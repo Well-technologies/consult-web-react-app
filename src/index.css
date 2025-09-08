@@ -1,0 +1,216 @@
+@import "tailwindcss";
+
+@plugin 'tailwindcss-animate';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --width-fill-available: -webkit-fill-available;
+
+  --height-fill-available: -webkit-fill-available;
+
+  --font-mono: SF Mono, Fira Code, Fira Mono, Roboto Mono, monospace;
+  --font-sans:
+    Calibre, Inter, San Francisco, SF Pro Text, -apple-system, system-ui,
+    sans-serif;
+
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-secondaryColor: rgba(44, 58, 66, 1);
+  --color-navy: #0a192f;
+  --color-dark-navy: #020c1b;
+  --color-lightest-navy: #233554;
+  --color-light-slate: #ccd6f6;
+  --color-slate: #8892b0;
+
+  --color-primary-50: #ffeff1;
+  --color-primary-100: #fcd8dc;
+  --color-primary-200: #f9b1b9;
+  --color-primary-300: #f58b95;
+  --color-primary-400: #f06675;
+  --color-primary-500: #e83e52;
+  --color-primary-600: #e02e40;
+  --color-primary-700: #b02130;
+  --color-primary-800: #8a1925;
+  --color-primary-900: #62111a;
+  --color-primary-950: #400a0f;
+
+  --color-primary: var(--color-primary-600);
+  --color-primary-foreground: var(--primary-50);
+
+  --color-secondary-50: #f1f4f6;
+  --color-secondary-100: #dce1e6;
+  --color-secondary-200: #b9c3cd;
+  --color-secondary-300: #94a4b3;
+  --color-secondary-400: #708599;
+  --color-secondary-500: #4d677f;
+  --color-secondary-600: #2c3a42;
+  --color-secondary-700: #222c35;
+  --color-secondary-800: #192027;
+  --color-secondary-900: #101519;
+  --color-secondary-950: #080b0e;
+
+  --color-secondary: var(--color-secondary-600);
+  --color-secondary-foreground: var(--color-secondary-50);
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }
+}
+
+@utility container {
+  margin-inline: auto;
+  padding-inline: 2rem;
+  @media (width >= --theme(--breakpoint-sm)) {
+    max-width: none;
+  }
+  @media (width >= 1400px) {
+    max-width: 1400px;
+  }
+}
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 47.4% 11.2%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 47.4% 11.2%;
+
+    --primary: 224% 46% 64%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: var(--color-secondaryColor);
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 100% 50%;
+    --destructive-foreground: 210 40% 98%;
+
+    --ring: 215 20.2% 65.1%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 224 71% 4%;
+    --foreground: 213 31% 91%;
+
+    --muted: 223 47% 11%;
+    --muted-foreground: 215.4 16.3% 56.9%;
+
+    --accent: 216 34% 17%;
+    --accent-foreground: 210 40% 98%;
+
+    --popover: 224 71% 4%;
+    --popover-foreground: 215 20.2% 65.1%;
+
+    --border: 216 34% 17%;
+    --input: 216 34% 17%;
+
+    --card: 224 71% 4%;
+    --card-foreground: 213 31% 91%;
+
+    --primary: 224% 46% 64%;
+    --primary-foreground: 222.2 47.4% 1.2%;
+
+    --secondary: var(--color-secondaryColor);
+    --secondary-foreground: 210 40% 98%;
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+
+    --ring: 216 34% 17%;
+
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply text-foreground bg-white;
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1;
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+}

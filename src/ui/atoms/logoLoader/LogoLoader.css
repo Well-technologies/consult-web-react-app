@@ -1,0 +1,48 @@
+.LogoLeft,
+.LogoRight {
+  animation-duration: 3s; /* Full loop */
+  animation-iteration-count: infinite;
+}
+
+.LogoLeft {
+  animation-name: leftLogo;
+}
+
+.LogoRight {
+  animation-name: rightLogo;
+}
+
+.logoContainer {
+  animation: logoContainer 3s infinite;
+  animation-delay: 3s; /* Starts after 3s */
+  transform-origin: center;
+}
+
+@keyframes leftLogo {
+  33% {
+    transform: translateY(-20px);
+  } /* First 3s - Move up */
+  100% {
+    transform: translateY(0px);
+  } /* Back to 0 */
+}
+
+@keyframes rightLogo {
+  33% {
+    transform: translateY(20px);
+  } /* First 3s - Move down */
+  100% {
+    transform: translateY(0px);
+  } /* Back to 0 */
+}
+
+@keyframes logoContainer {
+  0%,
+  32% {
+    transform: rotate(0deg);
+  } /* No rotation for first 3s */
+
+  100% {
+    transform: rotate(360deg);
+  } /* Stops rotating */
+}
