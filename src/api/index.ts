@@ -9,7 +9,7 @@ import { ClientType, Tokens } from "./index.types";
 import { getContentTypeByApiClientType } from "./index.utils";
 
 export const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL,
+  baseURL: process.env.REACT_FLASH_ADMIN_API_ENDPOINT,
   headers: {
     "X-Country-Code": "BD",
     "X-Client-Name": "WEBSITE",
@@ -33,7 +33,7 @@ export const createClient = (
   type: ClientType
 ) => {
   const client = axios.create({
-    baseURL: process.env.REACT_APP_API_URL,
+    baseURL: process.env.REACT_FLASH_ADMIN_API_ENDPOINT,
     headers: {
       ...(previousTokens.accessToken && {
         Authorization: `Bearer ${previousTokens.accessToken}`,
@@ -73,7 +73,7 @@ export const createClient = (
 
 
 export const consultApi = axios.create({
-  baseURL: process.env.REACT_APP_API_URL,
+  baseURL: process.env.REACT_CONSULT_API_ENDPOINT,
   headers: {
     "X-Country-Code": "BD",
     "X-Client-Name": "WEBSITE",
@@ -97,7 +97,7 @@ export const createConsultClient = (
   type: ClientType
 ) => {
   const client = axios.create({
-    baseURL: process.env.REACT_APP_API_URL,
+    baseURL: process.env.REACT_CONSULT_API_ENDPOINT,
     headers: {
       ...(previousTokens.accessToken && {
         Authorization: `Bearer ${previousTokens.accessToken}`,

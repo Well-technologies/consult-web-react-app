@@ -10,7 +10,11 @@ export type LoginResponseData = Pick<
   token: string;
 };
 
-export type LoginBody = {
+export type PhoneLoginBody = {
+  mobile: string;
+};
+
+export type EmailLoginBody = {
   email: string;
   password: string;
 };

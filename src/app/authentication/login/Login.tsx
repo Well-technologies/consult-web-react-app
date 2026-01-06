@@ -2,17 +2,21 @@ import clsx from "clsx";
 import { useTranslation } from "react-i18next";
 
 import FlashLogo from "@/assets/logo.png";
-import { LogoLoader } from "@/ui/atoms/logoLoader/LogoLoader";
 import { Version } from "@/ui/molecules/Version/Version";
-import { FormInput } from "@/ui/molecules/formInput/FormInput";
+import { FormInput } from "../../../ui/molecules/formInput/FormInput";
 
-import { LoginProps } from "./Login.types";
+import { LoginProps, LoginTypes } from "./Login.types";
+import { FormPhoneNumberInput } from "@/ui/molecules/formPhoneNumberInput/FormPhoneNumberInput";
+import { Button } from "@/ui/atoms/button/Button";
+import { Divider } from "@/ui/atoms/divider/Divider";
 
 export const Login = ({
-  errors,
-  onSubmit,
-  register,
+  errorsEmail,
+  onSubmitEmail,
+  controlEmail,
   isPending,
+  loginType,
+  setLoginType,
 }: LoginProps) => {
   const { t } = useTranslation();
 
@@ -36,23 +40,26 @@ export const Login = ({
             {/* <LogoLoader isMaxSize={false} isFullHeight isFullWidth /> */}
           </div>
           <div className={"space-y-4 p-6 sm:p-8 md:space-y-6"}>
-            <h1 className="text-xl leading-tight font-bold tracking-tight text-gray-900 md:text-2xl dark:text-white">
+            <h1 className="text-xl leading-tight font-bold tracking-tight mb-1 text-gray-900 md:text-2xl dark:text-white">
               {t("login.title")}
             </h1>
-            <form className="space-y-4 md:space-y-6" action="#">
+            <h1 className="text-xl leading-tight font-bold tracking-tight text-gray-900 md:text-2xl dark:text-white">
+              {t("login.subtitle")}
+            </h1>
+            <form className="space-y-4 md:space-y-6" action="#" hidden={loginType === LoginTypes.PHONE} onSubmit={onSubmitEmail}>
               <div>
                 <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
                   {t("login.form.email.label")}
                 </label>
                 <FormInput
-                  register={register}
+                  control={controlEmail}
                   id="email"
                   type="email"
                   name="email"
                   placeholder={t("login.form.email.placeholder")}
                   autoComplete="on"
-                  error={!!errors?.email}
-                  helperText={errors?.email?.message}
+                  error={!!errorsEmail?.email}
+                  helperText={errorsEmail?.email?.message}
                   required
                 />
               </div>
@@ -62,24 +69,34 @@ export const Login = ({
                 </label>
                 <FormInput
                   id="password"
-                  register={register}
+                  control={controlEmail}
                   type="password"
                   name="password"
                   autoComplete="on"
                   placeholder={t("login.form.password.placeholder")}
-                  error={!!errors?.password}
-                  helperText={errors?.password?.message}
+                  error={!!errorsEmail?.password}
+                  helperText={errorsEmail?.password?.message}
                   required
                 />
               </div>
-              <button
+              <Divider className="mt-0" children={t("login.form.or")} />
+              <Button
+                type="button"
+                onClick={() => setLoginType(LoginTypes.PHONE)}
+                isDisabled={isPending}
+                variant="outline"
+                isFullWidth
+              >
+                {t("login.form.login_with_phone.button")}
+              </Button>
+              <Button
                 type="submit"
-                onClick={onSubmit}
-                disabled={isPending}
-                className="bg-primary-600 cursor-pointer hover:bg-primary-700 dark:bg-primary-600 dark:hover:bg-primary-700 w-full rounded-lg px-5 py-2.5 text-center text-sm font-medium text-white"
+                isDisabled={isPending}
+                variant="primary"
+                isFullWidth
               >
                 {t("login.form.submit")}
-              </button>
+              </Button>
             </form>
           </div>
         </div>
