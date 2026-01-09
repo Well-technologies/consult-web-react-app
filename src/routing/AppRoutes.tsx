@@ -15,6 +15,7 @@ export const AppRoutes = () => {
   );
 
   if (isAuthorized) {
+    console.log("Authorized User");
     return <ProtectedRoutes />;
   }
 

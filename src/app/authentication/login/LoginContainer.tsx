@@ -5,41 +5,46 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import { useLogin, useRequestOtp } from "@/api/authentication/authentication";
-import { UserRoles } from "@/api/user/user.types";
+import { useLogin, useRequestOtp, useVerifyOtp } from "@/api/authentication/authentication";
 import { AppRoute } from "@/routing/AppRoute.enum";
 import { onLoginSuccess } from "@/store/authReducer/authReducer";
 
-import { Login } from "./Login";
 import { EmailLoginFormInputs, LoginTypes, PhoneLoginFormInputs } from "./Login.types";
-import { EmailLoginSchema, PhoneLoginSchema } from "./Login.utils";
+import { EmailLoginSchema } from "./Login.utils";
 import { useState } from "react";
 import { MobileLoginForm } from "./MobileLogin";
+import { onUserDetailsFetch } from "@/store/userReducer/userReducer";
+import { useClient } from "@/hooks/useClient/useClient";
+import { VerifyOTPBody } from "@/api/authentication/authentication.types";
 
 export const LoginContainer = () => {
+  const client = useClient({})
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [loginType, setLoginType] = useState<LoginTypes>(LoginTypes.EMAIL);
+  const [loginType, setLoginType] = useState<LoginTypes>(LoginTypes.PHONE);
+  const [isOtpSent, setIsOtpSent] = useState<boolean>(false);
+  const [mobileNumber, setMobileNumber] = useState<string>("");
 
-  const { mutateAsync: mutateOnEmailLogin, isPending: isEmailLoginPending } = useLogin({
-    onSuccess: ({ data: { role, token, refresh_token } }) => {
-      if (role !== UserRoles.Reviewer) {
-        window.open(process.env.REACT_APP_ADMIN_URL, "_self");
-        return;
+  const { mutateAsync: mutateOnEmailLogin } = useLogin({
+    onSuccess: ({ data, success, message }) => {
+
+      if (success) {
+        toast.success(message);
+        dispatch(
+          onLoginSuccess({
+            token: data.token,
+            isAuthorized: success,
+          })
+        );
+        dispatch(
+          onUserDetailsFetch({ userDetails: data })
+        );
+        navigate(AppRoute.Dashboard);
+      } else {
+        toast.error(message);
       }
-      dispatch(
-        onLoginSuccess({
-          tokens: {
-            accessToken: token,
-            refreshToken: refresh_token,
-          },
-          isAuthorized: true,
-        })
-      );
-      toast.success(t("login.alert.success"));
-      navigate(AppRoute.Claim);
     },
     onError: (error) => {
       console.error("onError error", error);
@@ -47,23 +52,33 @@ export const LoginContainer = () => {
     },
   });
 
-  const { mutateAsync: mutateOnPhoneLogin, isPending: isPhoneLoginPending } = useRequestOtp({
-    onSuccess: ({ data: { role, token, refresh_token } }) => {
-      if (role !== UserRoles.Reviewer) {
-        window.open(process.env.REACT_APP_ADMIN_URL, "_self");
-        return;
+  const { mutateAsync: mutateOnPhoneLogin, isPending: isPhoneLoginPending, variables } = useRequestOtp({
+    onSuccess: () => {
+      setMobileNumber(variables?.body?.mobile || "");
+      setIsOtpSent(true);
+    },
+    onError: (error) => {
+      console.error("onError error", error);
+      toast.error(t("login.alert.error"));
+    },
+  });
+
+  const { mutateAsync: mutateOnVerifyOtp } = useVerifyOtp({
+    onSuccess: ({ data, success, message }) => {
+      if (success) {
+        toast.success(message);
+        dispatch(
+          onLoginSuccess({
+            token: data.token,
+            isAuthorized: success,
+          }))
+        dispatch(
+          onUserDetailsFetch({ userDetails: data })
+        );
+        navigate(AppRoute.Dashboard);
+      } else {
+        toast.error(message);
       }
-      dispatch(
-        onLoginSuccess({
-          tokens: {
-            accessToken: token,
-            refreshToken: refresh_token,
-          },
-          isAuthorized: true,
-        })
-      );
-      toast.success(t("login.alert.success"));
-      navigate(AppRoute.Claim);
     },
     onError: (error) => {
       console.error("onError error", error);
@@ -86,38 +101,41 @@ export const LoginContainer = () => {
     handleSubmit: handleSubmitWithPhone,
     formState: { errors: errorsWithPhone },
   } = useForm<PhoneLoginFormInputs>({
-    resolver: PhoneLoginSchema(t),
+    // resolver: PhoneLoginSchema(t),
     mode: "onBlur",
     reValidateMode: "onChange",
   });
 
 
   const handleSubmit = async (values: EmailLoginFormInputs | PhoneLoginFormInputs) => {
-
     console.log("values", values, loginType);
     if (loginType === LoginTypes.EMAIL) {
-      await mutateOnEmailLogin(values as EmailLoginFormInputs);
-    } 
-    if (loginType === LoginTypes.PHONE) {   
-      await mutateOnPhoneLogin(values as PhoneLoginFormInputs);
+      await mutateOnEmailLogin({ client, body: values as VerifyOTPBody });
     }
-  
+    if (loginType === LoginTypes.PHONE && !isOtpSent) {
+      await mutateOnPhoneLogin({ client, body: values as VerifyOTPBody });
+    }
+    if (loginType === LoginTypes.PHONE && isOtpSent) {
+      await mutateOnVerifyOtp({ client, body: values as VerifyOTPBody });
+    }
+
   }
 
 
   return (
     <>
-    {loginType === LoginTypes.PHONE && (
-      <MobileLoginForm
-        control={controlWithPhone}
-        onSubmit={handleSubmitWithPhone(handleSubmit)}
-        isPending={isPhoneLoginPending}
-        t={t}
-        setLoginType={setLoginType}
-      />
-    )}
-    {loginType === LoginTypes.EMAIL && ( 
-
+      {loginType === LoginTypes.PHONE && (
+        <MobileLoginForm
+          control={controlWithPhone}
+          onSubmit={handleSubmitWithPhone(handleSubmit)}
+          isPending={isPhoneLoginPending}
+          setLoginType={setLoginType}
+          isOtpSent={isOtpSent}
+          setIsOtpSent={setIsOtpSent}
+          mobileNumber={mobileNumber}
+        />
+      )}
+      {/* {loginType === LoginTypes.EMAIL && ( 
     <Login
       controlEmail={controlWithEmail}
       onSubmitEmail={handleSubmitWithEmail(handleSubmit)}
@@ -126,8 +144,8 @@ export const LoginContainer = () => {
       setLoginType={setLoginType}
       loginType={loginType}
     />)
-}
-</>
+} */}
+    </>
   );
 
 }

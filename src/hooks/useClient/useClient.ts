@@ -1,22 +1,25 @@
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import { createClient } from "@/api";
-import { ClientType } from "@/api/index.types";
-import { StoreReducerStateTypes } from "@/store/store.types";
-import { allReducerStates } from "@/store/store.utils";
+import { ServiceConfigType } from "@/api/index.types";
+import { UseClientProps } from "./useClient.types";
+import { useCustomSelector } from "../useCustomSelector/useCustomSelector";
+import { useQueryClient } from "@tanstack/react-query";
+import { getDefaultEnvironmentByType } from "@/config/config.utils";
+import { EnvironmentType } from "@/config/config.types";
 
-export const useClient = (clientType?: ClientType) => {
-  const { tokens } = useSelector(
-    (rootState) => allReducerStates(rootState as StoreReducerStateTypes).auth
-  );
-
+export const useClient = ({serviceConfigType}: UseClientProps) => {
+const queryClient = useQueryClient();
+  const token = useCustomSelector(rootState => rootState.auth.token);
   const dispatch = useDispatch();
 
-  const axiosInstance = createClient(
-    tokens,
+  const axiosInstance = createClient({
+    previousToken: token,
     dispatch,
-    clientType || ClientType.JSON
-  );
-
+    // type: clientType || ClientType.JSON,
+    serviceConfig: getDefaultEnvironmentByType(EnvironmentType.Staging),
+    serviceConfigType: ServiceConfigType.Core,
+    queryClient,
+  });
   return axiosInstance;
 };

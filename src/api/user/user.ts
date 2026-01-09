@@ -13,6 +13,9 @@ import {
   GetUserDetailsProps,
   GetUserDetailResponse,
   DeleteEmployeeProps,
+  GetProfileProps,
+  GetProfileResponse,
+  ProfileKeyTypes,
 } from "./user.types";
 
 const getLeads = ({ client, params }: GetLeadsProps) =>
@@ -36,6 +39,19 @@ export const useGetUserDetails = ({ client }: GetUserDetailsProps) =>
     queryKey: [UserKeyTypes.UserDetails],
     queryFn: () => getUserDetails({ client }),
     placeholderData: keepPreviousData,
+  });
+
+
+const getProfile = ({ client }: GetProfileProps) =>
+  client.get<GetProfileResponse>('customer/profile').then(({ data }) => data);
+
+export const useGetProfile = ({ client, options }: GetProfileProps) =>
+  useQuery({
+    queryKey: [ProfileKeyTypes.GetProfile],
+    queryFn: () => getProfile({ client }),
+    placeholderData: keepPreviousData,
+    staleTime: Infinity,
+    ...options,
   });
 
 const deleteEmployee = ({ client, leadId }: DeleteEmployeeProps) =>

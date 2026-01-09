@@ -84,6 +84,7 @@ const OtpInput = React.forwardRef<HTMLInputElement, OtpInputProps>(
                 }
               }
             }}
+            autoFocus={index === 0}
             type="text"
             inputMode="numeric"
             maxLength={1}

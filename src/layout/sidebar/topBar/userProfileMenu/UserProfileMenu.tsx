@@ -11,9 +11,9 @@ import { Version } from "@/ui/molecules/Version/Version";
 export const UserProfileMenu = () => {
   const { t } = useTranslation();
 
-  const { name, email, profilePictureUrl } = useSelector(
+  const { name, email, profile_picture_url } = useSelector(
     (rootState) =>
-      allReducerStates(rootState as StoreReducerStateTypes).user.userDetails
+      allReducerStates(rootState as StoreReducerStateTypes).user.profile
   );
 
   const dispatch = useDispatch();
@@ -33,7 +33,7 @@ export const UserProfileMenu = () => {
         id="profileSection"
         className="flex gap-2 items-center w-full px-2 py-2"
       >
-        <Avatar className="w-10" imageUrl={profilePictureUrl || undefined} />
+        <Avatar className="w-10" imageUrl={profile_picture_url || undefined} />
         <div className="flex flex-col">
           <p className="text-sm text-secondary font-bold">{name}</p>
           <p className="text-xs text-secondary-400 font-semibold">{email}</p>

@@ -11,9 +11,9 @@ import { UserProfileMenu } from "../userProfileMenu/UserProfileMenu";
 export const TopBarActions = () => {
   const [openProfileMenu, setOpenProfileMenu] = useState(false);
 
-  const { profilePictureUrl } = useSelector(
+  const { profile_picture_url } = useSelector(
     (rootState) =>
-      allReducerStates(rootState as StoreReducerStateTypes).user.userDetails
+      allReducerStates(rootState as StoreReducerStateTypes).user.profile
   );
 
   return (
@@ -30,7 +30,7 @@ export const TopBarActions = () => {
         >
           <Avatar
             className="h-full"
-            imageUrl={profilePictureUrl || undefined}
+            imageUrl={profile_picture_url || undefined}
           />
           {/* <p className="text-sm text-secondary font-semibold">{name}</p> */}
         </button>

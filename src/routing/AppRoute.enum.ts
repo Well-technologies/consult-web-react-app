@@ -11,4 +11,6 @@ export enum AppRoute {
   ActivityLog = "/activity-log",
   Dashboard = "/dashboard",
   LeaderBoard = "/leaderboard",
+  Consultations = "/consultations",
+  Patients = "/patients",
 }

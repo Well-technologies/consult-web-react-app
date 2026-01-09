@@ -3,12 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 import { AuthState } from "./authReducer.types";
 
 export const authInitialState: AuthState = {
-  tokens: {
-    accessToken: "",
-    refreshToken: "",
-  },
+  token: "",
   isAuthorized: false,
-  isFetchingUserDetails: false,
 };
 
 export const auth = createSlice({
@@ -16,21 +12,17 @@ export const auth = createSlice({
   initialState: authInitialState,
   reducers: {
     onLoginSuccess: (state, { payload }) => {
-      state.tokens = payload.tokens;
+      state.token = payload.token;
       state.isAuthorized = payload.isAuthorized;
     },
-    setFetchingUserDetails: (state, { payload }) => {
-      state.isFetchingUserDetails = payload;
-    },
     onLogOutAction: (state) => {
-      state.tokens = authInitialState.tokens;
+      state.token = authInitialState.token;
       state.isAuthorized = false;
-      state.isFetchingUserDetails = false;
     },
   },
 });
 
-export const { onLoginSuccess, setFetchingUserDetails, onLogOutAction } =
+export const { onLoginSuccess, onLogOutAction } =
   auth.actions;
 
 export default auth.reducer;

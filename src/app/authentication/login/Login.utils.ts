@@ -29,15 +29,20 @@ export const EmailLoginSchema = (translate: TFunction<"translation", undefined>)
     })
   );
 
-const phoneSchema = ({ mobile }: PhoneLoginFormSchema) =>
+const phoneSchema = ({ mobile, otp }: PhoneLoginFormSchema) =>
   Joi.object<PhoneLoginFormSchema>({
     mobile: Joi.string().required().messages(mobile),
+    otp: Joi.string().required().messages(otp),
   });
 
 export const PhoneLoginSchema = (translate: TFunction<"translation", undefined>) =>
   joiResolver(
     phoneSchema({
       mobile: {
+        "string.empty": translate("global.errors.required"),
+        "any.required": translate("global.errors.required"),
+      },
+      otp: {
         "string.empty": translate("global.errors.required"),
         "any.required": translate("global.errors.required"),
       },

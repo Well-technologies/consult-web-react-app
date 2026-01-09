@@ -2,7 +2,7 @@ import { AxiosInstance } from "axios";
 
 // import { FamilyMemberType } from "@/app/employeeDetails/addFamilyModal/AddFamilyModal.types";
 
-import { CommonSuccessResponse } from "../index.types";
+import { CommonQueryOptions, CommonSuccessResponse } from "../index.types";
 // import { B2BDetails } from "../organization/organization.types";
 
 export enum UserKeyTypes {
@@ -193,12 +193,6 @@ export type ClaimFeatures = {
   creditType: number;
 };
 
-export enum GenderType {
-  Male = "male",
-  Female = "female",
-  Other = "other",
-}
-
 export type LeadDetails = {
   id: number;
   lead_id: number;
@@ -275,3 +269,71 @@ export type B2BUserDetails = {
   country_code: string; // Should be Enum
   district: string | null;
 };
+
+export type GetProfileProps = {
+  client: AxiosInstance;
+  options?: CommonQueryOptions;
+};
+
+export enum ProfileKeyTypes {
+  GetProfile = 'GetProfile',
+  GetFamily = 'GetFamily',
+  GetTransaction = 'GetTransaction',
+  GetInvitees = 'GetInvitees',
+  GetCoupons = 'GetCoupons',
+  GetHealthConditions = 'GetHealthConditions',
+  GetSummaryReports = 'GetSummaryReports',
+}
+
+export type GetProfileResponse = CommonSuccessResponse<Profile>;
+
+export enum GenderType {
+  Male = 'Male',
+  Female = 'Female',
+  Other = 'Other',
+}
+
+export type Profile = {
+  address_id: null | number;
+  bank_account_no: string;
+  bank_branch: string;
+  bank_name: string;
+  comments: string;
+  created_at: string;
+  date_of_birth: string;
+  email: string;
+  formatted_id: string;
+  full_name: string;
+  gender: GenderType;
+  healthcondition: any[];
+  healthtopic: any[];
+  id: string;
+  is_aia_downgraded: boolean;
+  lead_owner_id: number;
+  lead_type: string;
+  leads_status: number;
+  mobile_no: string;
+  name: string;
+  name_title: string | null;
+  nic_no: string;
+  offer_notification: null | string;
+  organization_id: number;
+  phone: null | string;
+  preferred_language: null | string;
+  product_code?: string | null;
+  profile_picture_url: string;
+  request_quote_notification: null | number;
+  role: string;
+  show_on_leadboard: number;
+  show_to_doner: number;
+  source: number;
+  trial_used: string;
+  updated_at: string;
+  userDetail: string;
+  store_id: string;
+};
+
+export enum ConsultUserKeyTypes {
+  GetConsultUserDetails = 'GetConsultUserDetails',
+  GetAppointmentCountByStatus = 'GetAppointmentCountByStatus',
+}

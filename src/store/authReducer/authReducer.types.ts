@@ -1,7 +1,4 @@
-import { Tokens } from "@/api/index.types";
-
 export type AuthState = {
-  tokens: Tokens;
+  token: string;
   isAuthorized: boolean;
-  isFetchingUserDetails: boolean;
 };

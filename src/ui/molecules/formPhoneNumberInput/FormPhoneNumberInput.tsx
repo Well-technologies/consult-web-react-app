@@ -26,6 +26,7 @@ export const FormPhoneNumberInput = ({
         control={control}
         render={({ field }) => (
           <PhoneNumber 
+            {...props}
             value={field.value} 
             onChange={field.onChange} 
             disabled={props.disabled} 

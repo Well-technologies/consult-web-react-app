@@ -1,26 +1,18 @@
-import { UserRoles } from "@/api/user/user.types";
+import { Profile, UserRoles } from "@/api/user/user.types";
+
+
 
 export type UserState = {
   userDetails: StateUserDetails;
-  companyDetails: StateCompanyDetails;
+  profile: Profile;
 };
 
 export type StateUserDetails = {
-  id: number;
-  name: string;
-  email: string;
-  mobile: string;
-  role: UserRoles;
-  profilePictureUrl: string | null;
-  gender: string; // Should be Enum
-};
-
-export type StateCompanyDetails = {
-  id: number;
-  companyName: string;
-  note: string | null;
-  brNumber: string | null;
-  packageId: number;
-  companyLogo: string;
-  subCompanies: Omit<StateCompanyDetails, "subCompanies">[]; // Should add Type
+  lead_id: string,
+  user_type: UserRoles | "",
+  country_code: string,
+  registration_credit: boolean,
+  registration_credit_amount: number,
+  leads_status: number,
+  token: string,
 };

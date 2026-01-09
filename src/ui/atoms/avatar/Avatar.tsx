@@ -1,6 +1,6 @@
 import clsx from "clsx";
 
-import AvatarIcon from "@/assets/icons/avatar_icon.png";
+// import AvatarIcon from "@/assets/icons/avatar_icon.png";
 
 import { AvatarProps } from "./Avatar.types";
 
@@ -14,7 +14,7 @@ export const Avatar = ({ className, imageUrl, defaultIcon }: AvatarProps) => {
     >
       <img
         className={clsx("w-full h-full object-contain")}
-        src={imageUrl || defaultIcon || AvatarIcon}
+        src={imageUrl || defaultIcon}
         alt={`${imageUrl || "AvatarIcon"}-logo`}
       />
     </div>

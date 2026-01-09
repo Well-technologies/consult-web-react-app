@@ -21,10 +21,16 @@ const PhoneNumber = ({ value, onChange, disabled, className }: PhoneNumberProps)
       onChange={(phoneValue) => {
         onChange?.(phoneValue || '')
       }}
+      autoFocus
       value={value || ''}
       className={cn(
-              "border-input text-secondary bg-background ring-offset-background placeholder:text-secondary-300 flex h-10 w-full rounded-md border px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring focus-visible:outline-hidden disabled:cursor-not-allowed disabled:opacity-50",
-              className,
+                "border-input bg-background flex h-10 w-full rounded-md border px-3 py-2 text-sm",
+                "[&_.PhoneInputInput]:outline-none",
+                "[&_.PhoneInputInput]:ring-0",
+                "[&_.PhoneInputInput:focus]:outline-none",
+                "[&_.PhoneInputInput:focus-visible]:outline-none",
+                "[&_.PhoneInputInput:focus-visible]:ring-0",
+                className,
               disabled ? "bg-gray-50" : ""
             )}/>
   )

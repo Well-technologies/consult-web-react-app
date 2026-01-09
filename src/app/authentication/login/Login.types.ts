@@ -10,6 +10,7 @@ export type EmailLoginFormInputs = {
 
 export type PhoneLoginFormInputs = {
   mobile: string;
+  otp?: string;
 };
 
 export type OTPFormInputs = {
