@@ -21,6 +21,22 @@ export type CommonSuccessResponse<T> = {
   message: string;
 };
 
+export type ConsultSuccessResponse<T, D> = {
+  success: boolean;
+  message: string;
+  payload: T;
+  data: D;
+  meta: ConsultSuccessResponseMeta | null;
+};
+
+export type ConsultSuccessResponseMeta = {
+  page: number;
+  take: number;
+  total: number;
+};
+
+
+
 export type CommonErrorResponseData = {
   message: string;
 };
@@ -47,7 +63,7 @@ export enum ServiceConfigType {
 export type CreateClientProps = {
   previousToken: string;
   dispatch: Dispatch<UnknownAction>;
-  // type: ClientType;
+  type: ClientType.JSON;
   serviceConfig: ServiceConfig;
   serviceConfigType: ServiceConfigType;
   queryClient: QueryClient;
@@ -55,5 +71,5 @@ export type CreateClientProps = {
 
 export type GetClientConfigProps = Pick<
   CreateClientProps,
-  'serviceConfig' | 'serviceConfigType' | 'previousToken'
+  'serviceConfig' | 'serviceConfigType' | 'previousToken' | 'type'
 >;

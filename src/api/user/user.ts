@@ -16,6 +16,8 @@ import {
   GetProfileProps,
   GetProfileResponse,
   ProfileKeyTypes,
+  GetConsultUserDetailsProps,
+  ConsultUserDetails,
 } from "./user.types";
 
 const getLeads = ({ client, params }: GetLeadsProps) =>
@@ -31,13 +33,13 @@ export const useGetLeads = ({ client, params }: GetLeadsProps) =>
     enabled: params.search_subscriber.length > 0,
   });
 
-const getUserDetails = ({ client }: GetUserDetailsProps) =>
-  client.get<GetUserDetailResponse>(`/b2b/user`).then(({ data }) => data);
+const getConsultUserDetails = ({ client, leadId }: GetConsultUserDetailsProps) =>
+  client.get<ConsultUserDetails>(`/users/getLead/${leadId}`).then(({ data }) => data);
 
-export const useGetUserDetails = ({ client }: GetUserDetailsProps) =>
+export const useGetConsultUserDetails = ({ client, leadId }: GetConsultUserDetailsProps) =>
   useQuery({
     queryKey: [UserKeyTypes.UserDetails],
-    queryFn: () => getUserDetails({ client }),
+    queryFn: () => getConsultUserDetails({ client, leadId }),
     placeholderData: keepPreviousData,
   });
 

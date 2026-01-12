@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { data, Navigate, Route, Routes } from "react-router-dom";
 
-import { useGetProfile, useGetUserDetails } from "@/api/user/user";
+import { useGetProfile } from "@/api/user/user";
 // import { ClaimReportContainer } from "@/app/claimReport/ClaimReportContainer";
 import { useClient } from "@/hooks/useClient/useClient";
 import { Sidebar } from "@/layout/sidebar/Sidebar";
@@ -13,6 +13,8 @@ import { LogoLoader } from "@/ui/atoms/logoLoader/LogoLoader";
 import { AppRoute } from "./AppRoute.enum";
 import { ServiceConfigType } from "@/api/index.types";
 import { Dashboard } from "@/app/dashboard/Dashboard";
+import { PatientsListContainer } from "../app/patients/PatientsListContainer";
+import { PatientDetailsContainer } from "@/app/patientDetails/PatientDetailsContainer";
 
 export const ProtectedRoutes = () => {
   const client = useClient({serviceConfigType: ServiceConfigType.Core});
@@ -58,7 +60,15 @@ export const ProtectedRoutes = () => {
         path={AppRoute.Patients}
         element={
           <Sidebar>
-            <Dashboard />
+            <PatientsListContainer/>
+          </Sidebar>
+        }
+      />
+      <Route
+        path={AppRoute.PatientDetails}
+        element={
+          <Sidebar>
+            <PatientDetailsContainer/>
           </Sidebar>
         }
       />

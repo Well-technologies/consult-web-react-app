@@ -3,10 +3,10 @@ import { EnvironmentType, ServiceConfig } from './config.types';
 export const stagingServiceConfig: ServiceConfig = {
   environment: EnvironmentType.Staging,
   core: {
-    api: 'https://admin-api-staging.flash.health/api/v1/',
+    api: process.env.REACT_FLASH_ADMIN_API_ENDPOINT || '',
   },
   consult: {
-    api: 'https://api-staging.flash.health/consult/api/v1/',
+    api: process.env.REACT_CONSULT_API_ENDPOINT || '',
     socket: 'https://api-staging.flash.health/init',
     turnServer: 'turn:turn-staging.flash.health',
     stunServer: 'stun:stun-staging.flash.health',

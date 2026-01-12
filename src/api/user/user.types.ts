@@ -221,14 +221,14 @@ export type GetUserDetailsProps = {
   client: AxiosInstance;
 };
 
-export type GetEmployeeDetailsProps = GetUserDetailsProps & {
+export type GetConsultUserDetailsProps = GetUserDetailsProps & {
   leadId: string;
 };
 
-export type GetUserDetailResponse = any;
-// CommonSuccessResponse<
-// // B2BDetails
-// >;
+export type GetUserDetailResponse = 
+CommonSuccessResponse<
+ConsultUserDetails | null
+>;
 
 export type B2BUserDetails = {
   id: number;
@@ -337,3 +337,8 @@ export enum ConsultUserKeyTypes {
   GetConsultUserDetails = 'GetConsultUserDetails',
   GetAppointmentCountByStatus = 'GetAppointmentCountByStatus',
 }
+
+export type ConsultUserDetails = {
+  id: string;
+  lead_id: number | null;
+};

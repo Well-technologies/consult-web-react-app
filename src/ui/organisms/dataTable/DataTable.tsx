@@ -19,8 +19,9 @@ export const DataTable = <TData extends RowData>({
   columns,
   data,
   enableSorting,
+  onRowClick,
   ...props
-}: Omit<TableOptions<TData>, "getCoreRowModel">) => {
+}: Omit<TableOptions<TData>, "getCoreRowModel"> & { onRowClick?: (i: number) => void; }) => {
   const table = useReactTable<TData>({
     data,
     columns,
@@ -64,7 +65,7 @@ export const DataTable = <TData extends RowData>({
         ))}
       </TableHeader>
       <TableBody>
-        {table.getRowModel().rows.map((row) => {
+        {table.getRowModel().rows.map((row, i) => {
           return (
             <TableRow
               key={row.id}
@@ -73,6 +74,7 @@ export const DataTable = <TData extends RowData>({
                   ? "bg-gray-200 hover:bg-gray-200 border-b-gray-300"
                   : ""
               }
+              onClick={() => onRowClick?.(i)}
             >
               {row.getVisibleCells().map((cell) => {
                 return (

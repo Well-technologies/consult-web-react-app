@@ -2,7 +2,7 @@ import clsx from "clsx";
 
 import { VersionProps } from "./Version.types";
 
-const APP_VERSION = "0.1.3";
+const APP_VERSION = "0.0.1";
 
 export const Version = ({ className }: VersionProps) => {
   return (
