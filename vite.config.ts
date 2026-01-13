@@ -13,7 +13,7 @@ export default defineConfig(({ mode, ...props }) => {
     },
   plugins: [tailwindcss(), react()],
   build: {
-    outDir: '/build',   // <-- outputs to <root>/build
+    outDir: 'build',   // <-- outputs to <root>/build
     emptyOutDir: true, // <-- clears the folder before each build
   },
   resolve: {
