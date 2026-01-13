@@ -7,6 +7,7 @@
     "module": "ESNext",
     "skipLibCheck": true,
     "composite": true,
+    "resolveJsonModule": true,
 
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -22,10 +23,17 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
     
-    "baseUrl": "./src",
+    
+    "rootDir": "src",
+    "outDir": "build",
+
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./src/*"]
     }
   },
-  "include": ["src"]
+  "include": [  "src/**/*.ts",
+  "src/**/*.tsx",
+  "src/**/*.json"],
+  "exclude": ["node_modules", "build"]
 }
