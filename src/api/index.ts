@@ -1,5 +1,3 @@
-import { Dispatch, UnknownAction } from "@reduxjs/toolkit";
-
 import axios from "axios";
 
 import { onLogOutAction } from "@/store/authReducer/authReducer";

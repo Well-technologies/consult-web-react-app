@@ -13,6 +13,7 @@ import { Lead } from "../user/user.types";
 export enum PatientKeyTypes {
   PatientsList = "PatientsList",
   PatientDetails = "PatientDetails",
+  PatientSearch = "PatientSearch",
 }
 
 export type GetPatientsProps = {
@@ -20,8 +21,18 @@ export type GetPatientsProps = {
   params: GetPatientsListParams;
 };
 
+export type SearchPatientsProps = {
+  client: AxiosInstance;
+  params: SearchPatientParamsProps;
+  enabled: boolean;
+};
+
 export type GetPatientsListParams = CommonPaginationParams & {
   doctor_id: string;
+};
+
+export type SearchPatientParamsProps = {
+  patient: string;
 };
 
 export type GetPatientsResponse = CommonSuccessResponse<
@@ -41,13 +52,9 @@ export type CreatePatientProps = {
 export type CreatePatientBody = {
   name: string;
   mobile_no: string;
-  email: string;
+  email?: string;
   gender: string;
-  parent_org_id: number;
-  full_name: string;
-  bank_name: string;
-  bank_branch: string;
-  bank_account_no: string;
+  dob: string
 };
 
 export type CreatePatientResponse = CommonSuccessResponse<UserDetails>;

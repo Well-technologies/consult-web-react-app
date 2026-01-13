@@ -1,6 +1,5 @@
 import clsx from "clsx";
 import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
 // import RightArrowIcon from "@/assets/icons/arrow_down_icon.png";
@@ -8,7 +7,6 @@ import { useSelector } from "react-redux";
 import { AppRoute } from "@/routing/AppRoute.enum";
 import { StoreReducerStateTypes } from "@/store/store.types";
 import { allReducerStates } from "@/store/store.utils";
-import { Avatar } from "@/ui/atoms/avatar/Avatar";
 
 import { SidebarProps } from "./Sidebar.types";
 import { getNavbarOptions } from "./Sidebar.utils";
@@ -17,7 +15,6 @@ import { TopBar } from "./topBar/TopBar";
 
 export const Sidebar = ({ children }: SidebarProps) => {
   console.log("Sidebar rendered");
-  const { t } = useTranslation();
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const { profile } = useSelector(
     (rootState) =>

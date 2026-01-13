@@ -5,7 +5,7 @@ import FlashLogo from "@/assets/logo.png";
 import { Control, Controller } from 'react-hook-form';
 import { LoginTypes, PhoneLoginFormInputs } from "./Login.types";
 import { Button } from "@/ui/atoms/button/Button";
-import { Divider } from "@/ui/atoms/divider/Divider";
+// import { Divider } from "@/ui/atoms/divider/Divider";
 import { BaseSyntheticEvent, useEffect, useState } from "react";
 import { t } from "i18next";
 import { Version } from "@/ui/molecules/Version/Version";

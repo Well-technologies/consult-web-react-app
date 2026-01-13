@@ -1,11 +1,5 @@
-import { useClient } from "@/hooks/useClient/useClient";
-
-import { getStatsFromClaimStatsDetails } from "./Dashboard.utils";
-import { DashboardStatCard } from "./dashboardStatCard/DashboardStatCard";
-import { DashboardStatSkeletonCard } from "./dashboardStatSkeletonCard/DashboardStatSkeletonCard";
 
 export const Dashboard = () => {
-  const client = useClient({});
 
   // const { data, isLoading } = useGetClaimsStats({
   //   client,

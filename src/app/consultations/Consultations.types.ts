@@ -1,29 +1,29 @@
 
 
 // import { ConsultUserDetails } from "@/api/user/user.types";
-import { ConsultUserDetails } from "@/api/consult/consult.types";
-import { PatientDetails } from "../../api/patient/patient.types";
+import { ConsultationDetails } from "@/api/consult/consult.types";
+// import { UseFormReturn } from "react-hook-form";
 
 export enum UserStatus {
   Active = "Active",
   Inactive = "Inactive",
 }
 
-export enum PatientDetailsTab {
+export enum ConsultationsTab {
   Consultations = "Consultations",
   HealthVault = "Health Vault",
 }
 
-export type PatientDetailsProps ={
+export type ConsultationsProps ={
   isLoading: boolean;
-  data: ConsultUserDetails | null | undefined;
-  consultations: any | undefined;
+  data: ConsultationDetails[] | null | undefined;
+  // consultations: any | undefined;
 }
 
 export type PatientsListProps = {
   // data?: GetClaimsResponse["data"];
   // transactionsData?: GetLeadTransactionsResponse;
-  data?: PatientDetails[] | undefined;
+  data?: ConsultationDetails[] | undefined;
   openAndCloseFilter: () => void;
   openFilter: boolean;
   isLoading?: boolean;

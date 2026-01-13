@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { ChangeEvent, useState } from "react";
 
-import { ClientType } from "@/api/index.types";
+// import { ClientType } from "@/api/index.types";
 import { useClient } from "@/hooks/useClient/useClient";
 import { useMediaUpload } from "@/hooks/useMediaUpload/useMediaUpload";
 import { FormLabel } from "@/ui/atoms/formLabel/FormLabel";
@@ -20,7 +20,7 @@ export const DragAndDropUploadForm = ({
   uploadConfig: { endpoint, formDataKey, dropzoneOptions },
   ...props
 }: DragAndDropUploadFormProps) => {
-  const client = useClient(ClientType.FormData);
+  const client = useClient({});
   register(name);
 
   const [uploadedFileUrl, setUploadedFileUrl] = useState("");

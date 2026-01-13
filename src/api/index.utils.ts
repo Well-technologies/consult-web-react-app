@@ -66,6 +66,7 @@ export const getClientConfig = ({
 };
 
 export const convertObjectToFormData = (data: Record<string, unknown>) => {
+  console.log(data)
   const formData = new FormData();
   // Object.entries(data).map(([key, value]) => {
   //   formData.append(key, value);

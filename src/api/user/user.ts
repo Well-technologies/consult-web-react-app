@@ -10,15 +10,15 @@ import {
   GetLeadsResponse,
   GetLeadsProps,
   UserKeyTypes,
-  GetUserDetailsProps,
-  GetUserDetailResponse,
+  // GetUserDetailResponse,
   DeleteEmployeeProps,
   GetProfileProps,
   GetProfileResponse,
   ProfileKeyTypes,
   GetConsultUserDetailsProps,
-  ConsultUserDetails,
+  // ConsultUserDetails,
 } from "./user.types";
+import { GetConslutUserDetailResponse } from "../consult/consult.types";
 
 const getLeads = ({ client, params }: GetLeadsProps) =>
   client
@@ -34,7 +34,7 @@ export const useGetLeads = ({ client, params }: GetLeadsProps) =>
   });
 
 const getConsultUserDetails = ({ client, leadId }: GetConsultUserDetailsProps) =>
-  client.get<ConsultUserDetails>(`/users/getLead/${leadId}`).then(({ data }) => data);
+  client.get<GetConslutUserDetailResponse>(`/users/getLead/${leadId}`).then(({ data }) => data);
 
 export const useGetConsultUserDetails = ({ client, leadId }: GetConsultUserDetailsProps) =>
   useQuery({

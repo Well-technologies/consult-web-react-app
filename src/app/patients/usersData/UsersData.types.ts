@@ -1,20 +1,21 @@
 import { GetPatientListResponse, PatientDetails } from "../../../api/patient/patient.types";
 import { FormType } from "@/types";
-import { UseFormSetValue } from "react-hook-form";
+import { UseFormReturn, UseFormSetValue, UseFormWatch } from "react-hook-form";
+import { AddUserFormInputs } from "../addPatientModal/AddPatientModal.types";
 // import { UsersProps } from "../Users.types";
 
 export type UsersProps = {
-  // register: UseFormReturn<UsersFormInputs>["register"];
-  // control: UseFormReturn<UsersFormInputs>["control"];
+  register: UseFormReturn<AddUserFormInputs>["register"];
+  control: UseFormReturn<AddUserFormInputs>["control"];
   data?: GetPatientListResponse["data"];
-  // setValue: UseFormSetValue<any>;
-  // watch: UseFormWatch<UsersFormInputs>;
-  // openAndCloseFilter: () => void;
+  setValue: UseFormSetValue<any>;
+  watch: UseFormWatch<AddUserFormInputs>;
+  openAndCloseFilter: () => void;
   openAddNewModal: (
     data: PatientDetails | null,
     formType: FormType
   ) => void;
-  // openFilter: boolean;
+  openFilter: boolean;
   isLoading?: boolean;
   onOpenEmployeeDeleteModal: (data: PatientDetails | null) => void;
 };
@@ -24,6 +25,6 @@ export type UsersDataProps = Pick<
   // | "setValue"
   | "data"
   | "isLoading"
-  // | "openAddNewModal"
+  | "openAddNewModal"
   // | "onOpenEmployeeDeleteModal"
 >;

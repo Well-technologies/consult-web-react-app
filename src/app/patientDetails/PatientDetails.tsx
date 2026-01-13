@@ -1,9 +1,12 @@
-import clsx from "clsx";
 import { useTranslation } from "react-i18next";
 
 
-import { PatientDetailsProps, PatientsListProps } from "./PatientDetails.types";
-import { UsersData } from "../patients/usersData/UsersData";
+import { PatientDetailsProps, PatientDetailsTab } from "./PatientDetails.types";
+import { TabType } from "@/ui/atoms/tabs/Tabs.types";
+import { Tabs } from "@/ui/atoms/tabs/Tabs";
+import { useState } from "react";
+import { PatientDetailsCard } from "./patientDetailsCard/PatientDetailsCard";
+import { Consultations } from "../consultations/Consultations";
 // import { UsersData } from "./usersData/UsersData";
 
 export const PatientDetails = ({
@@ -15,50 +18,40 @@ export const PatientDetails = ({
   // openAndCloseFilter,
   ...props
 }: PatientDetailsProps) => {
+  
+  const [activeTab, setActiveTab] = useState(PatientDetailsTab.Consultations);
   const { t } = useTranslation();
 
+
+  const tabs: TabType<PatientDetailsTab>[] = [
+    {
+      value: PatientDetailsTab.Consultations,
+      label: t("patient.details.tab.consultations"),
+      component: (
+        <Consultations data={consultations} isLoading={isLoading}  />
+      ),
+    },
+    {
+      value: PatientDetailsTab.HealthVault,
+      label: t("patient.details.tab.health_vault"),
+      component: <>Health Vault</>
+      // <TransactionData {...transactionForm} {...props}
+      //  />,
+    },
+  ];
+
   return (
-    <div className="flex flex-col p-2 gap-6">
-      <div className="pb-0 flex flex-col border-2 border-gray-100 rounded-lg">
-        <div className="flex p-4 flex-col md:flex-row gap-2 md:gap-0 md:items-center justify-between border-b-2 border-gray-100">
-          <div className="text-lg font-bold">{t("user.title")}</div>
-          <div className="flex gap-2 flex-col-reverse md:flex-row">
-            {/* <button
-              onClick={() => openAndCloseFilter()}
-              className={clsx(
-                "flex gap-2 cursor-pointer items-center justify-center md:justify-start border-2 rounded-lg px-4 py-2 text-sm",
-                openFilter
-                  ? "text-white bg-secondary border-secondary"
-                  : "text-secondary  border-secondary-100"
-              )}
-            >
-              <img
-                className={clsx("w-4", openFilter ? "invert-100" : "")}
-                src="https://img.icons8.com/ios/50/horizontal-settings-mixer--v1.png"
-                alt="horizontal-settings-mixer--v1"
-              />
-              {t("claim.filter.button")}
-            </button> */}
-            {/* <button
-              onClick={() => openAddNewModal(null, FormType.Add)}
-              className="flex gap-2 cursor-pointer items-center justify-center md:justify-start rounded-lg px-4 py-2 bg-primary-600 text-white text-sm"
-            >
-              <img
-                className="w-4 invert"
-                src="https://img.icons8.com/ios-glyphs/30/plus-math.png"
-                alt="plus-math"
-              />
-              {t("user.newUser.button")}
-            </button> */}
-          </div>
-        </div>
-        {/* <UsersFilters openFilter={openFilter} {...props} /> */}
-        {/* <UsersData 
-        data={data}
-        isLoading={isLoading}
-        // openAddNewModal={openAddNewModal} 
-        {...props} /> */}
+    <div className="flex flex-col p-2 gap-2 sm:gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
+        <PatientDetailsCard
+          data={data}
+          // claimFeatures={claimFeatures}
+          // onOpenUserModal={onOpenUserModal}
+          isLoading={isLoading}
+          {...props}        />
+        {/* <ClaimBalanceDetailsCard isLoading={isLoadingEmployeeData} {...props} /> */}
       </div>
-    </div>
-  );
+
+      <Tabs activeTab={activeTab} setTab={setActiveTab} tabs={tabs} />
+    </div>  );
 };

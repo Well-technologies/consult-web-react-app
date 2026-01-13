@@ -504,6 +504,11 @@ export type ConsultationDetails = {
   appointmentDateString: string;
 };
 
+export type GetConslutUserDetailResponse = 
+ConsultSuccessResponse<
+ConsultUserDetails | null | undefined, null
+>;
+
 export type ClinicalCommonDetails = {
   items: ClinicalCommonDataDetails[];
   note: string;

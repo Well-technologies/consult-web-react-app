@@ -1,6 +1,6 @@
 import { AxiosInstance } from "axios";
 import { CommonSuccessResponse } from "../index.types";
-import { B2BUserDetails } from "../user/user.types";
+import { UserDetails } from "../patient/patient.types";
 
 export type LoginSuccessResponse = CommonSuccessResponse<LoginResponseData>;
 
@@ -10,8 +10,8 @@ export enum UserType {
 }
 
 export type LoginResponseData = Pick<
-  B2BUserDetails,
-  "id" | "name" | "role" | "country_code" | "refresh_token"
+  UserDetails,
+  "id" | "name"
 > & {
   token: string;
 };

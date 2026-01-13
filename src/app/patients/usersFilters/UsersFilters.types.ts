@@ -1,4 +1,4 @@
-import { UsersProps } from "../Users.types";
+import { UsersProps } from "../usersData/UsersData.types";
 
 export type UsersFiltersProps = Pick<
   UsersProps,

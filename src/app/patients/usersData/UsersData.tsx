@@ -29,9 +29,6 @@ export const UsersData = ({
   //     allReducerStates(rootState as StoreReducerStateTypes).user.companyDetails
   // );
 
-  const companies = data;
-  console.log('data', data)
-
   const columns = useMemo<ColumnDef<PatientDetails>[]>(
     () => [
       {
