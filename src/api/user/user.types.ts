@@ -3,6 +3,7 @@ import { AxiosInstance } from "axios";
 // import { FamilyMemberType } from "@/app/employeeDetails/addFamilyModal/AddFamilyModal.types";
 
 import { CommonQueryOptions, CommonSuccessResponse } from "../index.types";
+import { ConsultUserDetails } from "../consult/consult.types";
 // import { B2BDetails } from "../organization/organization.types";
 
 export enum UserKeyTypes {
@@ -227,48 +228,8 @@ export type GetConsultUserDetailsProps = GetUserDetailsProps & {
 
 export type GetUserDetailResponse = 
 CommonSuccessResponse<
-ConsultUserDetails | null
+ConsultUserDetails
 >;
-
-export type B2BUserDetails = {
-  id: number;
-  name: string;
-  email: string;
-  email_verified_at: Date | null;
-  created_at: Date;
-  updated_at: Date;
-  mobile: string;
-  role: UserRoles;
-  is_active: 1 | 0;
-  api_token: string;
-  refresh_token: string;
-  is_token_active: 1 | 0;
-  profile_picture_url: string | null;
-  stripe_id: string | null;
-  card_brand: string | null;
-  card_last_four: string | null;
-  trial_ends_at: string | null;
-  proof_urls: string | null;
-  address_line1: string | null;
-  address_line2: string | null;
-  city_id: string | null;
-  state: string | null;
-  country_id: string | null;
-  postal_code: string | null;
-  address_type: string; // Should be Enum
-  is_sales_rep: string | null;
-  gender: string; // Should be Enum
-  xero_access_token: string | null;
-  tenant_id: string | null;
-  doctor_type: string | null; // Should be Enum
-  slug: string | null;
-  xero_id: string | null;
-  doctor_preference: string | null;
-  qualities: string | null;
-  company_tag: string;
-  country_code: string; // Should be Enum
-  district: string | null;
-};
 
 export type GetProfileProps = {
   client: AxiosInstance;
@@ -307,7 +268,7 @@ export type Profile = {
   gender: GenderType;
   healthcondition: any[];
   healthtopic: any[];
-  id: string;
+  id: string;       //lead id
   is_aia_downgraded: boolean;
   lead_owner_id: number;
   lead_type: string;
@@ -338,7 +299,136 @@ export enum ConsultUserKeyTypes {
   GetAppointmentCountByStatus = 'GetAppointmentCountByStatus',
 }
 
-export type ConsultUserDetails = {
-  id: string;
-  lead_id: number | null;
-};
+export type ConsultUser = {
+  availabilityStatus
+: string,
+averageRating
+: 
+number
+createdAt
+: 
+Date
+device_os
+: 
+string | null
+dob
+: 
+Date 
+doc_consultation_fee
+: 
+number | null
+doc_speciality_icon
+: 
+string | null
+doc_speciality_id
+: 
+string | null
+doc_speciality_title
+: 
+string | null
+doc_time_slot
+: 
+string | null
+doctorQualification
+: 
+string | null
+doctorRegistrationId
+: 
+string | null
+doctorSignatureUrl
+: 
+string | null
+doctorSpecialties
+: 
+string | null
+doctorType
+: 
+string | null
+doctor_preference
+: 
+string | null
+doctor_prefix
+: 
+string | null
+email
+: 
+string
+gender
+: 
+string | null
+healthData
+: 
+string | null
+id
+: 
+string
+isHealthDataPermissionAccepted
+: 
+boolean
+isUserSync
+: 
+boolean
+isWhatsAppEnabled
+: 
+boolean
+language
+: 
+string | null
+lead_id
+: 
+number
+lead_pkg_id
+: 
+number
+name
+: 
+string
+onlineStatus
+: 
+"OFFLINE"
+phoneNumber
+: 
+"94111555963"
+profilePicture
+: 
+null
+pushNotificationToken
+: 
+null
+quality
+: 
+null
+refreshToken
+: 
+null
+registration_id
+: 
+null
+roleId
+: 
+null
+socket
+: 
+null
+token
+: 
+null
+totalConsultation
+: 
+0
+totalRating
+: 
+0
+totalRatingCount
+: 
+0
+updatedAt
+: 
+"2026-01-12T05:23:04.460Z"
+userId
+: 
+null
+userType
+: 
+"PATIENT"
+}

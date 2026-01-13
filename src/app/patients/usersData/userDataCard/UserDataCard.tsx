@@ -1,18 +1,14 @@
 import clsx from "clsx";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
 
 import { CalendarIcon } from "@/assets/icons/customIcons/CalendarIcon";
 import EmailIcon from "@/assets/icons/email_icon.png";
 import PhoneIcon from "@/assets/icons/phone_icon.png";
 import ThreeDotsIcon from "@/assets/icons/threeDots.svg";
-import { StoreReducerStateTypes } from "@/store/store.types";
-import { allReducerStates } from "@/store/store.utils";
-import { DateFormatOptionType } from "@/types";
 import { PopupMenu } from "@/ui/atoms/popupMenu/PopupMenu";
 import { CardViewActions } from "@/ui/molecules/CardViewActions/CardViewActions";
-import { getFormattedDateAndTime } from "@/utils";
+import { convertISOToDateTime } from "@/utils/timeConvertor.utils";
 
 import { getCSSAndStatusFromStatus } from "../UsersData.utils";
 import { UserDataCardProps } from "./UserDataCard.types";
@@ -27,14 +23,14 @@ const UserDataCard = ({ data, ...props }: UserDataCardProps) => {
     ...props,
   });
   const { css, statusName } = getCSSAndStatusFromStatus(data);
-  const { subCompanies, ...parent } = useSelector(
-    (rootState) =>
-      allReducerStates(rootState as StoreReducerStateTypes).user.companyDetails
-  );
+  // const { subCompanies, ...parent } = useSelector(
+  //   (rootState) =>
+  //     allReducerStates(rootState as StoreReducerStateTypes).user.companyDetails
+  // );
 
-  const packageName =
-    [...subCompanies, parent].find((item) => item.id === data.organization_id)
-      ?.companyName || "";
+  // const packageName =
+  //   [...subCompanies, parent].find((item) => item.id === data.organization_id)
+  //     ?.companyName || "";
 
   return (
     <div className="flex flex-col shadow-sm rounded-lg">
@@ -56,9 +52,9 @@ const UserDataCard = ({ data, ...props }: UserDataCardProps) => {
           <div className="flex flex-row items-center">
             <CalendarIcon className="size-3 me-1.5 mt-0.5" />
             <div className="text-xs text-gray-400 mt-0.5">
-              {getFormattedDateAndTime(
+              {convertISOToDateTime(
                 data.created_at,
-                DateFormatOptionType.MonthDayYear
+                // DateFormatOptionType.MonthDayYear
               )}
             </div>
           </div>
@@ -75,9 +71,9 @@ const UserDataCard = ({ data, ...props }: UserDataCardProps) => {
         </div>
       </div>
       <div className="flex flex-row justify-between bg-gray-50 rounded-b-lg p-2 pl-4">
-        <div className="flex w-auto text-center rounded-2xl text-xs font-medium bg-secondary text-white px-3 py-1">
+        {/* <div className="flex w-auto text-center rounded-2xl text-xs font-medium bg-secondary text-white px-3 py-1">
           {packageName}
-        </div>
+        </div> */}
         <PopupMenu
           componentClassName="bottom-full right-0"
           onClose={() => setOpenMenu(false)}

@@ -20,7 +20,6 @@ import {
   GetAllAdvisersResponse,
   GetConsultationCallLogsProps,
   GetConsultationCallLogsResponse,
-  GetConsultationMessagesProps,
   GetConsultationsProps,
   GetConsultationsResponse,
   GetAllHealthVaultByUserIdProps,

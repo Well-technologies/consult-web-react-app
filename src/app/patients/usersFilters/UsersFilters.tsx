@@ -1,33 +1,27 @@
 import clsx from "clsx";
 import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
 
-import { StoreReducerStateTypes } from "@/store/store.types";
-import { allReducerStates } from "@/store/store.utils";
-import { Option } from "@/ui/atoms/select/Select.types";
 import { FormInput } from "@/ui/molecules/formInput/FormInput";
-import { FormSelect } from "@/ui/molecules/formSelect/FormSelect";
 
 import { UsersFiltersProps } from "./UsersFilters.types";
 
 export const UsersFilters = ({
   register,
   openFilter,
-  control,
 }: UsersFiltersProps) => {
   const { t } = useTranslation();
 
-  const { subCompanies, ...parent } = useSelector(
-    (rootState) =>
-      allReducerStates(rootState as StoreReducerStateTypes).user.companyDetails
-  );
+  // const {   , ...parent } = useSelector(
+  //   (rootState) =>
+  //     allReducerStates(rootState as StoreReducerStateTypes).user
+  // );
 
-  const companies = [parent, ...subCompanies];
+  // const companies = [parent, ...subCompanies];
 
-  const subCompanyOptions: Option[] = companies.map((item) => ({
-    label: item.companyName,
-    value: item.id,
-  }));
+  // const subCompanyOptions: Option[] = companies.map((item) => ({
+  //   label: item.companyName,
+  //   value: item.id,
+  // }));
 
   return (
     <div
@@ -50,7 +44,7 @@ export const UsersFilters = ({
           className=""
           placeholder={t("user.filter.searchText.placeholder")}
         />
-        {!!subCompanies.length ? (
+        {/* {!!subCompanies.length ? (
           <FormSelect
             id="orgId"
             name="org_id"
@@ -59,7 +53,7 @@ export const UsersFilters = ({
             isClearable
             options={subCompanyOptions}
           />
-        ) : null}
+        ) : null} */}
       </form>
     </div>
   );

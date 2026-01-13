@@ -1,19 +1,10 @@
-import { use, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
+import { useEffect } from "react";
+// import { useTranslation } from "react-i18next";
 import { Navigate, useParams } from "react-router-dom";
 
-import {
-  useGetMyPatients,
-} from "../../api/patient/patient";
-import { CommonPaginationParams, ServiceConfigType } from "@/api/index.types";
-import { LeadFamily } from "@/api/user/user.types";
+import { ServiceConfigType } from "@/api/index.types";
 import { useClient } from "@/hooks/useClient/useClient";
 import { AppRoute } from "@/routing/AppRoute.enum";
-import { StoreReducerStateTypes } from "@/store/store.types";
-import { allReducerStates } from "@/store/store.utils";
-import { FormType } from "@/types";
 
 import { PatientDetails } from "./PatientDetails";
 import { useGetConsultUserDetails } from "@/api/user/user";
@@ -23,15 +14,15 @@ import { Breadcrumbs } from "@/ui/molecules/breadcrumbs/Breadcrumbs";
 import { useGetConsultations } from "@/api/consult/consult";
 
 export const PatientDetailsContainer = () => {
-  const client = useClient({serviceConfigType: ServiceConfigType.Core});
+  // const client = useClient({serviceConfigType: ServiceConfigType.Core});
   const consultClient = useClient({serviceConfigType: ServiceConfigType.Consult});
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
 
   const { leadId }  = useParams<LeadIdParamType>();
 
   if (!leadId) return <Navigate to={AppRoute.Patients} replace />;
 
-  const [openFilter, setOpenFilter] = useState(true);
+  // const [openFilter, setOpenFilter] = useState(true);
 
   // const [openUserModal, setOpenUserModal] = useState<{
   //   data: OrganizationUserDetails | null;
@@ -41,33 +32,33 @@ export const PatientDetailsContainer = () => {
   // const [openFamilyDeleteModal, setOpenFamilyDeleteModal] =
   //   useState<LeadFamily | null>(null);
 
-  const { lead_id } = useSelector(
-    (rootState) =>
-      allReducerStates(rootState as StoreReducerStateTypes).user.userDetails
-  );
+  // const { lead_id } = useSelector(
+  //   (rootState) =>
+  //     allReducerStates(rootState as StoreReducerStateTypes).user.userDetails
+  // );
 
-  const patientFrom = useForm<CommonPaginationParams>({
-    shouldUnregister: false,
-    defaultValues: {
-      page: 1,
-      page_size: 10,
-    },
-  });
+  // const patientFrom = useForm<CommonPaginationParams>({
+  //   shouldUnregister: false,
+  //   defaultValues: {
+  //     page: 1,
+  //     page_size: 10,
+  //   },
+  // });
 
-  const openAndCloseFilter = () => {
-    setOpenFilter(!openFilter);
-    if (openFilter) {
-      patientFrom.reset({
-        page: 1,
-        page_size: 10,
-      });
-    }
-  };
+  // const openAndCloseFilter = () => {
+  //   setOpenFilter(!openFilter);
+  //   if (openFilter) {
+  //     patientFrom.reset({
+  //       page: 1,
+  //       page_size: 10,
+  //     });
+  //   }
+  // };
 
   const {
     data: consultPatient,
     isLoading: isLoadingConsultPatient,
-    refetch: refatchConsultPatient,
+    // refetch: refatchConsultPatient,
   } = useGetConsultUserDetails({
     client: consultClient,
     leadId
@@ -80,7 +71,7 @@ export const PatientDetailsContainer = () => {
   } = useGetConsultations({
     client: consultClient,
     params: {
-      patient: consultPatient?.id || '',
+      patient: consultPatient?.payload?.id || '',
       page: 1,
       take: 20
     },
@@ -89,27 +80,23 @@ export const PatientDetailsContainer = () => {
   });
 
   useEffect(()=>{
-    console.log(consultPatient?.id)
+    console.log(consultPatient)
     refatchConsultations();
-  }, [consultPatient?.id])
-
-
-
-
+  }, [consultPatient?.payload?.id])
 
   const navigationOptions = getPatientDetailsBreadCrumbOptions();
 
   return (
     <>
       <Breadcrumbs breadcrumbs={navigationOptions} />
-      {/* <PatientDetails
-      data={consultPatient}
+      <PatientDetails
+      data={consultPatient?.payload}
       isLoading={isLoadingConsultPatient || isLoadingConsultations}
-      consultations={consultations}
-        openAddNewModal={onOpenUserModal}
-        openFilter={openFilter}
-        openAndCloseFilter={openAndCloseFilter}
-      /> */}
+      consultations={consultations?.payload}
+        // openAddNewModal={onOpenUserModal}
+        // openFilter={openFilter}
+        // openAndCloseFilter={openAndCloseFilter}
+      />
       {/* {openUserModal && (
         <AddUserModalContainer
           refetch={refetch}

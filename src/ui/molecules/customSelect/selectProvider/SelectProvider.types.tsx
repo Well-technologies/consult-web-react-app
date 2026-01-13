@@ -1,3 +1,4 @@
+import { JSX } from "react";
 import { ClassNames, GroupOption, Option } from "../CustomSelect.types";
 
 export interface SelectProviderStore {

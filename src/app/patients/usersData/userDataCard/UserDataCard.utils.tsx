@@ -18,6 +18,7 @@ export const getCardViewActionOptions = ({
     },
     {
       onClick: () => openAddNewModal(UserData, FormType.Edit),
+      // onClick: () => openAddNewModal(UserData, FormType.Edit),
       icon: (
         <img
           className="w-5"

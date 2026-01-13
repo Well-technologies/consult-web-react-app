@@ -6,7 +6,6 @@ import { Version } from "@/ui/molecules/Version/Version";
 import { FormInput } from "../../../ui/molecules/formInput/FormInput";
 
 import { LoginProps, LoginTypes } from "./Login.types";
-import { FormPhoneNumberInput } from "@/ui/molecules/formPhoneNumberInput/FormPhoneNumberInput";
 import { Button } from "@/ui/atoms/button/Button";
 import { Divider } from "@/ui/atoms/divider/Divider";
 

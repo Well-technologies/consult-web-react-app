@@ -1,12 +1,12 @@
 import clsx from "clsx";
 
-import { formatNumbersToCurrencyStrings } from "@/utils";
+// import { formatNumbersToCurrencyStrings } from "@/utils";
 
 import { DashboardStatCardProps } from "./DashboardStatCard.types";
 
 export const DashboardStatCard = ({
   name,
-  count,
+  // count,
   isLoadingItem,
 }: DashboardStatCardProps) => {
   return (
@@ -21,7 +21,7 @@ export const DashboardStatCard = ({
       <div className="text-secondary-600 text-md">{name}</div>
       <div className="flex justify-between items-end">
         <div className="text-secondary-600 font-bold text-2xl">
-          {formatNumbersToCurrencyStrings(count)}
+          {/* {formatNumbersToCurrencyStrings(count)} */}
         </div>
         <div />
       </div>

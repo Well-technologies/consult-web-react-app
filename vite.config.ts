@@ -12,6 +12,10 @@ export default defineConfig(({ mode, ...props }) => {
       "process.env": env,
     },
   plugins: [tailwindcss(), react()],
+  build: {
+    outDir: '/build',   // <-- outputs to <root>/build
+    emptyOutDir: true, // <-- clears the folder before each build
+  },
   resolve: {
       alias: {
         "@": path.resolve(__dirname, "src"), // Correctly resolving @ to src

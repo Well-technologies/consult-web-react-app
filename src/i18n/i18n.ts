@@ -4,15 +4,15 @@ import { initReactI18next } from "react-i18next";
 
 // import Backend from "i18next-http-backend";
 import enJson from "./locale/en.json";
-import siJson from "./locale/si.json";
+// import siJson from "./locale/si.json";
 
 const resources = {
   en: {
     translation: enJson,
   },
-  si: {
-    translation: siJson,
-  },
+  // si: {
+  //   translation: siJson,
+  // },
 };
 
 i18n

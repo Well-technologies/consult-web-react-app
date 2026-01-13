@@ -1,7 +1,7 @@
 
 
-import { PatientDetails } from "../../api/patient/patient.types";
-import { UseFormReturn } from "react-hook-form";
+import { PatientDetails, UserDetails } from "../../api/patient/patient.types";
+import { FormType } from "./addPatientModal/AddPatientModal.types";
 
 export enum UserStatus {
   Active = "Active",
@@ -40,6 +40,10 @@ export type PatientsListProps = {
   openAndCloseFilter: () => void;
   openFilter: boolean;
   isLoading?: boolean;
+    openAddNewModal: (
+    data: UserDetails | null,
+    formType: FormType
+  ) => void;
   // isLoadingEmployeeData?: boolean;
   // claimForm: UseFormReturn<ClaimFormInputs, any, GetClaimParams>;
   // transactionForm: UseFormReturn<

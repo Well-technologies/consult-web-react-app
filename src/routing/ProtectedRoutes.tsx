@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { data, Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 
 import { useGetProfile } from "@/api/user/user";
 // import { ClaimReportContainer } from "@/app/claimReport/ClaimReportContainer";
 import { useClient } from "@/hooks/useClient/useClient";
 import { Sidebar } from "@/layout/sidebar/Sidebar";
-import { onProfileFetch, onUserDetailsFetch } from "@/store/userReducer/userReducer";
+import { onProfileFetch } from "@/store/userReducer/userReducer";
 import { LogoLoader } from "@/ui/atoms/logoLoader/LogoLoader";
 // import { setCustomUserId } from "@/utils/Clarity/clarity";
 

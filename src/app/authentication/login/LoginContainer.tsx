@@ -87,9 +87,9 @@ export const LoginContainer = () => {
   });
 
   const {
-    control: controlWithEmail,
-    handleSubmit: handleSubmitWithEmail,
-    formState: { errors: errorsWithEmail },
+    // control: controlWithEmail,
+    // handleSubmit: handleSubmitWithEmail,
+    // formState: { errors: errorsWithEmail },
   } = useForm<EmailLoginFormInputs>({
     resolver: EmailLoginSchema(t),
     mode: "onBlur",
@@ -99,7 +99,7 @@ export const LoginContainer = () => {
   const {
     control: controlWithPhone,
     handleSubmit: handleSubmitWithPhone,
-    formState: { errors: errorsWithPhone },
+    // formState: { errors: errorsWithPhone },
   } = useForm<PhoneLoginFormInputs>({
     // resolver: PhoneLoginSchema(t),
     mode: "onBlur",

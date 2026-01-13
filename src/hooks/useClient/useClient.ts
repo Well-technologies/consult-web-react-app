@@ -8,7 +8,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { getDefaultEnvironmentByType } from "@/config/config.utils";
 import { EnvironmentType } from "@/config/config.types";
 
-export const useClient = ({serviceConfigType, clientType}: UseClientProps) => {
+export const useClient = ({serviceConfigType}: UseClientProps) => {
 const queryClient = useQueryClient();
   const token = useCustomSelector(rootState => rootState.auth.token);
   const dispatch = useDispatch();
@@ -16,7 +16,7 @@ const queryClient = useQueryClient();
   const axiosInstance = createClient({
     previousToken: token,
     dispatch,
-    type: clientType || ClientType.JSON,
+    type: ClientType.JSON,
     serviceConfig: getDefaultEnvironmentByType(EnvironmentType.Staging),
     serviceConfigType: serviceConfigType || ServiceConfigType.Core,
     queryClient,

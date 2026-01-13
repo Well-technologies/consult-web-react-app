@@ -7,23 +7,21 @@ import {
   UseFormWatch,
 } from "react-hook-form";
 
-import {
-  CreateEmployeeBody,
-  OrganizationUserDetails,
-} from "@/api/employee/employee.types";
 import { Schema } from "@/types";
 import { ModalProps } from "@/ui/molecules/modal/Modal.types";
+import { CreatePatientBody, UserDetails } from "@/api/patient/patient.types";
 
-export type AddUserModalContainerProps = Pick<
+export type AddPatientModalContainerProps = Pick<
   ModalProps,
   "onClose" | "open"
 > & {
   refetch: () => void;
-  data: OrganizationUserDetails | null;
+  data: UserDetails | null;
   formType: FormType;
+  myPatients?: UserDetails[]
 };
 
-export type AddUserModalProps = Omit<AddUserModalContainerProps, "refetch"> & {
+export type AddPatientModalProps = Omit<AddPatientModalContainerProps, "refetch"> & {
   register: UseFormRegister<AddUserFormInputs>;
   control: Control<AddUserFormInputs, unknown>;
   errors: FieldErrors<AddUserFormInputs>;
@@ -31,6 +29,9 @@ export type AddUserModalProps = Omit<AddUserModalContainerProps, "refetch"> & {
   watch: UseFormWatch<AddUserFormInputs>;
   onSubmit: (e?: BaseSyntheticEvent) => Promise<void>;
   setValue: UseFormSetValue<AddUserFormInputs>;
+  isMyPatient: boolean;
+  isValidForm: boolean;
+  isRegisteredPatient: boolean | undefined;
 };
 
 export enum FormType {
@@ -39,9 +40,6 @@ export enum FormType {
   View = "View",
 }
 
-export type AddUserFormInputs = CreateEmployeeBody & {
-  reEnterBankAccountNo: string;
-  hasBankDetails: boolean;
-};
+export type AddUserFormInputs = CreatePatientBody;
 
 export type FormSchema = Schema<AddUserFormInputs>;
