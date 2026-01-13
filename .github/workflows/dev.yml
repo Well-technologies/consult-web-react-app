@@ -20,7 +20,7 @@ jobs:
     - name: npm install, build, and test
       run: |
         npm install
-        envsubst "`printf '${%s} ' $(sh -c "env|cut -d'=' -f1")`" < ./src/environments/environment.dist > ./src/environments/environment.prod.ts
+        envsubst "`printf '${%s} ' $(sh -c "env|cut -d'=' -f1")`" < ./.env.example > ./.env
         echo "$(cat ./src/environments/environment.prod.ts)"
         npm run build
       env:
