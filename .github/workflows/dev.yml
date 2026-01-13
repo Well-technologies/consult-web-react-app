@@ -1,0 +1,44 @@
+name: consult-web dev
+
+on:
+  push:
+    branches:
+      - pipeline
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use Node.js 12.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.x
+
+    - name: npm install, build, and test
+      run: |
+        npm install
+        envsubst "`printf '${%s} ' $(sh -c "env|cut -d'=' -f1")`" < ./src/environments/environment.dist > ./src/environments/environment.prod.ts
+        echo "$(cat ./src/environments/environment.prod.ts)"
+        npm run build
+      env:
+        CI: false
+        API_ENDPOINT: https://api-dev.flash.health/consult/api/v1/
+        SOCKET_ENDPOINT: https://api-dev.flash.health/init
+        SOCKET_ROOM_ENDPOINT: https://api-dev.flash.health/room
+        FLASH_ADMIN_API_ENDPOINT: 'https://admin-api-staging.flash.health/api/v1/'
+        STUN_SERVER_URL: stun:stun-staging.flash.health
+        TURN_SERVER_URL: turn:turn-staging.flash.health
+        TURN_SERVER_USERNAME: ${{ secrets.STG_TURN_SERVER_USERNAME }}
+        TURN_SERVER_PASSWORD: ${{ secrets.STG_TURN_SERVER_PASSWORD }}
+
+    - name: Upload statics & Cloudfront CDN cache clear
+      run: |
+        aws s3 sync ./dist/vex s3://consult-dev.flash.health
+        aws cloudfront create-invalidation --distribution-id E1WHWUHB7C12MJ --paths '/*'
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_DEFAULT_REGION: 'ap-south-1'
