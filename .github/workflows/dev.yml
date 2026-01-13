@@ -24,15 +24,20 @@ jobs:
         echo "$(cat ./src/environments/environment.prod.ts)"
         npm run build
       env:
-        CI: false
-        API_ENDPOINT: https://api-dev.flash.health/consult/api/v1/
-        SOCKET_ENDPOINT: https://api-dev.flash.health/init
-        SOCKET_ROOM_ENDPOINT: https://api-dev.flash.health/room
-        FLASH_ADMIN_API_ENDPOINT: 'https://admin-api-staging.flash.health/api/v1/'
-        STUN_SERVER_URL: stun:stun-staging.flash.health
-        TURN_SERVER_URL: turn:turn-staging.flash.health
-        TURN_SERVER_USERNAME: ${{ secrets.STG_TURN_SERVER_USERNAME }}
-        TURN_SERVER_PASSWORD: ${{ secrets.STG_TURN_SERVER_PASSWORD }}
+        REACT_APP_ENV: $REACT_APP_ENV
+        REACT_APP_ADMIN_URL: $REACT_APP_ADMIN_URL
+        REACT_FLASH_ADMIN_API_ENDPOINT: $REACT_FLASH_ADMIN_API_ENDPOINT
+        REACT_API_ENDPOINT: $REACT_API_ENDPOINT
+        REACT_SOCKET_ENDPOINT: $REACT_SOCKET_ENDPOINT
+        REACT_CYBER_SOURCE_ENDPOINT: $REACT_CYBER_SOURCE_ENDPOINT
+        REACT_SOCKET_ROOM_ENDPOINT: $REACT_SOCKET_ROOM_ENDPOINT
+        REACT_WHATSAPP_FIRST_ADVICE_NO: $REACT_WHATSAPP_FIRST_ADVICE_NO
+        REACT_CONTACT_SUPPORT_EMAIL: $REACT_CONTACT_SUPPORT_EMAIL
+        # REACT_GOOGLE_MAPS_API_KEY: $REACT_GOOGLE_MAPS_API_KEY
+        # REACT_GOOGLE_MAPS_API_URL: $REACT_GOOGLE_MAPS_API_URL
+        REACT_SPECIALTIES_FOR_UA_USERS: $REACT_SPECIALTIES_FOR_UA_USERS
+        REACT_PHYSICAL_APPOINTMENT_DEFAULT_ADDRESS: $REACT_PHYSICAL_APPOINTMENT_DEFAULT_ADDRESS
+
 
     - name: Upload statics & Cloudfront CDN cache clear
       run: |
