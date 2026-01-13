@@ -41,7 +41,7 @@ jobs:
 
     - name: Upload statics & Cloudfront CDN cache clear
       run: |
-        aws s3 sync ./buid s3://consult-dev.flash.health
+        aws s3 sync ./build s3://consult-dev.flash.health
         aws cloudfront create-invalidation --distribution-id E1WHWUHB7C12MJ --paths '/*'
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
