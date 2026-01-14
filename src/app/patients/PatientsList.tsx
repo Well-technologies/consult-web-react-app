@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { PatientsListProps } from "./PatientsList.types";
 import { UsersData } from "./usersData/UsersData";
 import { FormType } from "./addPatientModal/AddPatientModal.types";
+import { UsersFilters } from "./usersFilters/UsersFilters";
 
 export const PatientList = ({
   openAddNewModal,
@@ -12,6 +13,8 @@ export const PatientList = ({
   openFilter,
   isLoading,
   openAndCloseFilter,
+  searchText,
+  setSearchText,
   ...props
 }: PatientsListProps) => {
   const { t } = useTranslation();
@@ -51,7 +54,7 @@ export const PatientList = ({
             </button>
           </div>
         </div>
-        {/* <UsersFilters openFilter={openFilter} {...props} /> */}
+        <UsersFilters openFilter={openFilter} {...props} searchText={searchText} setSearchText={setSearchText}/>
         <UsersData 
         data={data}
         isLoading={isLoading}

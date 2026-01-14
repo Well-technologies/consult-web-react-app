@@ -63,7 +63,7 @@ export const Consultations = ({
   }
 
   if (!data?.length) {
-    return <NotFound text={t("claim.table.notFound.text")} />;
+    return <NotFound text={t("consultation.table.notFound.text")} />;
   }
 
 

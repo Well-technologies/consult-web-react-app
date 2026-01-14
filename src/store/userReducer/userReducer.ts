@@ -28,7 +28,7 @@ export const userInitialState: UserState = {
     gender: GenderType.Other,
     healthcondition: [],
     healthtopic: [],
-    id: "1654",
+    id: 0,
     is_aia_downgraded: false,
     lead_owner_id: 0,
     lead_type: "",

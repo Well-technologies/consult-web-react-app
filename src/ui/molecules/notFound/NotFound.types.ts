@@ -4,4 +4,5 @@ export type NotFoundProps = {
   imageClassName?: string;
   textClassName?: string;
   image?: string;
+  children?: React.ReactNode;
 };

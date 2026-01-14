@@ -10,6 +10,7 @@ export const NotFound = ({
   image,
   imageClassName,
   textClassName,
+  children,
 }: NotFoundProps) => {
   return (
     <div
@@ -25,6 +26,9 @@ export const NotFound = ({
       />
       <p className={clsx("text-lg font-bold text-secondary", textClassName)}>
         {text}
+      </p>
+      <p className={clsx("text-lg font-bold text-secondary", textClassName)}>
+        {children}
       </p>
     </div>
   );

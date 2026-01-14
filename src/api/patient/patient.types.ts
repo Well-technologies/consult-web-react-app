@@ -28,7 +28,7 @@ export type SearchPatientsProps = {
 };
 
 export type GetPatientsListParams = CommonPaginationParams & {
-  doctor_id: string;
+  doctor_id: number;
 };
 
 export type SearchPatientParamsProps = {
@@ -54,7 +54,9 @@ export type CreatePatientBody = {
   mobile_no: string;
   email?: string;
   gender: string;
-  dob: string
+  dob: string;
+  consultation_mode_id? : number;
+  doctor_id?: number
 };
 
 export type CreatePatientResponse = CommonSuccessResponse<UserDetails>;
@@ -65,13 +67,7 @@ export type UserDetails = Pick<
   | "name"
   | "mobile_no"
   | "email"
-  | "comments"
-  | "leads_status"
-  | "channel"
-  | "source"
-  | "organization_id"
-  | "updated_at"
-  | "created_at"
+  | "date_of_birth"
 >;
 
 export type UpdatePatientProps = {
@@ -90,7 +86,9 @@ export type GetPatientDetailsProps = Pick<GetPatientsProps, "client"> & {
 
 export type GetPatientDetailsResponse = CommonSuccessResponse<PatientDetails>;
 
-export type PatientDetails = Lead
+export type PatientDetails = Lead & {
+  isDisabled?: boolean;
+};
 export type PatientDetailsWalletData = {
   remainingCredit: number;
 };

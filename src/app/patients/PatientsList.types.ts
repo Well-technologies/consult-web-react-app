@@ -38,6 +38,8 @@ export type PatientsListProps = {
   // transactionsData?: GetLeadTransactionsResponse;
   data?: PatientDetails[] | undefined;
   openAndCloseFilter: () => void;
+  searchText: string;
+  setSearchText: (text: string) => void;
   openFilter: boolean;
   isLoading?: boolean;
     openAddNewModal: (

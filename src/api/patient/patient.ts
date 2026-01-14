@@ -33,7 +33,7 @@ export const useGetMyPatients = ({ client, params }: GetPatientsProps) =>
 
 const createPatient = ({ client, body }: CreatePatientProps) =>
   client
-    .post<CreatePatientResponse>("/organizationwiseleadscreate", body)
+    .post<CreatePatientResponse>("/third-party-register", body)
     .then(({ data }) => data);
 
 export const useCreatePatient = (
@@ -60,13 +60,12 @@ export const useSearchPatients = ({ client, params, enabled }: SearchPatientsPro
     queryFn: () => searchPatients({ client, params, enabled }),
     placeholderData: keepPreviousData,
     enabled
-    
   });
 
 
 const updatePatient = ({ client, body, userId }: UpdatePatientProps) =>
   client
-    .post<UpdatePatientResponse>(`/organizationwiseleadsedit/${userId}`, body)
+    .post<UpdatePatientResponse>(`/third-party-register/${userId}`, body)
     .then(({ data }) => data);
 
 export const useUpdatePatient = (

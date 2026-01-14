@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Navigate, useParams } from "react-router-dom";
 
 import {
   useGetMyPatients,
+  useSearchPatients,
 } from "../../api/patient/patient";
 import { CommonPaginationParams, ServiceConfigType } from "@/api/index.types";
 import { useClient } from "@/hooks/useClient/useClient";
@@ -11,8 +12,12 @@ import { AppRoute } from "@/routing/AppRoute.enum";
 import { FormType } from "@/types";
 
 import { PatientList } from "./PatientsList";
-import { UserDetails } from "@/api/patient/patient.types";
+import { PatientDetails, UserDetails } from "@/api/patient/patient.types";
 import { AddPatientModalContainer } from "./addPatientModal/AddPatientModalContainer";
+import { StoreReducerStateTypes } from "@/store/store.types";
+import { allReducerStates } from "@/store/store.utils";
+import { useSelector } from "react-redux";
+import { sortByDate } from "./PatientsList.utils";
 
 export const PatientsListContainer = () => {
   const client = useClient({serviceConfigType: ServiceConfigType.Core});
@@ -23,6 +28,7 @@ export const PatientsListContainer = () => {
   if (!leadId) return <Navigate to={AppRoute.Patients} replace />;
 
   const [openFilter, setOpenFilter] = useState(true);
+  const [searchText, setSearchText] = useState("");
 
   const [openUserModal, setOpenUserModal] = useState<{
     data: UserDetails | null;
@@ -32,10 +38,10 @@ export const PatientsListContainer = () => {
   // const [openFamilyDeleteModal, setOpenFamilyDeleteModal] =
   //   useState<LeadFamily | null>(null);
 
-  // const { lead_id } = useSelector(
-  //   (rootState) =>
-  //     allReducerStates(rootState as StoreReducerStateTypes).user.userDetails
-  // );
+  const { userDetail: {id: doctor_id} } = useSelector(
+    (rootState) =>
+      allReducerStates(rootState as StoreReducerStateTypes).user.profile
+  );
 
   const patientFrom = useForm<CommonPaginationParams>({
     shouldUnregister: false,
@@ -66,31 +72,54 @@ export const PatientsListContainer = () => {
   };
 
   const {
+    data: searchPatientsData,
+    isLoading: isLoadingSearchPatientsData,
+    refetch: refetchSearchPatientsData,
+  } = useSearchPatients({
+    client,
+    params: {
+      patient: searchText
+    },
+    enabled: false
+  });
+
+  const {
     data: patientsData,
     isLoading: isLoadingPatientsData,
     refetch,
   } = useGetMyPatients({
     client,
     params: {
-      doctor_id: '317',
+      doctor_id,
       page: 1,
-      page_size: 10
+      page_size: 10,
+      // search: searchText
     }
   });
 
+  const [filteredPatientsData, setFilteredPatientsData] = useState<PatientDetails[]>([]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      refetchSearchPatientsData();
+      setFilteredPatientsData(searchPatientsData?.data?.map((searched_patient) => {
+        if(patientsData?.data.map((patient) => patient.id).includes(searched_patient.id)) {
+          return {
+            ...searched_patient,
+            isDisabled: false,
+          };
+        } else{
+        return {
+          ...searched_patient,
+          isDisabled: true,
+        };}
+      }) || []);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchText]);
+
+
   
-  // const {
-  //   data: patientsData,
-  //   isLoading: isLoadingPatientsData,
-  //   refetch,
-  // } = useSearchPatients({
-  //   client,
-  //   params: {
-  //     patient: 
-  //   }
-  // });
-
-
 
   // const navigationOptions = getPatientDetailsBreadCrumbOptions();
 
@@ -98,11 +127,14 @@ export const PatientsListContainer = () => {
     <>
       {/* <Breadcrumbs breadcrumbs={navigationOptions} /> */}
       <PatientList
-      data={patientsData?.data?.sort((a, b) => (new Date(b.created_at).getTime()) - (new Date( a.created_at).getTime())) || []}
-      isLoading={isLoadingPatientsData}
+      data={sortByDate(searchText ? filteredPatientsData || [] : patientsData?.data || [], false, 'created_at')}
+      isLoading={isLoadingPatientsData || isLoadingSearchPatientsData}
         openAddNewModal={onOpenUserModal}
         openFilter={openFilter}
+        searchText={searchText}
+        setSearchText={setSearchText}
         openAndCloseFilter={openAndCloseFilter}
+        
       />
       {openUserModal && (
         <AddPatientModalContainer

@@ -268,7 +268,7 @@ export type Profile = {
   gender: GenderType;
   healthcondition: any[];
   healthtopic: any[];
-  id: string;       //lead id
+  id: number;       //lead id
   is_aia_downgraded: boolean;
   lead_owner_id: number;
   lead_type: string;
@@ -290,7 +290,7 @@ export type Profile = {
   source: number;
   trial_used: string;
   updated_at: string;
-  userDetail: string;
+  userDetail: any;
   store_id: string;
 };
 

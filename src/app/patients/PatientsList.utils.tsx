@@ -2,9 +2,7 @@ import clsx from "clsx";
 import { useTranslation } from "react-i18next";
 
 import {
-  ClaimFeatures,
-  FeatureCategoryId,
-  LeadCataloguePackage,
+  Lead,
 } from "@/api/user/user.types";
 import { AppRoute } from "@/routing/AppRoute.enum";
 import { Breadcrumb } from "@/ui/molecules/breadcrumbs/Breadcrumbs.types";
@@ -39,27 +37,15 @@ export const getPatientDetailsBreadCrumbOptions = (): Breadcrumb[] => {
   ];
 };
 
-export const getClaimFeatures = (
-  packageIds: number[],
-  leadCataloguePackages: LeadCataloguePackage[]
-): ClaimFeatures | null => {
-  const activeCataloguePackage = leadCataloguePackages.filter((item) =>
-    packageIds.includes(item.package_id)
-  );
-  if (!activeCataloguePackage.length) return null;
-  const cataloguePackage = activeCataloguePackage[0];
-  if (!cataloguePackage?.package_end_date) return null;
-  const claimPackage = cataloguePackage.lead_catalogue_package_feature.find(
-    (item) => item.category_id === FeatureCategoryId.Claim
-  );
+export const sortByDate = <K extends keyof Lead>(
+  data: Lead[],
+  isAsc: boolean,
+  param: K
+) => {
+  return [...data].sort((a, b) => {
+    const timeA = new Date(a[param] as string | Date).getTime();
+    const timeB = new Date(b[param] as string | Date).getTime();
 
-  if (!claimPackage || !claimPackage?.feature_value) return null;
-
-  const claimPackageFeatureValues: ClaimFeatures[] = JSON.parse(
-    claimPackage.feature_value
-  );
-
-  if (!claimPackageFeatureValues.length) return null;
-
-  return claimPackageFeatureValues[0];
+    return isAsc ? timeA - timeB : timeB - timeA;
+  });
 };

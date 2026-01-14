@@ -30,6 +30,7 @@ export type AddPatientModalProps = Omit<AddPatientModalContainerProps, "refetch"
   onSubmit: (e?: BaseSyntheticEvent) => Promise<void>;
   setValue: UseFormSetValue<AddUserFormInputs>;
   isMyPatient: boolean;
+  isVerifyOtpDivEnabled: boolean;
   isValidForm: boolean;
   isRegisteredPatient: boolean | undefined;
 };

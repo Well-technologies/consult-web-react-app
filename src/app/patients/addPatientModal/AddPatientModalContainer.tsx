@@ -13,6 +13,9 @@ import { AddPatientModal } from "./AddPatientModal";
 import { FormType } from "@/types";
 import { AddPatientModalContainerProps, AddUserFormInputs } from "./AddPatientModal.types";
 import { AddUserSchema } from "./AddPatientModal.utils";
+import { useSelector } from "react-redux";
+import { StoreReducerStateTypes } from "@/store/store.types";
+import { allReducerStates } from "@/store/store.utils";
 
 export const AddPatientModalContainer = ({
   onClose,
@@ -24,8 +27,13 @@ export const AddPatientModalContainer = ({
 }: AddPatientModalContainerProps) => {
   const { t } = useTranslation();
   const client = useClient({});
+  const { userDetail: {id: doctor_id} } = useSelector(
+    (rootState) =>
+      allReducerStates(rootState as StoreReducerStateTypes).user.profile
+  );
   const [isMyPatient, setIsMyPatient] = useState<boolean>(false)
   const [isRegisteredPatient, setIsRegisteredPatient] = useState<boolean | undefined>(undefined)
+  const [isVerifyOtpDivEnabled, setVerifyOtpDivEnabled] = useState(false);
 
   const {
     register,
@@ -45,9 +53,9 @@ export const AddPatientModalContainer = ({
     },
   });
 
-  const {mobile_no: search_text} = watch();
+  const {mobile_no: search_text_mobile, name: search_text_name} = watch();
 
-  console.log('search_text', search_text)
+  console.log('search_text', search_text_mobile, search_text_name)
 
   // useEffect(() => {
   //   const isFieldsAreNotEmpty = getFieldsAreNotEmpty([
@@ -107,9 +115,9 @@ export const AddPatientModalContainer = ({
     } = useSearchPatients({
       client,
       params: {
-        patient: search_text,
+        patient: search_text_mobile,
       },
-      enabled: !!search_text && search_text.length === 9
+      enabled: !!search_text_mobile && search_text_mobile.length === 9
     });
 
   useEffect(() => {
@@ -123,26 +131,52 @@ export const AddPatientModalContainer = ({
     setValue('dob', patient.date_of_birth)
     setValue('email', patient.email)
     setValue('gender', "")
-}   
-  }, [searchedPatients?.data])
+    } else {
+      console.log('not found')
+      setVerifyOtpDivEnabled(true)
+    }
+  }, [searchedPatients?.data, searchedPatients?.success])
 
   useEffect(() => {
-if(search_text?.length !== 9) {
+if(search_text_mobile?.length !== 9) {
   console.log(searchedPatientsError)
     setIsRegisteredPatient(undefined)
 
   setValue('name', "")
     setValue('dob', "")
     setValue('email', "")
+      setVerifyOtpDivEnabled(false)
+  
 }
 
-  }, [search_text])
+  }, [search_text_mobile])
 
 
   const {
-    // mutateAsync: mutateOnUpdateEmployee,
-    isPending: isPendingUpdateEmployee,
+    mutateAsync: mutateOnUpdatePatient,
+    isPending: isPendingCreatePatient,
   } = useUpdatePatient({
+    onSuccess: () => {
+      refetch();
+      reset({
+        name: "",
+        gender: "",
+        email: "",
+        mobile_no: "",
+        dob: "",
+      });
+      onClose();
+      toast.success(t("user.alert.update.success"));
+    },
+    onError: () => {
+      toast.error(t("global.alert.common.error"));
+    },
+  });
+  
+  const {
+    mutateAsync: mutateOnCreatePatient,
+    isPending: isPendingUpdatePatient,
+  } = useCreatePatient({
     onSuccess: () => {
       refetch();
       reset({
@@ -162,24 +196,26 @@ if(search_text?.length !== 9) {
 
   const handleOnSubmit = async (values: AddUserFormInputs) => {
     console.log('values', values)
-    if (formType === FormType.Add) {
-      // await mutateOnCreateEmployee({
-      //   client,
-      //   body: {
-      //     // ...omit(values, ["reEnterBankAccountNo", "hasBankDetails"]),
-      //     mobile_no: `+94${values.mobile_no}`,
-      //   },
-      // });
+    if (formType === FormType.Add && !isRegisteredPatient) {
+      await mutateOnCreatePatient({
+        client,
+        body: {
+          ...values,
+          doctor_id,
+          consultation_mode_id: 4,
+          mobile_no: `+94${values.mobile_no}`,
+        },
+      });
     }
-    if (formType === FormType.Edit && data) {
-      // await mutateOnUpdateEmployee({
-      //   client,
-      //   userId: data.id,
-      //   body: {
-      //     // ...omit(values, ["reEnterBankAccountNo", "hasBankDetails"]),
-      //     mobile_no: `+94${values.mobile_no}`,
-      //   },
-      // });
+    if ((formType === FormType.Edit && searchedPatients) || (isRegisteredPatient && searchedPatients?.data)) {
+      await mutateOnUpdatePatient({
+        client,
+        userId: isRegisteredPatient ? searchedPatients.data[0].id : data ? data.id : '',
+        body: {
+          ...values,
+          mobile_no: `+94${values.mobile_no}`,
+        },
+      });
     }
   };
 
@@ -189,7 +225,7 @@ if(search_text?.length !== 9) {
       formType={formType}
       data={!!searchedPatients?.data && searchedPatients?.data[0] || data}
       control={control}
-      isLoading={isPending || isPendingUpdateEmployee}
+      isLoading={isPending || isPendingCreatePatient || isPendingUpdatePatient}
       errors={errors}
       watch={watch}
       register={register}
@@ -198,6 +234,7 @@ if(search_text?.length !== 9) {
       isMyPatient={isMyPatient}
       isRegisteredPatient={isRegisteredPatient}
       isValidForm={isValid}
+      isVerifyOtpDivEnabled={isVerifyOtpDivEnabled}
       {...props}
     />
   );

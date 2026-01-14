@@ -39,11 +39,9 @@ export const AddUserSchema = (translate: TFunction<"translation", undefined>) =>
         "string.empty": translate("global.errors.required"),
         "any.required": translate("global.errors.required"),
       },
-      email: {
-        // "string.email": translate("global.errors.email"),
-        // "string.empty": translate("global.errors.required"),
-        // "any.required": translate("global.errors.required"),
-      },
+      email: {},
+      consultation_mode_id: {},
+      doctor_id: {},
       mobile_no: {
         "string.empty": translate("global.errors.required"),
         "any.required": translate("global.errors.required"),
