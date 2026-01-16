@@ -1,3 +1,0 @@
-import { TFunction } from "i18next";
-export declare const EmailLoginSchema: (translate: TFunction<"translation", undefined>) => <TFieldValues extends import("react-hook-form").FieldValues, TContext>(values: TFieldValues, context: TContext | undefined, options: import("react-hook-form").ResolverOptions<TFieldValues>) => Promise<import("react-hook-form").ResolverResult<TFieldValues>>;
-export declare const PhoneLoginSchema: (translate: TFunction<"translation", undefined>) => <TFieldValues extends import("react-hook-form").FieldValues, TContext>(values: TFieldValues, context: TContext | undefined, options: import("react-hook-form").ResolverOptions<TFieldValues>) => Promise<import("react-hook-form").ResolverResult<TFieldValues>>;

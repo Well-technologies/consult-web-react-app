@@ -5,7 +5,7 @@ export const Days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 export const generateYearGroups = (
   startYear: number,
   groupSize: number,
-  minYear: number
+  minYear: number,
 ) => {
   const yearGroups = [];
 

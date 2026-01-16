@@ -39,7 +39,7 @@ export const PatientList = ({
                 src="https://img.icons8.com/ios/50/horizontal-settings-mixer--v1.png"
                 alt="horizontal-settings-mixer--v1"
               />
-              {t("claim.filter.button")}
+              {t("global.text.filter")}
             </button>
             <button
               onClick={() => openAddNewModal(null, FormType.Add)}

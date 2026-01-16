@@ -22,7 +22,10 @@ export default function DatePicker({
   type = DatePickerType.DateRange,
   disabled,
   isHiddenActions,
+  pastOnly,
 }: DatePickerProps) {
+
+
   const { t } = useTranslation();
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
   const [isSelectingMonth, setIsSelectingMonth] = useState(false);

@@ -9,14 +9,14 @@ import {
 
 import { Schema } from "@/types";
 import { ModalProps } from "@/ui/molecules/modal/Modal.types";
-import { CreatePatientBody, UserDetails } from "@/api/patient/patient.types";
+import { CreatePatientBody, PatientDetails, UserDetails } from "@/api/patient/patient.types";
 
 export type AddPatientModalContainerProps = Pick<
   ModalProps,
   "onClose" | "open"
 > & {
   refetch: () => void;
-  data: UserDetails | null;
+  data: PatientDetails | null;
   formType: FormType;
   myPatients?: UserDetails[]
 };

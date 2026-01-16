@@ -12,6 +12,20 @@ const OtpInput = React.forwardRef<HTMLInputElement, OtpInputProps>(
   ({ value = "", onChange, disabled = false, className }, ref) => {
     const inputRefs = React.useRef<(HTMLInputElement | null)[]>([null, null, null, null]);
     const digits = value.split("").slice(0, 4);
+    const [focusIndex, setFocusIndex] = React.useState<number | null>(null);
+
+    React.useEffect(() => {
+      if (!disabled && value.length === 0) {
+        setFocusIndex(0);
+      }
+    }, [disabled, value.length]);
+
+    React.useEffect(() => {
+      if (focusIndex !== null) {
+        inputRefs.current[focusIndex]?.focus();
+      }
+    }, [focusIndex]);
+
 
     const handleChange = (index: number, inputValue: string) => {
       const numericValue = inputValue.replace(/\D/g, "");
@@ -27,7 +41,7 @@ const OtpInput = React.forwardRef<HTMLInputElement, OtpInputProps>(
       onChange(newValue);
 
       if (numericValue && index < 3) {
-        inputRefs.current[index + 1]?.focus();
+        setFocusIndex(index + 1);
       }
     };
 
@@ -43,14 +57,14 @@ const OtpInput = React.forwardRef<HTMLInputElement, OtpInputProps>(
           newDigits[index] = "";
         } else if (index > 0) {
           newDigits[index - 1] = "";
-          inputRefs.current[index - 1]?.focus();
+          setFocusIndex(index - 1);
         }
 
         onChange(newDigits.join(""));
       } else if (e.key === "ArrowLeft" && index > 0) {
-        inputRefs.current[index - 1]?.focus();
+        setFocusIndex(index - 1);
       } else if (e.key === "ArrowRight" && index < 3) {
-        inputRefs.current[index + 1]?.focus();
+        setFocusIndex(index + 1);
       }
     };
 
@@ -64,7 +78,7 @@ const OtpInput = React.forwardRef<HTMLInputElement, OtpInputProps>(
         if (numericData.length === 4) {
           inputRefs.current[3]?.blur();
         } else {
-          inputRefs.current[numericData.length]?.focus();
+          setFocusIndex(numericData.length);
         }
       }
     };
@@ -84,7 +98,6 @@ const OtpInput = React.forwardRef<HTMLInputElement, OtpInputProps>(
                 }
               }
             }}
-            autoFocus={index === 0}
             type="text"
             inputMode="numeric"
             maxLength={1}

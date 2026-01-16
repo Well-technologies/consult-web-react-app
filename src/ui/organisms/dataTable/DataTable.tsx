@@ -31,6 +31,7 @@ export const DataTable = <TData extends RowData>({
     debugTable: true,
     debugHeaders: true,
     debugColumns: false,
+    enableHiding: true,
     ...props,
   });
 

@@ -1,11 +1,9 @@
 import clsx from "clsx";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
 
 import RightArrowIcon from "@/assets/icons/arrow_down_icon.png";
-import { StoreReducerStateTypes } from "@/store/store.types";
-import { allReducerStates } from "@/store/store.utils";
+import CheckIcon from "@/assets/icons/check.png";
 import { FormLabel } from "@/ui/atoms/formLabel/FormLabel";
 import { Input } from "@/ui/atoms/input/input";
 import { FormInput } from "@/ui/molecules/formInput/FormInput";
@@ -17,6 +15,7 @@ import { getConfirmButtonText, getModalTitle, getIsConfirmButtonHide, getCancelB
 import { DatePickerType } from "@/ui/atoms/datePicker/DatePicker.types";
 import { FormDatePicker } from "@/ui/molecules/formDatePicker/FormDatePicker";
 import { cn } from "@/lib/utils";
+import { OtpVerificationContainer } from "../otpVerification/OtpVerificationContainer";
 
 
 export const AddPatientModal = ({
@@ -25,6 +24,7 @@ export const AddPatientModal = ({
   errors,
   formType,
   isLoading,
+  isValidForm,
   onClose,
   onSubmit,
   open,
@@ -34,20 +34,11 @@ export const AddPatientModal = ({
   isMyPatient,
 }: AddPatientModalProps) => {
   const { t } = useTranslation();
-  console.log('data', data)
+  const {mobile_no} = watch();
 
-  const [isVerifyOtp, setVerifyOtp] = useState(false);
-  const [isVerifyOtpDivDisabled, setVerifyOtpDivDisabled] = useState(isMyPatient);
-  // const [isFieldDisabled, setIsFieldDisabled] = useState(false)
+  const [isVerifyOtp, setVerifyOtp] = useState(!isMyPatient);
+  const [isOtpVerified, setOtpVerified] = useState(isMyPatient);
 
-  const {  } = useSelector(
-    (rootState) =>
-      allReducerStates(rootState as StoreReducerStateTypes).user.userDetails
-  );
-
-  useEffect(()=> {
-    setVerifyOtpDivDisabled(isMyPatient)
-  }, [])
 
   return (
     <Modal
@@ -61,6 +52,7 @@ export const AddPatientModal = ({
       cancelButtonText={getCancelButtonText(formType)}
       isCloseOnOutsideClickDisabled
       isCloseIcon
+      disabled={!isOtpVerified || !isValidForm}
     >
       <form className="space-y-4 md:space-y-6" action="#">
         <div className="flex flex-col gap-4">
@@ -112,7 +104,6 @@ export const AddPatientModal = ({
               startedDateName="dob"
               endedDateName=""
               type={DatePickerType.SingleDate}
-              // disabled={getIsDisabledFormItem(formType, "dob")}
               register={register}
               label={t("user.form.dob.label")}
               id="dob"
@@ -157,35 +148,35 @@ export const AddPatientModal = ({
         </div>
         <div className="flex flex-col gap-0 ">
           <div
-            className={cn("font-semibold relative cursor-pointer text-md bg-secondary-50 rounded-t-md p-2 px-4", (isVerifyOtpDivDisabled)  ? "pointer-events-none opacity-30" :  "pointer-events-auto")}
+            className={cn("font-semibold relative cursor-pointer text-md bg-secondary-50 rounded-t-md p-2 px-4", (isMyPatient)  ? "pointer-events-none opacity-30" :  "pointer-events-auto")}
             onClick={() => {
               setVerifyOtp(!isVerifyOtp);
             }}
-            
           >
             {t("user.form.verify_otp.title")}
             <div className="absolute top-2 rounded-full right-2 p-2  bg-secondary-50 ">
-              <img
+              {isOtpVerified ? <img
+                src={CheckIcon}
+                className="w-4 aspect-square transition-all duration-300"
+              /> : <img
                 src={RightArrowIcon}
                 className={clsx(
                   "w-3 aspect-square transition-all duration-300",
                   isVerifyOtp ? "rotate-180" : "rotate-0"
                 )}
-              />
+              /> }
             </div>
           </div>
           <div
             className={clsx(
-              "flex flex-col border rounded-b-sm transition-all duration-500",
-              isVerifyOtp
+              "flex border rounded-b-sm transition-all duration-500",
+              !isOtpVerified 
                 ? "max-h-[1000px] border border-t-0"
                 : "max-h-0 border-0 overflow-hidden"
             )}
           >
-            <div className={"flex flex-col gap-4 px-4 py-4"}>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {}
-              </div>
+            <div className={"py-4 justify-center items-center flex w-full"}>
+                <OtpVerificationContainer mobileNo={mobile_no} isOtpVerified={isOtpVerified} setIsOtpVerified={setOtpVerified} />
             </div>
           </div>
         </div>

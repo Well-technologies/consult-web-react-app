@@ -25,7 +25,9 @@ const schema = ({
       .required()
       .messages(mobile_no),
     email: Joi.string()
-      .email({ tlds: { allow: false } }),
+      .email({ tlds: { allow: false } })
+      .allow(null)
+      .allow(""),
       // .required()
       // .messages(email),
     gender: Joi.string().required().messages(gender),
@@ -63,9 +65,9 @@ export const getConfirmButtonText = (formType: FormType) => {
   const { t } = useTranslation();
   switch (formType) {
     case FormType.Add:
-      return t("claim.modal.add.submit");
+      return t("patient.form.add.submit");
     case FormType.Edit:
-      return t("claim.modal.edit.submit");
+      return t("patient.form.add.submit");
     default:
       return "";
   }
@@ -84,9 +86,9 @@ export const getCancelButtonText = (formType: FormType) => {
   const { t } = useTranslation();
   switch (formType) {
     case FormType.View:
-      return t("claim.modal.view.cancel");
+      return t("global.modal.cancel");
     default:
-      return t("claim.modal.default.cancel");
+      return t("global.modal.cancel");
   }
 };
 

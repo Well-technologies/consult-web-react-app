@@ -22,6 +22,7 @@ export const UsersData = ({
 }: UsersDataProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const showActions = data?.some((item) => item.isDisabled);
   const columns = useMemo<ColumnDef<PatientDetails>[]>(
     () => [
       {
@@ -37,19 +38,19 @@ export const UsersData = ({
         header: t("user.table.mobileNo.header"),
       },
       {
-        accessorKey: "email",
-        id: "email",
+        accessorKey: "date_of_birth",
+        id: "date_of_birth",
         cell: (info) => info.getValue(),
         accessorFn: (row) => (
           <div className="flex gap-2 item-center text-black">
-            {row.isDisabled ? "" : row.email}
+            {row.date_of_birth ? row.date_of_birth : ""}
           </div>
         ),
-        header: t("user.table.email.header"),
+        header: t("user.table.date_of_birth.header"),
       },
       {
-        accessorKey: "created_at",
-        id: "createdDate",
+        accessorKey: "action",
+        id: "action",
         accessorFn: (row) => row.isDisabled ? (
           <button
                         onClick={() => openAddNewModal(row, FormType.Add)}
@@ -62,13 +63,13 @@ export const UsersData = ({
                         />
                         {t("patient.new_user.button")}
                       </button>
-        ) : (String(row.created_at) || "").split(" ")[0],
+        ) : <></>,
         cell: (info) => info.getValue(),
-        header: t("user.table.createdDate.header"),
+        header: "",
       },
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [data]
+    []
   );
 
   if (isLoading) {

@@ -52,7 +52,7 @@ export type CreatePatientProps = {
 export type CreatePatientBody = {
   name: string;
   mobile_no: string;
-  email?: string;
+  email?: string | null;
   gender: string;
   dob: string;
   consultation_mode_id? : number;

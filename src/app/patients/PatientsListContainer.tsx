@@ -21,8 +21,6 @@ import { sortByDate } from "./PatientsList.utils";
 
 export const PatientsListContainer = () => {
   const client = useClient({serviceConfigType: ServiceConfigType.Core});
-  // const consultClient = useClient({serviceConfigType: ServiceConfigType.Consult});
-  // const { t } = useTranslation();
 
   const  leadId  = useParams<'patientId'>();
   if (!leadId) return <Navigate to={AppRoute.Patients} replace />;
@@ -34,9 +32,6 @@ export const PatientsListContainer = () => {
     data: UserDetails | null;
     formType: FormType;
   } | null>(null);
-
-  // const [openFamilyDeleteModal, setOpenFamilyDeleteModal] =
-  //   useState<LeadFamily | null>(null);
 
   const { userDetail: {id: doctor_id} } = useSelector(
     (rootState) =>
@@ -93,14 +88,13 @@ export const PatientsListContainer = () => {
       doctor_id,
       page: 1,
       page_size: 10,
-      // search: searchText
     }
   });
 
   const [filteredPatientsData, setFilteredPatientsData] = useState<PatientDetails[]>([]);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
+    let timer = setTimeout(() => {
       refetchSearchPatientsData();
       setFilteredPatientsData(searchPatientsData?.data?.map((searched_patient) => {
         if(patientsData?.data.map((patient) => patient.id).includes(searched_patient.id)) {
@@ -118,14 +112,8 @@ export const PatientsListContainer = () => {
     return () => clearTimeout(timer);
   }, [searchText]);
 
-
-  
-
-  // const navigationOptions = getPatientDetailsBreadCrumbOptions();
-
   return (
     <>
-      {/* <Breadcrumbs breadcrumbs={navigationOptions} /> */}
       <PatientList
       data={sortByDate(searchText ? filteredPatientsData || [] : patientsData?.data || [], false, 'created_at')}
       isLoading={isLoadingPatientsData || isLoadingSearchPatientsData}
@@ -144,20 +132,6 @@ export const PatientsListContainer = () => {
           {...openUserModal}
         />
       )}
-
-      {/* {!!openFamilyDeleteModal && (
-        <DeleteConfirmModal
-          open={!!openFamilyDeleteModal}
-          confirmKey={FamilyDeleteConfirmKey}
-          onClose={() => setOpenFamilyDeleteModal(null)}
-          onConfirm={() => onHandleDeleteMember(openFamilyDeleteModal)}
-          isLoading={isLoadingDeleteMember}
-          title={t("familyMember.deleteConfirm.modal.title")}
-          description={t("familyMember.deleteConfirm.modal.description", {
-            member: openFamilyDeleteModal?.name,
-          })}
-        />
-      )} */}
     </>
   );
 };
