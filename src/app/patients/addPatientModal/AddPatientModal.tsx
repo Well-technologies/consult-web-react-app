@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import RightArrowIcon from "@/assets/icons/arrow_down_icon.png";
@@ -25,6 +25,7 @@ export const AddPatientModal = ({
   formType,
   isLoading,
   isValidForm,
+  trigger,
   onClose,
   onSubmit,
   open,
@@ -32,13 +33,27 @@ export const AddPatientModal = ({
   register,
   setValue,
   isMyPatient,
+  isRegisteredPatient,
 }: AddPatientModalProps) => {
   const { t } = useTranslation();
   const {mobile_no} = watch();
 
+  
   const [isVerifyOtp, setVerifyOtp] = useState(!isMyPatient);
-  const [isOtpVerified, setOtpVerified] = useState(isMyPatient);
+  const [isOtpVerified, setOtpVerified] = useState(!isRegisteredPatient || isMyPatient);
+  
+  useEffect(() => {
+    console.log('isMyPatient', isMyPatient, !isRegisteredPatient );
+    console.log('isOtpVerified', isOtpVerified );
+    console.log('trigger', trigger);
+    if(trigger){
+      trigger();
+    }
+  }, [isOtpVerified, isMyPatient, isRegisteredPatient]);
 
+
+
+  // setValue('patient_id', data?.id)
 
   return (
     <Modal
@@ -87,7 +102,7 @@ export const AddPatientModal = ({
             <FormInput
               register={register}
               label={t("user.form.name.label")}
-              disabled={getIsDisabledFormItem(formType, "name")}
+              disabled={getIsDisabledFormItem(formType, "name") || !isOtpVerified}
               id="name"
               type="text"
               name="name"
@@ -95,6 +110,15 @@ export const AddPatientModal = ({
               error={!!errors?.name}
               helperText={errors?.name?.message}
               required
+            />
+
+            <FormInput
+              register={register}
+              id="patient_id"
+              type="text"
+              name="patient_id"
+              hidden
+              value={data?.id}
             />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -112,12 +136,14 @@ export const AddPatientModal = ({
               helperText={errors?.dob?.message}
               isHiddenActions
               required
+              disabled={!isOtpVerified}
+              pastOnly={true}
               />
 
             <FormSelect
               id="gender"
               name="gender"
-              isDisabled={getIsDisabledFormItem(formType, "gender")}
+              isDisabled={getIsDisabledFormItem(formType, "gender") || !isOtpVerified}
               label={t("user.form.gender.label")}
               control={control}
               placeholder={t("user.form.gender.placeholder")}
@@ -127,15 +153,13 @@ export const AddPatientModal = ({
               helperText={errors?.gender?.message}
               required
             />
-            
-
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
             <FormInput
               register={register}
               label={t("user.form.email.label")}
-              disabled={getIsDisabledFormItem(formType, "email")}
+              disabled={getIsDisabledFormItem(formType, "email") || !isOtpVerified}
               id="email"
               type="email"
               name="email"
@@ -146,7 +170,7 @@ export const AddPatientModal = ({
             />
           </div>
         </div>
-        <div className="flex flex-col gap-0 ">
+        {isRegisteredPatient &&<div className="flex flex-col gap-0 ">
           <div
             className={cn("font-semibold relative cursor-pointer text-md bg-secondary-50 rounded-t-md p-2 px-4", (isMyPatient)  ? "pointer-events-none opacity-30" :  "pointer-events-auto")}
             onClick={() => {
@@ -179,7 +203,7 @@ export const AddPatientModal = ({
                 <OtpVerificationContainer mobileNo={mobile_no} isOtpVerified={isOtpVerified} setIsOtpVerified={setOtpVerified} />
             </div>
           </div>
-        </div>
+        </div>}
       </form>
     </Modal>
   );

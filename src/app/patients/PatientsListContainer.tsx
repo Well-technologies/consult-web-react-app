@@ -12,7 +12,7 @@ import { AppRoute } from "@/routing/AppRoute.enum";
 import { FormType } from "@/types";
 
 import { PatientList } from "./PatientsList";
-import { PatientDetails, UserDetails } from "@/api/patient/patient.types";
+import { PatientDetails } from "@/api/patient/patient.types";
 import { AddPatientModalContainer } from "./addPatientModal/AddPatientModalContainer";
 import { StoreReducerStateTypes } from "@/store/store.types";
 import { allReducerStates } from "@/store/store.utils";
@@ -20,20 +20,21 @@ import { useSelector } from "react-redux";
 import { sortByDate } from "./PatientsList.utils";
 
 export const PatientsListContainer = () => {
-  const client = useClient({serviceConfigType: ServiceConfigType.Core});
+  const client = useClient({ serviceConfigType: ServiceConfigType.Core });
 
-  const  leadId  = useParams<'patientId'>();
+  const leadId = useParams<'patientId'>();
   if (!leadId) return <Navigate to={AppRoute.Patients} replace />;
 
   const [openFilter, setOpenFilter] = useState(true);
+  const [isSearching, setIsSearching] = useState(false);
   const [searchText, setSearchText] = useState("");
 
   const [openUserModal, setOpenUserModal] = useState<{
-    data: UserDetails | null;
+    data: PatientDetails | null;
     formType: FormType;
   } | null>(null);
 
-  const { userDetail: {id: doctor_id} } = useSelector(
+  const { userDetail: { id: doctor_id } } = useSelector(
     (rootState) =>
       allReducerStates(rootState as StoreReducerStateTypes).user.profile
   );
@@ -57,7 +58,7 @@ export const PatientsListContainer = () => {
   };
 
   const onOpenUserModal = (
-    data: UserDetails | null,
+    data: PatientDetails | null,
     formType: FormType
   ) => {
     setOpenUserModal({
@@ -94,41 +95,43 @@ export const PatientsListContainer = () => {
   const [filteredPatientsData, setFilteredPatientsData] = useState<PatientDetails[]>([]);
 
   useEffect(() => {
-    let timer = setTimeout(() => {
+    setTimeout(() => {
       refetchSearchPatientsData();
-      setFilteredPatientsData(searchPatientsData?.data?.map((searched_patient) => {
-        if(patientsData?.data.map((patient) => patient.id).includes(searched_patient.id)) {
+      setFilteredPatientsData(searchPatientsData?.data?.map((searchedPatient) => {
+        if (patientsData?.data.map((patient) => patient.id).includes(searchedPatient.id)) {
           return {
-            ...searched_patient,
+            ...searchedPatient,
             isDisabled: false,
           };
-        } else{
-        return {
-          ...searched_patient,
-          isDisabled: true,
-        };}
+        } else {
+          return {
+            ...searchedPatient,
+            isDisabled: true,
+          };
+        }
       }) || []);
+      setIsSearching(false)
     }, 500);
-    return () => clearTimeout(timer);
-  }, [searchText]);
+  }, [searchText, searchPatientsData?.data?.length]);
 
   return (
     <>
       <PatientList
-      data={sortByDate(searchText ? filteredPatientsData || [] : patientsData?.data || [], false, 'created_at')}
-      isLoading={isLoadingPatientsData || isLoadingSearchPatientsData}
+        data={sortByDate(searchText ? filteredPatientsData || [] : patientsData?.data || [], false, 'updated_at')}
+        isLoading={isLoadingPatientsData || isLoadingSearchPatientsData || isSearching}
         openAddNewModal={onOpenUserModal}
         openFilter={openFilter}
         searchText={searchText}
         setSearchText={setSearchText}
         openAndCloseFilter={openAndCloseFilter}
-        
+
       />
       {openUserModal && (
         <AddPatientModalContainer
           refetch={refetch}
           open={!!openUserModal}
           onClose={() => setOpenUserModal(null)}
+          setSearchText={setSearchText}
           {...openUserModal}
         />
       )}

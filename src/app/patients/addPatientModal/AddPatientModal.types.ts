@@ -4,12 +4,14 @@ import {
   FieldErrors,
   UseFormRegister,
   UseFormSetValue,
+  UseFormTrigger,
   UseFormWatch,
 } from "react-hook-form";
 
 import { Schema } from "@/types";
 import { ModalProps } from "@/ui/molecules/modal/Modal.types";
 import { CreatePatientBody, PatientDetails, UserDetails } from "@/api/patient/patient.types";
+import { UsersFiltersProps } from "../usersFilters/UsersFilters.types";
 
 export type AddPatientModalContainerProps = Pick<
   ModalProps,
@@ -19,7 +21,7 @@ export type AddPatientModalContainerProps = Pick<
   data: PatientDetails | null;
   formType: FormType;
   myPatients?: UserDetails[]
-};
+} & Partial<Pick<UsersFiltersProps, "setSearchText">>;
 
 export type AddPatientModalProps = Omit<AddPatientModalContainerProps, "refetch"> & {
   register: UseFormRegister<AddUserFormInputs>;
@@ -27,13 +29,14 @@ export type AddPatientModalProps = Omit<AddPatientModalContainerProps, "refetch"
   errors: FieldErrors<AddUserFormInputs>;
   isLoading: boolean;
   watch: UseFormWatch<AddUserFormInputs>;
+  trigger: UseFormTrigger<AddUserFormInputs> | undefined;
   onSubmit: (e?: BaseSyntheticEvent) => Promise<void>;
   setValue: UseFormSetValue<AddUserFormInputs>;
   isMyPatient: boolean;
   isVerifyOtpDivEnabled: boolean;
   isValidForm: boolean;
   isRegisteredPatient: boolean | undefined;
-};
+}
 
 export enum FormType {
   Edit = "Edit",

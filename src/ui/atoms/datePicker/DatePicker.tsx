@@ -23,6 +23,7 @@ export default function DatePicker({
   disabled,
   isHiddenActions,
   pastOnly,
+  futureOnly,
 }: DatePickerProps) {
 
 
@@ -73,6 +74,8 @@ export default function DatePicker({
         selectedEndDate,
         selectedStartDate,
         type,
+        pastOnly,
+        futureOnly,
       });
 
       daysArray.push(
@@ -151,6 +154,14 @@ export default function DatePicker({
   }, [currentDate, yearGroup]);
 
   const handleDayClick = (selectedDay: string) => {
+    const date = new Date(selectedDay);
+    const now = new Date();
+    date.setHours(0, 0, 0, 0);
+    const todayDate = new Date(now.setHours(0, 0, 0, 0));
+
+    if (pastOnly && date > todayDate) return;
+    if (futureOnly && date < todayDate) return;
+
     if (type === DatePickerType.SingleDate) {
       setSelectedEndDate(selectedDay);
       setSelectedStartDate(selectedDay);

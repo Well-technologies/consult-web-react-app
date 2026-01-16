@@ -13,6 +13,7 @@ export type DatePickerProps = {
   disabled?: boolean;
   isHiddenActions?: boolean;
   pastOnly?: boolean;
+  futureOnly?: boolean;
 };
 
 export type GetCalendarClassNameProps = {
@@ -21,4 +22,6 @@ export type GetCalendarClassNameProps = {
   selectedStartDate: string | null;
   selectedEndDate: string | null;
   day: Date;
+  pastOnly?: boolean;
+  futureOnly?: boolean;
 };

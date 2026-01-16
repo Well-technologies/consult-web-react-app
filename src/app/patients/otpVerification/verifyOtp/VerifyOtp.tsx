@@ -3,7 +3,6 @@ import { OtpInput } from "@/ui/atoms/otpInput/OtpInput";
 import { useTranslation } from "react-i18next";
 import { VerifyOtpProps } from "./VerifyOtp.types";
 import { Button } from "@/ui/atoms/button/Button";
-import { Input } from "@/ui/atoms/input/input";
 
 export const VerifyOtp = ({control, handleSubmit, watchOtp}: VerifyOtpProps) => {
     const {t} = useTranslation();

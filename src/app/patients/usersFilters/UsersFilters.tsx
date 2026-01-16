@@ -12,18 +12,6 @@ export const UsersFilters = ({
 }: UsersFiltersProps) => {
   const { t } = useTranslation();
 
-  // const {   , ...parent } = useSelector(
-  //   (rootState) =>
-  //     allReducerStates(rootState as StoreReducerStateTypes).user
-  // );
-
-  // const companies = [parent, ...subCompanies];
-
-  // const subCompanyOptions: Option[] = companies.map((item) => ({
-  //   label: item.companyName,
-  //   value: item.id,
-  // }));
-
   return (
     <div
       className={clsx(
@@ -46,16 +34,6 @@ export const UsersFilters = ({
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
         />
-        {/* {!!subCompanies.length ? (
-          <FormSelect
-            id="orgId"
-            name="org_id"
-            control={control}
-            placeholder={t("claim.filter.orgId.placeholder")}
-            isClearable
-            options={subCompanyOptions}
-          />
-        ) : null} */}
       </form>
     </div>
   );

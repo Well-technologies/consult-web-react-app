@@ -22,7 +22,6 @@ export const UsersData = ({
 }: UsersDataProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const showActions = data?.some((item) => item.isDisabled);
   const columns = useMemo<ColumnDef<PatientDetails>[]>(
     () => [
       {

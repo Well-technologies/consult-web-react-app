@@ -23,6 +23,7 @@ export const AddPatientModalContainer = ({
   formType,
   data,
   myPatients,
+  setSearchText,
   ...props
 }: AddPatientModalContainerProps) => {
   const { t } = useTranslation();
@@ -31,7 +32,7 @@ export const AddPatientModalContainer = ({
     (rootState) =>
       allReducerStates(rootState as StoreReducerStateTypes).user.profile
   );
-  const [isMyPatient, setIsMyPatient] = useState<boolean>(!data?.isDisabled || false)
+  const [isMyPatient, setIsMyPatient] = useState<boolean>((!!data ? data.isDisabled : false) || false )
   const [isRegisteredPatient, setIsRegisteredPatient] = useState<boolean | undefined>(undefined)
   const [isVerifyOtpDivEnabled, setVerifyOtpDivEnabled] = useState(false);
 
@@ -42,7 +43,7 @@ export const AddPatientModalContainer = ({
     reset,
     watch,
     setValue,
-    // trigger,
+    trigger,
     formState: { errors, isValid },
   } = useForm<AddUserFormInputs>({
     resolver: AddUserSchema(t),
@@ -52,19 +53,18 @@ export const AddPatientModalContainer = ({
       name: "",
     },
   });
+  
+  console.log('isMyPatient', isMyPatient)
 
-  const {mobile_no: search_text_mobile, name: search_text_name} = watch();
-
-  console.log('search_text', search_text_mobile, search_text_name)
+  const {mobile_no: search_text_mobile} = watch();
 
   useEffect(() => {
-    console.log('default data', data, formType)
     if (formType === FormType.Add && data) {
       
     setValue('name', data.name)
     setValue('dob', data.date_of_birth)
     setValue('email', data.email)
-    // setValue('gender', data.gender)
+    setValue('gender', data.lead_detail?.gender ? GenderType[data.lead_detail?.gender] : '')
     setValue('mobile_no', data.mobile_no.replace("+94", ""))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -95,7 +95,7 @@ export const AddPatientModalContainer = ({
     
     const {
       data: searchedPatients,
-      // isLoading: isSearchingPatient,
+      isLoading: isSearchingPatient,
       // error: searchedPatientsError
     } = useSearchPatients({
       client,
@@ -115,16 +115,22 @@ export const AddPatientModalContainer = ({
     setValue('name', patient.name)
     setValue('dob', patient.date_of_birth)
     setValue('email', patient.email)
-    setValue('gender', "")
+    setValue('gender', patient.lead_detail?.gender ? GenderType[patient.lead_detail?.gender] : '')
+    setValue('patient_id', patient.id)
     } else {
       console.log('not found')
+      reset({
+        name: "",
+        gender: "",
+        email: "",
+        dob: "",
+      });
       setVerifyOtpDivEnabled(true)
     }
   }, [searchedPatients?.data, searchedPatients?.success])
 
 
   const {
-    mutateAsync: mutateOnUpdatePatient,
     isPending: isPendingCreatePatient,
   } = useUpdatePatient({
     onSuccess: () => {
@@ -149,6 +155,7 @@ export const AddPatientModalContainer = ({
     isPending: isPendingUpdatePatient,
   } = useCreatePatient({
     onSuccess: () => {
+      setSearchText?.("");
       refetch();
       reset({
         name: "",
@@ -166,27 +173,33 @@ export const AddPatientModalContainer = ({
   });
 
   const handleOnSubmit = async (values: AddUserFormInputs) => {
-    if (formType === FormType.Add && !isRegisteredPatient) {
-      await mutateOnCreatePatient({
-        client,
-        body: {
-          ...values,
+    console.log(values)
+    if (formType === FormType.Add) {
+      console.log(values)
+      const {patient_id, ...restValues} = values
+      const data = {
+          ...(!isRegisteredPatient ? restValues : values),
           doctor_id,
           consultation_mode_id: 4,
           mobile_no: `+94${values.mobile_no}`,
-        },
-      });
-    }
-    if ((formType === FormType.Edit && searchedPatients) || (isRegisteredPatient && searchedPatients?.data)) {
-      await mutateOnUpdatePatient({
+          // patient_id: patient_id
+        }
+        console.log('handleOnSubmit', data)
+      await mutateOnCreatePatient({
         client,
-        userId: isRegisteredPatient ? searchedPatients.data[0].id : data ? data.id : '',
-        body: {
-          ...values,
-          mobile_no: `+94${values.mobile_no}`,
-        },
+        body: data,
       });
     }
+    // if ((formType === FormType.Edit && searchedPatients) || (isRegisteredPatient && searchedPatients?.data)) {
+    //   await mutateOnUpdatePatient({
+    //     client,
+    //     userId: isRegisteredPatient ? searchedPatients.data[0].id : data ? data.id : '',
+    //     body: {
+    //       ...values,
+    //       mobile_no: `+94${values.mobile_no}`,
+    //     },
+    //   });
+    // }
   };
 
   return (
@@ -195,15 +208,16 @@ export const AddPatientModalContainer = ({
       formType={formType}
       data={!!searchedPatients?.data && searchedPatients?.data[0] || data}
       control={control}
-      isLoading={isPending || isPendingCreatePatient || isPendingUpdatePatient}
+      isLoading={isPending || isPendingCreatePatient || isPendingUpdatePatient || isSearchingPatient}
       errors={errors}
       watch={watch}
       register={register}
       setValue={setValue}
       onSubmit={handleSubmit(handleOnSubmit)}
-      isMyPatient={!data?.isDisabled || isMyPatient}
+      isMyPatient={isMyPatient}
       isRegisteredPatient={isRegisteredPatient}
       isValidForm={isValid}
+      trigger={data?.id ? trigger : undefined}
       isVerifyOtpDivEnabled={!data?.isDisabled || isVerifyOtpDivEnabled}
       {...props}
     />

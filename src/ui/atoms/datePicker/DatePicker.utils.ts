@@ -51,6 +51,8 @@ export const getCalendarClassName = ({
   selectedEndDate,
   selectedStartDate,
   type,
+  pastOnly,
+  futureOnly,
 }: GetCalendarClassNameProps) => {
   const today = new Date().toLocaleDateString("en-US");
 
@@ -60,6 +62,21 @@ export const getCalendarClassName = ({
   // Today Date
   if (dayString === today) {
     className += "z-5 bg-secondary-50 dark:bg-secondary-600";
+  }
+
+  const date = new Date(day);
+  const now = new Date();
+  
+  // Reset time for accurate date comparison
+  date.setHours(0, 0, 0, 0);
+  const todayDate = new Date(now.setHours(0, 0, 0, 0));
+
+  if (pastOnly && date > todayDate) {
+    return "flex items-center justify-center text-sm w-11 aspect-square rounded-full text-gray-300 dark:text-gray-600 cursor-not-allowed pointer-events-none";
+  }
+
+  if (futureOnly && date < todayDate) {
+    return "flex items-center justify-center text-sm w-11 aspect-square rounded-full text-gray-300 dark:text-gray-600 cursor-not-allowed pointer-events-none";
   }
   if (type === DatePickerType.DateRange) {
     if (selectedStartDate && dayString === selectedStartDate) {

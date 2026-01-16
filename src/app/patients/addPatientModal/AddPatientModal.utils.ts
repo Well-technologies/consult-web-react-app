@@ -32,6 +32,7 @@ const schema = ({
       // .messages(email),
     gender: Joi.string().required().messages(gender),
     dob: Joi.string().required().messages(dob),
+    patient_id: Joi.string().allow(null).allow(""),
   });
 
 export const AddUserSchema = (translate: TFunction<"translation", undefined>) =>
@@ -44,6 +45,7 @@ export const AddUserSchema = (translate: TFunction<"translation", undefined>) =>
       email: {},
       consultation_mode_id: {},
       doctor_id: {},
+      patient_id: {},
       mobile_no: {
         "string.empty": translate("global.errors.required"),
         "any.required": translate("global.errors.required"),

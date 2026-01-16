@@ -1,12 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { VerifyOtp } from "./verifyOtp/VerifyOtp";
 import { RequestOtp } from "./requestOtp/RequestOtp";
 import { useForm } from "react-hook-form";
 import { PhoneLoginFormInputs } from "@/app/authentication/login/Login.types";
 import { useRequestOtp, useVerifyOtp } from "@/api/authentication/authentication";
-import { AppRoute } from "@/routing/AppRoute.enum";
-import { onLoginSuccess } from "@/store/authReducer/authReducer";
-import { onUserDetailsFetch } from "@/store/userReducer/userReducer";
 import { t } from "i18next";
 import { toast } from "react-toastify";
 import { useClient } from "@/hooks/useClient/useClient";
@@ -15,13 +12,13 @@ import { OtpVerificationProps } from "./OtpVerification.types";
 
 export const OtpVerificationContainer = ({mobileNo, isOtpVerified, setIsOtpVerified}: OtpVerificationProps) => {
     const [isOtpRequested, setIsOtpRequested] = useState(false);
+    const [showOtpError, setShowOtpError] = useState(false);
     const client = useClient({});
 
     // const [mobileNumber, setMobileNumber] = useState(mobileNo);
 
       const {
         control: controlWithPhone,
-        handleSubmit: handleSubmitWithPhone,
         watch: watchOtp,
         setValue,
         reset,
@@ -54,6 +51,7 @@ export const OtpVerificationContainer = ({mobileNo, isOtpVerified, setIsOtpVerif
             setValue('otp', '')
         //   setMobileNumber(variables?.body?.mobile || "");
           setIsOtpRequested(true);
+          setShowOtpError(false);
         },
         onError: (error) => {
           console.error("onError error", error);
@@ -62,7 +60,7 @@ export const OtpVerificationContainer = ({mobileNo, isOtpVerified, setIsOtpVerif
       });
     
       const { mutateAsync: mutateOnVerifyOtp } = useVerifyOtp({
-        onSuccess: ({ data, success, message }) => {
+        onSuccess: ({ success, message }) => {
           if (success) {
             
             setIsOtpVerified(true);
@@ -72,6 +70,7 @@ export const OtpVerificationContainer = ({mobileNo, isOtpVerified, setIsOtpVerif
             setValue('otp', '')
             toast.success(message);
           } else {
+            setShowOtpError(true);
             toast.error(message);
           }
         },
@@ -89,6 +88,6 @@ export const OtpVerificationContainer = ({mobileNo, isOtpVerified, setIsOtpVerif
     return (
         isOtpVerified ? <div>{t("user.form.verify_otp.success")}</div>
         : isOtpRequested ? <VerifyOtp control={controlWithPhone} watchOtp={watchOtp} handleSubmit={handleVerifyOtp}/>
-        : <RequestOtp setIsOtpRequested={setIsOtpRequested} mobileNo={mobileNo} handleSubmit={handleRequestOtp}/>
+        : <RequestOtp setIsOtpRequested={setIsOtpRequested} mobileNo={mobileNo} handleSubmit={handleRequestOtp} showOtpError={showOtpError}/>
     )
 }               

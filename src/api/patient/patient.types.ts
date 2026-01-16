@@ -8,7 +8,7 @@ import {
   PaginatedResponseData,
 } from "../index.types";
 // import { LeadTransactionsDetails } from "../transaction/transaction.types";
-import { Lead } from "../user/user.types";
+import { Lead, LeadDetails } from "../user/user.types";
 
 export enum PatientKeyTypes {
   PatientsList = "PatientsList",
@@ -57,6 +57,7 @@ export type CreatePatientBody = {
   dob: string;
   consultation_mode_id? : number;
   doctor_id?: number
+  patient_id?: string
 };
 
 export type CreatePatientResponse = CommonSuccessResponse<UserDetails>;
@@ -88,6 +89,7 @@ export type GetPatientDetailsResponse = CommonSuccessResponse<PatientDetails>;
 
 export type PatientDetails = Lead & {
   isDisabled?: boolean;
+  lead_detail?: LeadDetails;
 };
 export type PatientDetailsWalletData = {
   remainingCredit: number;
