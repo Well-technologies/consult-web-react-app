@@ -2,6 +2,7 @@
 
 // import { ConsultUserDetails } from "@/api/user/user.types";
 import { ConsultationDetails } from "@/api/consult/consult.types";
+import { ConsultSuccessResponseMeta } from "@/api/index.types";
 // import { UseFormReturn } from "react-hook-form";
 
 export enum UserStatus {
@@ -14,10 +15,16 @@ export enum ConsultationsTab {
   HealthVault = "Health Vault",
 }
 
-export type ConsultationsProps ={
+export type ConsultationsProps = {
   isLoading: boolean;
   data: ConsultationDetails[] | null | undefined;
-  // consultations: any | undefined;
+  meta: ConsultSuccessResponseMeta | null | undefined;
+  isConsultationsRoute: boolean;
+  isPatientDetailsRoute: boolean;
+  page: number;
+  pageSize: number;
+  onPageChange: (page: number) => void;
+  onPageSizeChange: (pageSize: number) => void;
 }
 
 export type PatientsListProps = {

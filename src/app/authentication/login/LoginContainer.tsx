@@ -27,6 +27,7 @@ export const LoginContainer = () => {
   const [isOtpSent, setIsOtpSent] = useState<boolean>(false);
   const [mobileNumber, setMobileNumber] = useState<string>("");
 
+
   const { mutateAsync: mutateOnEmailLogin } = useLogin({
     onSuccess: ({ data, success, message }) => {
 
@@ -64,7 +65,7 @@ export const LoginContainer = () => {
   });
 
   const { mutateAsync: mutateOnVerifyOtp } = useVerifyOtp({
-    onSuccess: ({ data, success, message }) => {
+    onSuccess: async ({ data, success, message }) => {
       if (success) {
         toast.success(message);
         dispatch(
@@ -75,7 +76,8 @@ export const LoginContainer = () => {
         dispatch(
           onUserDetailsFetch({ userDetails: data })
         );
-        navigate(AppRoute.Dashboard);
+        navigate(AppRoute.Dashboard)
+        // await refetchConsultUserDetails();
       } else {
         toast.error(message);
       }
@@ -85,6 +87,8 @@ export const LoginContainer = () => {
       toast.error(t("login.alert.error"));
     },
   });
+
+
 
   const {
     // control: controlWithEmail,

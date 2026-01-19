@@ -13,6 +13,7 @@ export const userInitialState: UserState = {
     registration_credit_amount: 0,
     leads_status: 0,
     token: "",
+    consult_user_id: ""
   },
   profile: {
     address_id: null,
@@ -61,7 +62,10 @@ export const user = createSlice({
   reducers: {
     onUserDetailsFetch: (state, { payload }) => {
       state.userDetails = payload.userDetails;
-    },    
+    },  
+    onConsultUserDetailsFetch: (state, { payload }) => {
+      state.userDetails.consult_user_id = payload.consultUserId;
+    },  
     onProfileFetch: (state, { payload }) => {
       console.log("payload.profile", payload.profile);
       state.profile = payload.profile;
@@ -73,6 +77,6 @@ export const user = createSlice({
   },
 });
 
-export const { onUserDetailsFetch, onRemoveUserDetails, onProfileFetch } = user.actions;
+export const { onUserDetailsFetch, onRemoveUserDetails, onProfileFetch, onConsultUserDetailsFetch } = user.actions;
 
 export default user.reducer;

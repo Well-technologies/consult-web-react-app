@@ -1,12 +1,12 @@
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Navigate, Route, Routes } from "react-router-dom";
 
-import { useGetProfile } from "@/api/user/user";
+import { useGetConsultUserByIdDetails, useGetProfile } from "@/api/user/user";
 // import { ClaimReportContainer } from "@/app/claimReport/ClaimReportContainer";
 import { useClient } from "@/hooks/useClient/useClient";
 import { Sidebar } from "@/layout/sidebar/Sidebar";
-import { onProfileFetch } from "@/store/userReducer/userReducer";
+import { onConsultUserDetailsFetch, onProfileFetch } from "@/store/userReducer/userReducer";
 import { LogoLoader } from "@/ui/atoms/logoLoader/LogoLoader";
 // import { setCustomUserId } from "@/utils/Clarity/clarity";
 
@@ -15,14 +15,42 @@ import { ServiceConfigType } from "@/api/index.types";
 import { Dashboard } from "@/app/dashboard/Dashboard";
 import { PatientsListContainer } from "../app/patients/PatientsListContainer";
 import { PatientDetailsContainer } from "@/app/patientDetails/PatientDetailsContainer";
+import { ConsultationsContainer } from "@/app/consultations/ConsultationsContainer";
+import { StoreReducerStateTypes } from "@/store/store.types";
+import { allReducerStates } from "@/store/store.utils";
 
 export const ProtectedRoutes = () => {
   const client = useClient({serviceConfigType: ServiceConfigType.Core});
+  const consultClient = useClient({serviceConfigType: ServiceConfigType.Consult});
   console.log("ProtectedRoutes rendered", client);
   const dispatch = useDispatch();
 
+  const { profile: {id : leadId} } = useSelector(
+    (rootState) =>
+      allReducerStates(rootState as StoreReducerStateTypes).user
+  );
+
   const { data: userDetails, isLoading: isFetchingUserDetails } =
     useGetProfile({ client });
+    
+    const { data: consultUserDetails} = useGetConsultUserByIdDetails({
+      client: consultClient,
+      leadId,
+      options: {
+        enabled: !!leadId && leadId !== 0
+      }
+    });
+  
+    useEffect(() => {
+      console.log("userDetails?.data?.id", userDetails?.data?.id);
+      if (consultUserDetails) {
+        console.log("consultUserDetails", consultUserDetails);
+        dispatch(
+          onConsultUserDetailsFetch({ consultUserId: consultUserDetails.payload?.id })
+        );
+        // navigate(AppRoute.Dashboard);
+      }
+    }, [consultUserDetails, userDetails?.data?.id]);
 
   useEffect(() => {
     console.log("userDetails", userDetails);
@@ -52,7 +80,7 @@ export const ProtectedRoutes = () => {
         path={AppRoute.Consultations}
         element={
           <Sidebar>
-            <Dashboard />
+            <ConsultationsContainer />
           </Sidebar>
         }
       />

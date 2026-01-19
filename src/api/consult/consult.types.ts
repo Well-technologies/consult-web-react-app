@@ -607,6 +607,7 @@ export type GetConsultationsProps = {
 export type GetConsultationsParams = {
   patient?: string;
   doctor?: string;
+  doctorId?: number;
   name?: string;
   page: number;
   take: number;

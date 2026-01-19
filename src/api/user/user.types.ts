@@ -223,8 +223,9 @@ export type GetUserDetailsProps = {
 };
 
 export type GetConsultUserDetailsProps = GetUserDetailsProps & {
-  leadId: string;
-};
+  leadId: string | number;
+  options?: CommonQueryOptions;
+}
 
 export type GetUserDetailResponse = 
 CommonSuccessResponse<

@@ -15,4 +15,5 @@ export type StateUserDetails = {
   registration_credit_amount: number,
   leads_status: number,
   token: string,
+  consult_user_id?: string,
 };

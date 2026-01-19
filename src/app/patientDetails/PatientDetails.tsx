@@ -28,7 +28,17 @@ export const PatientDetails = ({
       value: PatientDetailsTab.Consultations,
       label: t("patient.details.tab.consultations"),
       component: (
-        <Consultations data={consultations} isLoading={isLoading}  />
+        <Consultations 
+          data={consultations} 
+          meta={null}
+          isLoading={isLoading}
+          isConsultationsRoute={false}
+          isPatientDetailsRoute={true}
+          page={1}
+          pageSize={10}
+          onPageChange={() => {}}
+          onPageSizeChange={() => {}}
+        />
       ),
     },
     {

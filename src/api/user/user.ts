@@ -16,6 +16,7 @@ import {
   GetProfileResponse,
   ProfileKeyTypes,
   GetConsultUserDetailsProps,
+  ConsultUserKeyTypes,
   // ConsultUserDetails,
 } from "./user.types";
 import { GetConslutUserDetailResponse } from "../consult/consult.types";
@@ -33,14 +34,36 @@ export const useGetLeads = ({ client, params }: GetLeadsProps) =>
     enabled: params.search_subscriber.length > 0,
   });
 
+const getConsultUserByIdDetails = ({
+  client,
+  leadId,
+}: GetConsultUserDetailsProps) =>
+  client
+    .get<GetConslutUserDetailResponse>(`/users/getByUserId/${leadId}`)
+    .then(({ data }) => data);
+
+export const useGetConsultUserByIdDetails = ({
+  client,
+  options,
+  leadId,
+}: GetConsultUserDetailsProps) =>
+  useQuery({
+    queryKey: [ConsultUserKeyTypes.GetConsultUserDetails],
+    queryFn: () => getConsultUserByIdDetails({ client, leadId }),
+    placeholderData: keepPreviousData,
+    staleTime: Infinity,
+    ...options,
+  });
+
 const getConsultUserDetails = ({ client, leadId }: GetConsultUserDetailsProps) =>
   client.get<GetConslutUserDetailResponse>(`/users/getLead/${leadId}`).then(({ data }) => data);
 
-export const useGetConsultUserDetails = ({ client, leadId }: GetConsultUserDetailsProps) =>
+export const useGetConsultUserDetails = ({ client, options, leadId }: GetConsultUserDetailsProps) =>
   useQuery({
     queryKey: [UserKeyTypes.UserDetails],
     queryFn: () => getConsultUserDetails({ client, leadId }),
     placeholderData: keepPreviousData,
+    ...options,
   });
 
 
