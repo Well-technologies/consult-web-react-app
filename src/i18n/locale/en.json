@@ -79,6 +79,7 @@
   "dashboard.report.card.manual.totalClaims.title": "Total Manual Claims",
   "dashboard.report.card.manual.claimAmount.title": "Total Manual Claimed Value",
 
+  "appointments.table.title": "Appointments",
   "consultation.table.title": "Consultations",
   "consultation.table.doctor.header": "Doctor",
   "consultation.table.doctor_specialty.header": "Specialty",

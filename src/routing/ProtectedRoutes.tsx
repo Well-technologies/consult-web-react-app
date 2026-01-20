@@ -16,6 +16,7 @@ import { Dashboard } from "@/app/dashboard/Dashboard";
 import { PatientsListContainer } from "../app/patients/PatientsListContainer";
 import { PatientDetailsContainer } from "@/app/patientDetails/PatientDetailsContainer";
 import { ConsultationsContainer } from "@/app/consultations/ConsultationsContainer";
+import { AppointmentsContainer } from "@/app/appointments/AppointmentsContainer";
 import { StoreReducerStateTypes } from "@/store/store.types";
 import { allReducerStates } from "@/store/store.utils";
 
@@ -25,7 +26,7 @@ export const ProtectedRoutes = () => {
   console.log("ProtectedRoutes rendered", client);
   const dispatch = useDispatch();
 
-  const { profile: {id : leadId} } = useSelector(
+  const { profile: {userDetail : {id : leadId}} } = useSelector(
     (rootState) =>
       allReducerStates(rootState as StoreReducerStateTypes).user
   );
@@ -81,6 +82,14 @@ export const ProtectedRoutes = () => {
         element={
           <Sidebar>
             <ConsultationsContainer />
+          </Sidebar>
+        }
+      />
+      <Route
+        path={AppRoute.Appointments}
+        element={
+          <Sidebar>
+            <AppointmentsContainer />
           </Sidebar>
         }
       />

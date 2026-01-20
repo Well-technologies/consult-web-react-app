@@ -906,10 +906,10 @@ export type GetFirstAdviceOrderListParams = {
   doctor: string;
   page: number;
   take: number;
-  appointmentType?: any;
-  scheduleType: 'upcoming';
-  orderBy: 'appointmentDate';
-  orderType: 'DESC';
+  appointmentType?: 'BOOKING';
+  scheduleType?: 'upcoming';
+  orderBy?: 'appointmentDate';
+  orderType?: 'DESC' | 'ASC';
 };
 
 export type GetAllConsultationsResponse = ConsultSuccessResponse<

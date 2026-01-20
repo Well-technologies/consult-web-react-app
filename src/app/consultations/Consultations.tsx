@@ -7,7 +7,7 @@ import { LogoLoader } from "@/ui/atoms/logoLoader/LogoLoader";
 import { NotFound } from "@/ui/molecules/notFound/NotFound";
 import { ConsultationDetails } from "@/api/consult/consult.types";
 import { ConsultationsProps } from "./Consultations.types";
-import { convertISOToDateTime } from "@/utils/timeConvertor.utils";
+import { convertISOToDateTime, convertISOToTime } from "@/utils/timeConvertor.utils";
 import { Pagination } from "@/ui/atoms/pagination/Pagination";
 
 export const Consultations = ({
@@ -34,6 +34,13 @@ export const Consultations = ({
             accessorFn: (row) => (convertISOToDateTime(row.appointmentDate) || "").split(" ")[0],
             cell: (info) => info.getValue(),
             header: `${t("consultation.table.consultation_date.header")}`,
+          },
+          {
+            accessorKey: "appointmentTime",
+            id: "appointmentTime",
+            accessorFn: (row) => convertISOToTime(row.appointmentDate),
+            cell: (info) => info.getValue(),
+            header: `${t("consultation.table.consultation_time.header")}`,
           },
           {
             accessorKey: "patient",

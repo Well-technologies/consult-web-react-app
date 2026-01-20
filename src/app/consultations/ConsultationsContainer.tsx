@@ -17,15 +17,10 @@ export const ConsultationsContainer = () => {
   const client = useClient({ serviceConfigType: ServiceConfigType.Consult });
   const location = useLocation();
 
-  const { user, config , auth } = useSelector(
+  const { user } = useSelector(
     (rootState) =>
       allReducerStates(rootState as StoreReducerStateTypes)
   );
-
-  console.log(user);
-  console.log(config);
-  console.log(auth);
-
   
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);

@@ -3,7 +3,7 @@ name: consult-web dev
 on:
   push:
     branches:
-      - main
+      - pipeline
 
 jobs:
   build:

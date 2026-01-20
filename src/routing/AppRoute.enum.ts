@@ -12,6 +12,7 @@ export enum AppRoute {
   Dashboard = "/dashboard",
   LeaderBoard = "/leaderboard",
   Consultations = "/consultations",
+  Appointments = "/appointments",
   Patients = "/patients",
   PatientDetails = "/patients/:leadId",
 }
