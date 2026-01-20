@@ -6,7 +6,7 @@ export const stagingServiceConfig: ServiceConfig = {
     api: process.env.REACT_FLASH_ADMIN_API_ENDPOINT || '',
   },
   consult: {
-    api: process.env.REACT_CONSULT_API_ENDPOINT || '',
+    api: process.env.REACT_API_ENDPOINT || '',
     socket: 'https://api-staging.flash.health/init',
     turnServer: 'turn:turn-staging.flash.health',
     stunServer: 'stun:stun-staging.flash.health',
