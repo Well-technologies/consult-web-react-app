@@ -10,7 +10,7 @@ export const RequestOtp = ({mobileNo, handleSubmit, showOtpError}: RequestOtpPro
     return (
         <div className="flex flex-col gap-4 w-full items-center">
             {showOtpError && <p className="text-red-500">{t("user.form.request_otp.error")}</p>}
-            <p>{t( showOtpError ? "user.form.retry_otp.note" : "user.form.request_otp.note", {'mobileNo': mobileNo?.length !== 9 ? "" : mobileNo})}</p>
+            <p>{t( showOtpError ? "user.form.retry_otp.note" : "user.form.request_otp.note", {'mobileNo': mobileNo?.length !== 9 ? "" : '+94' + mobileNo})}</p>
             <Button variant="primary" type="button" isDisabled={mobileNo?.length !== 9} onClick={() => handleSubmit({mobile: '+94' + mobileNo})}> {t(showOtpError ? "user.form.retry_otp.button" : "user.form.request_otp.button")}</Button>
         </div>
     )

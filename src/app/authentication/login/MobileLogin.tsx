@@ -119,14 +119,14 @@ return (
               </div>
             </div>
         </div>
-        <Button
+        {/* <Button
             type="submit"
-            isDisabled={isPending}
+            isDisabled={isPending  || getValues('otp')?.length !== 4}
             variant="primary"
             isFullWidth
         >
             {t("login.form.submit")}
-        </Button>
+        </Button> */}
         </form>
         </div>
         </div>

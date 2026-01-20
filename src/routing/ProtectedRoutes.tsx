@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 
 import { useGetConsultUserByIdDetails, useGetProfile } from "@/api/user/user";
 // import { ClaimReportContainer } from "@/app/claimReport/ClaimReportContainer";
@@ -26,6 +26,8 @@ export const ProtectedRoutes = () => {
   console.log("ProtectedRoutes rendered", client);
   const dispatch = useDispatch();
 
+  const navigate = useNavigate();
+
   const { profile: {userDetail : {id : leadId}} } = useSelector(
     (rootState) =>
       allReducerStates(rootState as StoreReducerStateTypes).user
@@ -49,7 +51,7 @@ export const ProtectedRoutes = () => {
         dispatch(
           onConsultUserDetailsFetch({ consultUserId: consultUserDetails.payload?.id })
         );
-        // navigate(AppRoute.Dashboard);
+        navigate(AppRoute.Dashboard);
       }
     }, [consultUserDetails, userDetails?.data?.id]);
 

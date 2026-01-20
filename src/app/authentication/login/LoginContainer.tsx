@@ -11,7 +11,7 @@ import { onLoginSuccess } from "@/store/authReducer/authReducer";
 
 import { EmailLoginFormInputs, LoginTypes, PhoneLoginFormInputs } from "./Login.types";
 import { EmailLoginSchema } from "./Login.utils";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MobileLoginForm } from "./MobileLogin";
 import { onUserDetailsFetch } from "@/store/userReducer/userReducer";
 import { useClient } from "@/hooks/useClient/useClient";
@@ -103,13 +103,13 @@ export const LoginContainer = () => {
   const {
     control: controlWithPhone,
     handleSubmit: handleSubmitWithPhone,
+    watch,
     // formState: { errors: errorsWithPhone },
   } = useForm<PhoneLoginFormInputs>({
     // resolver: PhoneLoginSchema(t),
     mode: "onBlur",
     reValidateMode: "onChange",
   });
-
 
   const handleSubmit = async (values: EmailLoginFormInputs | PhoneLoginFormInputs) => {
     console.log("values", values, loginType);
@@ -122,8 +122,19 @@ export const LoginContainer = () => {
     if (loginType === LoginTypes.PHONE && isOtpSent) {
       await mutateOnVerifyOtp({ client, body: values as VerifyOTPBody });
     }
-
   }
+
+  const { otp } = watch();
+
+  useEffect(() => {
+    if (otp?.length === 4) {
+      handleSubmit({
+        mobile: mobileNumber,
+        otp: otp
+      });
+    }
+  }, [otp]);
+
 
 
   return (

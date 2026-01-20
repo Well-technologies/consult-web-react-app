@@ -72,7 +72,7 @@ export const user = createSlice({
     },
     onRemoveUserDetails: (state) => {
       state.userDetails = userInitialState.userDetails;
-      state.userDetails = userInitialState.userDetails;
+      state.profile = userInitialState.profile;
     },
   },
 });

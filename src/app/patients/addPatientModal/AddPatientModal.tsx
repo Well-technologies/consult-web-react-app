@@ -25,7 +25,6 @@ export const AddPatientModal = ({
   formType,
   isLoading,
   isValidForm,
-  trigger,
   onClose,
   onSubmit,
   open,
@@ -88,6 +87,7 @@ export const AddPatientModal = ({
                   error={!!errors?.mobile_no}
                   helperText={errors?.mobile_no?.message}
                   required
+                  autoFocus={true}
                 />
               </div>
             </div>

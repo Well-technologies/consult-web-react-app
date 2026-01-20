@@ -34,7 +34,6 @@ export const AddPatientModalContainer = ({
   );
   const [isMyPatient, setIsMyPatient] = useState<boolean>((!!data ? data.isDisabled : false) || false )
   const [isRegisteredPatient, setIsRegisteredPatient] = useState<boolean | undefined>(undefined)
-  const [isVerifyOtpDivEnabled, setVerifyOtpDivEnabled] = useState(false);
 
   const {
     register,
