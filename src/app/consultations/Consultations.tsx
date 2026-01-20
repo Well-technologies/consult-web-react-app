@@ -9,6 +9,8 @@ import { ConsultationDetails } from "@/api/consult/consult.types";
 import { ConsultationsProps } from "./Consultations.types";
 import { convertISOToDateTime, convertISOToTime } from "@/utils/timeConvertor.utils";
 import { Pagination } from "@/ui/atoms/pagination/Pagination";
+import { AppRoute } from "@/routing/AppRoute.enum";
+import { useNavigate } from "react-router-dom";
 
 export const Consultations = ({
   data,
@@ -22,6 +24,7 @@ export const Consultations = ({
   onPageSizeChange,
 }: ConsultationsProps) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const columns = useMemo<ColumnDef<ConsultationDetails>[]>(
     () => {
@@ -74,6 +77,13 @@ export const Consultations = ({
             accessorKey: "callEndedType",
             id: "callEndedType",
             accessorFn: (row) => row.callEndedType || "-",
+            cell: (info) => info.getValue(),
+            header: `${t("consultation.table.call_ended_type.header")}`,
+          },
+          {
+            accessorKey: "prescription",
+            id: "prescription",
+            accessorFn: (row) => row.prescription || "-",
             cell: (info) => info.getValue(),
             header: `${t("consultation.table.call_ended_type.header")}`,
           },
@@ -136,6 +146,7 @@ export const Consultations = ({
           columns={columns}
           data={data}
           getRowId={(row) => `${row.id}`}
+          onRowClick={(i) => data && navigate(AppRoute.ConsultationDetails.replace(':consultationId', data[i].id))}
         />
       </div>
       <div className="h-1 bg-gray-100 mt-2" />

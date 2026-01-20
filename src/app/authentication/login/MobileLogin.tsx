@@ -105,11 +105,11 @@ return (
         </div>
         <div>
             <div className="flex justify-between items-end">
-              <div className={!!timer ? "text-gray-900 dark:text-white" : "text-red-500"}>
-                <div className="text-sm leading-tight tracking-tight text-gray-900 md:text-sm dark:text-white">
+              <div className={clsx("text-sm leading-tight tracking-tight md:text-sm", !!timer ? "text-gray-900 dark:text-white" : "text-red-500")}>
+                <div>
                   {t("login.form.verify_login.no_otp")}
                   <br />
-                  <div >
+                  <div onClick={() => {if(!timer){setLoginType(LoginTypes.PHONE); setIsOtpSent(false)}}} className={clsx("cursor-pointer", !!timer ? "text-gray-900 dark:text-white" : "text-red-500")}>
                     {!!timer ? t("login.form.verify_login.no_otp_timer", { timer }) : t("login.form.verify_login.no_otp_action")}
                   </div>
                 </div>

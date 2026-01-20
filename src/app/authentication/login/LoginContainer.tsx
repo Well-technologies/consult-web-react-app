@@ -54,9 +54,14 @@ export const LoginContainer = () => {
   });
 
   const { mutateAsync: mutateOnPhoneLogin, isPending: isPhoneLoginPending, variables } = useRequestOtp({
-    onSuccess: () => {
+    onSuccess: (res) => {
+      console.log("res", res.data);
       setMobileNumber(variables?.body?.mobile || "");
       setIsOtpSent(true);
+      reset({
+        otp: "",
+        mobile: variables?.body?.mobile || "",
+      });
     },
     onError: (error) => {
       console.error("onError error", error);
@@ -91,6 +96,8 @@ export const LoginContainer = () => {
 
 
   const {
+    // reset
+    // setValue: setValueWithPhone,
     // control: controlWithEmail,
     // handleSubmit: handleSubmitWithEmail,
     // formState: { errors: errorsWithEmail },
@@ -101,6 +108,7 @@ export const LoginContainer = () => {
   });
 
   const {
+    reset,
     control: controlWithPhone,
     handleSubmit: handleSubmitWithPhone,
     watch,

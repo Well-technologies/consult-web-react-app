@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 
@@ -17,73 +17,90 @@ import { PatientsListContainer } from "../app/patients/PatientsListContainer";
 import { PatientDetailsContainer } from "@/app/patientDetails/PatientDetailsContainer";
 import { ConsultationsContainer } from "@/app/consultations/ConsultationsContainer";
 import { AppointmentsContainer } from "@/app/appointments/AppointmentsContainer";
+import { ConsultationDetailsContainer } from "@/app/consultations/consultationDetails/ConsultationDetailsContainer";
 import { StoreReducerStateTypes } from "@/store/store.types";
 import { allReducerStates } from "@/store/store.utils";
+import { createSelector } from "@reduxjs/toolkit";
+
+const selectLeadId = createSelector(
+  [(rootState: StoreReducerStateTypes) => 
+    allReducerStates(rootState).user.userDetails.lead_id],
+  (leadId) => leadId
+);
 
 export const ProtectedRoutes = () => {
-  const client = useClient({serviceConfigType: ServiceConfigType.Core});
-  const consultClient = useClient({serviceConfigType: ServiceConfigType.Consult});
-  console.log("ProtectedRoutes rendered", client);
-  const dispatch = useDispatch();
-
-  const navigate = useNavigate();
-
-  const { profile: {userDetail : {id : leadId}} } = useSelector(
-    (rootState) =>
-      allReducerStates(rootState as StoreReducerStateTypes).user
-  );
-
-  const { data: userDetails, isLoading: isFetchingUserDetails } =
-    useGetProfile({ client });
-    
-    const { data: consultUserDetails} = useGetConsultUserByIdDetails({
-      client: consultClient,
-      leadId,
-      options: {
-        enabled: !!leadId && leadId !== 0
-      }
-    });
+  const client = useClient({ serviceConfigType: ServiceConfigType.Core });
+  const consultClient = useClient({ serviceConfigType: ServiceConfigType.Consult });
   
-    useEffect(() => {
-      console.log("userDetails?.data?.id", userDetails?.data?.id);
-      if (consultUserDetails) {
-        console.log("consultUserDetails", consultUserDetails);
-        dispatch(
-          onConsultUserDetailsFetch({ consultUserId: consultUserDetails.payload?.id })
-        );
-        navigate(AppRoute.Dashboard);
-      }
-    }, [consultUserDetails, userDetails?.data?.id]);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const leadId = useSelector(selectLeadId);
+
+  const { data: userDetails, isLoading: isFetchingUserDetails, refetch: refetchUserDetails } =
+    useGetProfile({ client, options: { enabled: false } });
+
+  const { data: consultUserDetails, refetch } = useGetConsultUserByIdDetails({
+    client: consultClient,
+    leadId: userDetails?.data?.userDetail?.id,
+    options: { enabled: !!userDetails?.data?.userDetail?.id }
+  });
 
   useEffect(() => {
-    console.log("userDetails", userDetails);
-    if (userDetails?.data) {
-      dispatch(
-        onProfileFetch({ profile: userDetails.data })
-      );
+    if (consultUserDetails?.payload?.id) {
+      dispatch(onConsultUserDetailsFetch({ 
+        consultUserId: consultUserDetails.payload.id 
+      }));
+      navigate(AppRoute.Dashboard);
     }
-  }, [userDetails]);
+  }, [consultUserDetails]);
+
+  useEffect(() => {
+    if (leadId) {
+      refetchUserDetails()
+    }
+  }, [leadId, refetch]);
+  
+  useEffect(() => {
+    console.log(userDetails?.data);
+    if (userDetails?.data?.userDetail?.id) {
+      refetch();
+    }
+  }, [userDetails?.data?.userDetail?.id]);
+
+  useEffect(() => {
+    if (userDetails?.data) {
+      dispatch(onProfileFetch({ profile: userDetails.data }));
+    }
+  }, [userDetails, dispatch]);
 
   if (isFetchingUserDetails) {
     return <LogoLoader />;
   }
   return (
     <Routes>
-      <Route
+        <Route
         path={AppRoute.Dashboard}
-        element={
+          element={
           <>
             <Sidebar>
               <Dashboard />
             </Sidebar>
           </>
-        }
-      />
+          }
+        />
       <Route
         path={AppRoute.Consultations}
         element={
           <Sidebar>
             <ConsultationsContainer />
+          </Sidebar>
+        }
+      />
+      <Route
+        path={AppRoute.ConsultationDetails}
+        element={
+          <Sidebar>
+            <ConsultationDetailsContainer />
           </Sidebar>
         }
       />

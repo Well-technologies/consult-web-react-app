@@ -11,6 +11,8 @@ import { allReducerStates } from "@/store/store.utils";
 import { useSelector } from "react-redux";
 import { StoreReducerStateTypes } from "@/store/store.types";
 import { useTranslation } from "react-i18next";
+import { Breadcrumbs } from "@/ui/molecules/breadcrumbs/Breadcrumbs";
+import { getConsultationsBreadCrumbOptions } from "./Consultations.utils";
 
 export const ConsultationsContainer = () => {
   const { t } = useTranslation();
@@ -43,6 +45,7 @@ export const ConsultationsContainer = () => {
 
   return (
     <div className="flex flex-col p-2 gap-6">
+      <Breadcrumbs breadcrumbs={getConsultationsBreadCrumbOptions()} />
           <div className="pb-0 flex flex-col border-2 border-gray-100 rounded-lg">
             <div className="flex p-4 flex-col md:flex-row gap-2 md:gap-0 md:items-center justify-between border-b-2 border-gray-100">
               <div className="text-lg font-bold">{t("consultation.table.title")}</div>
