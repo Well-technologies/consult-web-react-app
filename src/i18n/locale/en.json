@@ -166,6 +166,8 @@
   "patient.modal.claimCreditTopUp.title": "Toping up for {{name}}",
   "patient.modal.claimCreditTopUp.points.label": "Credits",
   "patient.modal.claimCreditTopUp.points.placeholder": "Top Up Value",
+  "patient.alert.create.success": "Patient added successfully!",
+  "patient.alert.create.failure": "Failed to add patient!",
   "patient.details.claimCredit.newBalance": "NEW BALANCE",
   "patient.delete.success.message": "Employee deleted successfully!",
   "patient.deleteConfirm.modal.title": "Are you sure?",

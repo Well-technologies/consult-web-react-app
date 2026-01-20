@@ -71,7 +71,7 @@ export const AddPatientModalContainer = ({
   }, [formType, data]);
 
   const { isPending } = useCreatePatient({
-    onSuccess: () => {
+    onSuccess: (res) => {
       refetch();
       reset({
         name: "",
@@ -81,7 +81,7 @@ export const AddPatientModalContainer = ({
         dob: "",
       });
       onClose();
-      toast.success(t("user.alert.create.success"));
+      res.success ? toast.success(t("user.alert.create.success")) : toast.error(t("user.alert.create.failure"));
     },
     onError: ({ data }) => {
       toast.error(
