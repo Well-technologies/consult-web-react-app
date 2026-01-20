@@ -22,10 +22,10 @@ export const OtpVerificationContainer = ({mobileNo, isOtpVerified, setIsOtpVerif
         watch: watchOtp,
         setValue,
         reset,
-        // formState: { errors: errorsWithPhone },
+        // formState: { errors: errorsWithPhone, isValid: isValidOtp },
       } = useForm<PhoneLoginFormInputs>({
         // resolver: PhoneLoginSchema(t),
-        mode: "onBlur",
+        mode: "all",
         reValidateMode: "onChange",
         defaultValues: {
           otp: ""

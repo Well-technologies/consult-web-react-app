@@ -48,7 +48,7 @@ export const AddPatientModalContainer = ({
   } = useForm<AddUserFormInputs>({
     resolver: AddUserSchema(t),
     mode: "all",
-    reValidateMode: "onChange",
+    reValidateMode: "onBlur",
     defaultValues: {
       name: "",
     },
@@ -59,7 +59,7 @@ export const AddPatientModalContainer = ({
   const {mobile_no: search_text_mobile} = watch();
 
   useEffect(() => {
-    if (formType === FormType.Add && data) {
+    if (formType === FormType.Add && !!data) {
       
     setValue('name', data.name)
     setValue('dob', data.date_of_birth)
@@ -68,7 +68,7 @@ export const AddPatientModalContainer = ({
     setValue('mobile_no', data.mobile_no.replace("+94", ""))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formType, data]);
+  }, [formType, data, isMyPatient]);
 
   const { isPending } = useCreatePatient({
     onSuccess: (res) => {
@@ -91,9 +91,7 @@ export const AddPatientModalContainer = ({
     },
   });
 
-
-    
-    const {
+  const {
       data: searchedPatients,
       isLoading: isSearchingPatient,
       // error: searchedPatientsError
@@ -102,7 +100,8 @@ export const AddPatientModalContainer = ({
       params: {
         patient: search_text_mobile,
       },
-      enabled: !!search_text_mobile && search_text_mobile.length === 9 && !data
+      enabled: !!search_text_mobile && search_text_mobile?.length === 9 
+      // && !!data
     });
 
   useEffect(() => {
@@ -125,7 +124,9 @@ export const AddPatientModalContainer = ({
         email: "",
         dob: "",
       });
-      setVerifyOtpDivEnabled(true)
+      // setVerifyOtpDivEnabled(true)
+      setIsRegisteredPatient(false)
+      setIsMyPatient(false)
     }
   }, [searchedPatients?.data, searchedPatients?.success])
 
@@ -133,7 +134,7 @@ export const AddPatientModalContainer = ({
   const {
     isPending: isPendingCreatePatient,
   } = useUpdatePatient({
-    onSuccess: () => {
+    onSuccess: (res) => {
       refetch();
       reset({
         name: "",
@@ -143,7 +144,7 @@ export const AddPatientModalContainer = ({
         dob: "",
       });
       onClose();
-      toast.success(t("user.alert.update.success"));
+      res.success ? toast.success(t("user.alert.create.success")) : toast.error(t("user.alert.create.failure"));
     },
     onError: () => {
       toast.error(t("global.alert.common.error"));
@@ -154,7 +155,7 @@ export const AddPatientModalContainer = ({
     mutateAsync: mutateOnCreatePatient,
     isPending: isPendingUpdatePatient,
   } = useCreatePatient({
-    onSuccess: () => {
+    onSuccess: (res) => {
       setSearchText?.("");
       refetch();
       reset({
@@ -165,7 +166,7 @@ export const AddPatientModalContainer = ({
         dob: "",
       });
       onClose();
-      toast.success(t("user.alert.update.success"));
+      res.success ? toast.success(t("user.alert.create.success")) : toast.error(t("user.alert.create.failure"));;
     },
     onError: () => {
       toast.error(t("global.alert.common.error"));
@@ -218,7 +219,7 @@ export const AddPatientModalContainer = ({
       isRegisteredPatient={isRegisteredPatient}
       isValidForm={isValid}
       trigger={data?.id ? trigger : undefined}
-      isVerifyOtpDivEnabled={!data?.isDisabled || isVerifyOtpDivEnabled}
+      // isVerifyOtpDivEnabled={!data?.isDisabled || isVerifyOtpDivEnabled}
       {...props}
     />
   );

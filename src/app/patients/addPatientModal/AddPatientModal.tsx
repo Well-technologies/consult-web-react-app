@@ -34,27 +34,20 @@ export const AddPatientModal = ({
   setValue,
   isMyPatient,
   isRegisteredPatient,
+  // isVerifyOtpDivEnabled
 }: AddPatientModalProps) => {
   const { t } = useTranslation();
   const {mobile_no} = watch();
 
   
   const [isVerifyOtp, setVerifyOtp] = useState(!isMyPatient);
-  const [isOtpVerified, setOtpVerified] = useState(!isRegisteredPatient || isMyPatient);
-  
+  const [isOtpVerified, setOtpVerified] = useState(false);
+
   useEffect(() => {
-    console.log('isMyPatient', isMyPatient, !isRegisteredPatient );
-    console.log('isOtpVerified', isOtpVerified );
-    console.log('trigger', trigger);
-    if(trigger){
-      trigger();
-    }
-  }, [isOtpVerified, isMyPatient, isRegisteredPatient]);
+    setOtpVerified(!!isRegisteredPatient && !!isMyPatient)
+  }, [isRegisteredPatient, isMyPatient]);
 
-
-
-  // setValue('patient_id', data?.id)
-
+  console.log('mobile_no', mobile_no)
   return (
     <Modal
       onClose={onClose}
@@ -170,9 +163,12 @@ export const AddPatientModal = ({
             />
           </div>
         </div>
-        {isRegisteredPatient &&<div className="flex flex-col gap-0 ">
+        <div className="flex flex-col gap-0 ">
           <div
-            className={cn("font-semibold relative cursor-pointer text-md bg-secondary-50 rounded-t-md p-2 px-4", (isMyPatient)  ? "pointer-events-none opacity-30" :  "pointer-events-auto")}
+            className={cn("font-semibold relative cursor-pointer text-md bg-secondary-50 rounded-t-md p-2 px-4"
+              // , (isMyPatient)  ? "pointer-events-none opacity-30" :  "pointer-events-auto"
+            )
+            }
             onClick={() => {
               setVerifyOtp(!isVerifyOtp);
             }}
@@ -203,7 +199,7 @@ export const AddPatientModal = ({
                 <OtpVerificationContainer mobileNo={mobile_no} isOtpVerified={isOtpVerified} setIsOtpVerified={setOtpVerified} />
             </div>
           </div>
-        </div>}
+        </div>
       </form>
     </Modal>
   );
