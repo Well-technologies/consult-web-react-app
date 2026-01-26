@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
-import { useCreatePatient, useSearchPatients, useUpdatePatient } from "../../../api/patient/patient";
+import { useCreatePatient, useGetMyPatients, useSearchPatients, useUpdatePatient } from "../../../api/patient/patient";
 import { GenderType } from "@/api/user/user.types";
 import { useClient } from "@/hooks/useClient/useClient";
 
@@ -106,17 +106,35 @@ export const AddPatientModalContainer = ({
         patient: search_text_mobile,
       },
       enabled: !!search_text_mobile && search_text_mobile?.length === 9 
-      // && !!data
+    // && !!data
     });
+
+      const {
+        data: myPatientsData,
+        refetch: refetchMyPatientsData,
+      } = useGetMyPatients({
+        client,
+        params: {
+          doctor_id,
+          page: 1,
+          page_size: 10,
+        }
+      });
+
+      useEffect(() => {
+        console.log('myPatientsData...')
+        search_text_mobile?.length === 9 && refetchMyPatientsData();
+      }, [search_text_mobile]);
+  
 
   useEffect(() => {
     console.log('searchedPatients...')
 
     setIsMyPatient(false)
-    setIsRegisteredPatient(!!searchedPatients?.data)
-    if(!!searchedPatients?.data){
-      const patient = searchedPatients?.data[0];
-      setIsMyPatient(true)
+    const patient = searchedPatients?.data?.filter((patient) => !patient.name.includes('+94'))[0];
+    setIsRegisteredPatient(!!patient)
+    if(!!patient){
+      setIsMyPatient(myPatientsData?.data?.map((patient) => patient?.id).includes(patient?.id) || false)
 
     setValue('name', patient.name)
     setValue('dob', patient.date_of_birth)
@@ -225,7 +243,7 @@ export const AddPatientModalContainer = ({
     <AddPatientModal
       onClose={onClose}
       formType={formType}
-      data={!!searchedPatients?.data && searchedPatients?.data[0] || data}
+      data={!!searchedPatients?.data && searchedPatients?.data?.filter((patient) => !patient.name.includes('+94'))[0] || data}
       control={control}
       isLoading={isPending || isPendingCreatePatient || isPendingUpdatePatient || isSearchingPatient}
       errors={errors}

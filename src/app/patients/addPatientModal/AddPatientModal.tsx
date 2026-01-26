@@ -125,7 +125,10 @@ console.log('isOtpVerified', isOtpVerified)
             />
             
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* {isMyPatient ? (
+            <> */}
+            
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4" >
             <FormDatePicker
               setValue={setValue}
               value={watch("dob") || ""}
@@ -173,6 +176,8 @@ console.log('isOtpVerified', isOtpVerified)
               // required
             />
           </div>
+          {/* </>
+          ): null} */}
         </div>
         <div className="flex flex-col gap-0 ">
           <div
