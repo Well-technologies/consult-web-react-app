@@ -233,9 +233,9 @@ export const AddPatientModalContainer = ({
         } 
         if(appointmentType === AppointmentType.Appointment && isMyPatient) {
           console.log('handleOnSubmit appointment', appointmentType, isMyPatient)
-          // if(patient_id){
-          //   onConfirm?.(parseInt(patient_id));
-          // }
+          if(patient_id){
+            onConfirm?.(parseInt(patient_id));
+          }
         }
       // }
       // For non-registered patients, the flow is handled via OTP verification
