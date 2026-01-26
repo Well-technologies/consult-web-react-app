@@ -2,11 +2,11 @@ import clsx from "clsx";
 
 import { ButtonProps } from "./Button.types";
 
-export const Button = ({ variant, isDisabled, onClick, className, type, children, isFullWidth }: ButtonProps) => {
+export const Button = ({ variant, disabled, onClick, className, type, children, isFullWidth }: ButtonProps) => {
   return (
               <button
                 type={type || "button"}
-                disabled={isDisabled}
+                disabled={disabled}
                 onClick={onClick}
                 className={clsx(
                   "cursor-pointer rounded-lg px-5 py-2.5 text-center text-sm font-medium",

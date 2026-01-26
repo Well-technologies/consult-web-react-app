@@ -33,6 +33,7 @@ export enum ConsultKeyTypes {
   GetConsultationById = 'GetConsultationById',
   GetHealthLogs = 'GetHealthLogs',
   GetConsultReview = 'GetConsultReview',
+  GetPatientsSummary = 'GetPatientsSummary',
 }
 
 export type GetAllAdvisersProps = {
@@ -608,9 +609,11 @@ export type GetConsultationsParams = {
   patient?: string;
   doctor?: string;
   doctorId?: number;
-  name?: string;
+  // name?: string;
   page: number;
   take: number;
+  // start?: string;
+  // end?: string;
 };
 
 export type GetConsultationsResponse = ConsultSuccessResponse<
@@ -910,6 +913,12 @@ export type GetFirstAdviceOrderListParams = {
   scheduleType?: 'upcoming';
   orderBy?: 'appointmentDate';
   orderType?: 'DESC' | 'ASC';
+  claim_id?: string;
+  from_date?: string;
+  to_date?: string;
+  org_id?: string;
+  status?: string;
+  type?: string;
 };
 
 export type GetAllConsultationsResponse = ConsultSuccessResponse<
@@ -1014,6 +1023,27 @@ export type GetConsultationByIdResponse = ConsultSuccessResponse<
   ConsultationDetails,
   null
 >;
+
+export type GetPatientsSummaryProps = {
+  client: AxiosInstance;
+  doctorId?: string;
+  options?: CommonQueryOptions;
+};
+
+export type GetPatientsSummaryResponse = ConsultSuccessResponse<
+  PatientSummary[],
+  null
+>;
+
+export type PatientSummary = {
+  patientName: string;
+  patientId: string;
+  lead_id: number;
+  profilePicture: string | null;
+  consultationCount: string;
+  lastRequestedAt: string;
+  lastAppointmentDate: string;
+};
 
 export type RescheduleAdviceBookingProps = {
   client: AxiosInstance;

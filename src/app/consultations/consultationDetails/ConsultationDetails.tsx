@@ -4,12 +4,15 @@ import { ConsultationDetailsProps, ConsultationDetailsTab } from "./Consultation
 import { PatientDetailsCard } from "@/app/patientDetails/patientDetailsCard/PatientDetailsCard";
 import { Tabs } from "@/ui/atoms/tabs/Tabs";
 import { TabType } from "@/ui/atoms/tabs/Tabs.types";
+import { useTranslation } from "react-i18next";
+import { NotFound } from "@/ui/molecules/notFound/NotFound";
+import { PrescriptionViewer } from "./PrescriptionViewer";
 
 export const ConsultationDetails = ({
   data,
   isLoading,
 }: ConsultationDetailsProps) => {
-  /* const { t } = useTranslation(); */
+  const { t } = useTranslation(); 
   const [activeTab, setActiveTab] = useState(ConsultationDetailsTab.Overview);
 
   // Use patient data from the consultation details for the card
@@ -19,45 +22,86 @@ export const ConsultationDetails = ({
   // PatientDetailsCard uses PatientDetailsCardProps where data is likely ConsultUserDetails or similar.
   // Let's pass data.patient directly.
 
+  /* Counts calculation */
+  const labTestCount = data?.labTests?.length ?? 0;
+  const medicationCount = data?.medications?.length ?? 0;
+  
+  // Actually, diagnosis usually refers to the list of diagnoses. Notes are extra. I will count items.
+  const diagnosisItemCount = data?.diagnoses?.items?.length ?? 0;
+  
+  // Symptoms count
+  const symptomItemCount = data?.symptoms?.items?.length ?? 0;
+
   const tabs: TabType<ConsultationDetailsTab>[] = [
     {
       value: ConsultationDetailsTab.Overview,
       label: "Overview", // TODO: Add translation key t("consultation.details.tab.overview")
-      component: <div>Overview Content Placeholder</div>,
+      component: (
+        <div className="w-fill-available h-[50vh] flex flex-col justify-center items-center gap-4 p-4">
+
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 m-4">
+          <div 
+            onClick={() => setActiveTab(ConsultationDetailsTab.LabTest)}
+            className="p-4 border rounded-md shadow-sm bg-white cursor-pointer hover:shadow-md transition-shadow flex flex-col items-center justify-center gap-2"
+          >
+            <h3 className="text-lg font-semibold text-gray-700">Lab Tests</h3>
+            <span className="text-2xl font-bold text-primary">{labTestCount}</span>
+          </div>
+          <div 
+            onClick={() => setActiveTab(ConsultationDetailsTab.Medications)}
+            className="p-4 border rounded-md shadow-sm bg-white cursor-pointer hover:shadow-md transition-shadow flex flex-col items-center justify-center gap-2"
+          >
+            <h3 className="text-lg font-semibold text-gray-700">Medications</h3>
+            <span className="text-2xl font-bold text-primary">{medicationCount}</span>
+          </div>
+          <div 
+            onClick={() => setActiveTab(ConsultationDetailsTab.Diagnosis)}
+            className="p-4 border rounded-md shadow-sm bg-white cursor-pointer hover:shadow-md transition-shadow flex flex-col items-center justify-center gap-2"
+          >
+            <h3 className="text-lg font-semibold text-gray-700">Diagnosis</h3>
+            <span className="text-2xl font-bold text-primary">{diagnosisItemCount}</span>
+          </div>
+          <div 
+            onClick={() => setActiveTab(ConsultationDetailsTab.Symptoms)}
+            className="p-4 border rounded-md shadow-sm bg-white cursor-pointer hover:shadow-md transition-shadow flex flex-col items-center justify-center gap-2"
+          >
+            <h3 className="text-lg font-semibold text-gray-700">Symptoms</h3>
+            <span className="text-2xl font-bold text-primary">{symptomItemCount}</span>
+          </div>
+        </div>
+        </div>
+      ),
     },
     {
       value: ConsultationDetailsTab.Prescription,
       label: "Prescription", // TODO: Add translation key
-      component: <div>Prescription Content Placeholder</div>,
+      component: (
+        <PrescriptionViewer url={data?.prescription} />
+      ),
     },
-    {
-      value: ConsultationDetailsTab.Notes,
-      label: "Notes", // TODO: Add translation key
-      component: <div>Notes Content Placeholder</div>,
-    },
+    // {
+    //   value: ConsultationDetailsTab.Notes,
+    //   label: "Notes", // TODO: Add translation key
+    //   component: <div>Notes Content Placeholder</div>,
+    // },
     {
       value: ConsultationDetailsTab.LabTest,
       label: "Lab Test",
       component: (
         <div className="flex flex-col gap-4">
           {data?.labTests?.length ? (
-            data.labTests.map((test, index) => (
-              <div key={index} className="p-4 border rounded-md shadow-sm bg-white">
-                {test.note && (
-                  <p className="mb-2">
-                    <strong>Note:</strong> {test.note}
-                  </p>
-                )}
-                {test.data && (
-                  <div className="bg-gray-50 p-2 rounded text-xs overflow-auto">
-                    <pre>{JSON.stringify(test.data, null, 2)}</pre>
-                  </div>
-                )}
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 m-4">
+            {data.labTests.map((test, index) => (
+              <div key={index} className="p-4 border text-sm rounded-md shadow-sm bg-white">
+                {test.data.title}
               </div>
-            ))
+            ))}
+          </div>
           ) : (
             <div className="p-4 text-gray-500 text-center bg-gray-50 rounded-md">
-              No Lab Tests found.
+              <NotFound text={t("global.text.notFound", { text: "Lab Tests" })} />
             </div>
           )}
         </div>
@@ -67,45 +111,55 @@ export const ConsultationDetails = ({
       value: ConsultationDetailsTab.Medications,
       label: "Medications",
       component: (
-        <div className="flex flex-col gap-4">
+        <div>
           {data?.medications?.length ? (
-            data.medications.map((med, index) => (
-              <div key={index} className="p-4 border rounded-md shadow-sm bg-white">
-                <p className="font-semibold text-lg text-primary">
-                  {med.medicineName}
-                </p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2 text-sm">
-                  <p>
-                    <span className="font-medium text-gray-600">Dosage:</span>{" "}
-                    {med.dosage}
-                  </p>
-                  <p>
-                    <span className="font-medium text-gray-600">Frequency:</span>{" "}
-                    {med.frequency}
-                  </p>
-                  <p>
-                    <span className="font-medium text-gray-600">Duration:</span>{" "}
-                    {med.duration}
-                  </p>
-                  <p>
-                    <span className="font-medium text-gray-600">Timing:</span>{" "}
-                    {med.timing}
-                  </p>
-                  <p>
-                    <span className="font-medium text-gray-600">Route:</span>{" "}
-                    {med.route}
-                  </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 m-4">
+              {data.medications.map((med, index) => (
+                <div
+                  key={index}
+                  className="p-3 border rounded-md shadow-sm bg-white flex flex-col h-full"
+                >
+                  <h4
+                    className="font-semibold text-sm text-primary mb-2 line-clamp-2"
+                    title={med.medicineName}
+                  >
+                    {med.medicineName}
+                  </h4>
+                  <ul className="text-xs text-gray-600 space-y-1 uppercase">
+                    <li>
+                      {med.dosage}
+                    </li>
+                    {med.schedules.map((schedule, index) => (
+                      schedule.count > 0 && <li key={index}>
+                        {`${schedule.title}(${schedule.count})`}
+                      </li>
+                    ))}
+                    <li>
+                      {med.frequency}
+                    </li>
+                    <li>
+                      {med.timing}
+                    </li>
+                    {/* <li>
+                      {med.duration} days
+                    </li> */}
+                    <h2
+                    className="font-semibold text-[12px] text-primary mb-2 line-clamp-2 mt-4"
+                  >
+                    {t("consultation.details.notes")}
+                  </h2>
+                    {med.notes && (
+                      <li>
+                        {med.notes}
+                      </li>
+                    )}
+                  </ul>
                 </div>
-                {med.notes && (
-                  <p className="mt-2 text-sm text-gray-600 border-t pt-2">
-                    <strong>Notes:</strong> {med.notes}
-                  </p>
-                )}
-              </div>
-            ))
+              ))}
+            </div>
           ) : (
             <div className="p-4 text-gray-500 text-center bg-gray-50 rounded-md">
-              No Medications found.
+              <NotFound text={t("global.text.notFound", { text: "Medications" })} />
             </div>
           )}
         </div>
@@ -117,29 +171,24 @@ export const ConsultationDetails = ({
       component: (
         <div className="flex flex-col gap-4">
           {(data?.diagnoses?.items?.length ?? 0) > 0 || data?.diagnoses?.note ? (
-            <div className="p-4 border rounded-md shadow-sm bg-white">
-              {data?.diagnoses?.items && data.diagnoses.items.length > 0 && (
-                <div className="mb-4">
-                  <h4 className="font-medium mb-2 text-gray-700">Diagnoses:</h4>
-                  <ul className="list-disc pl-5 space-y-1">
-                    {data.diagnoses.items.map((item) => (
-                      <li key={item.id} className="text-gray-800">
-                        {item.name}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-              {data?.diagnoses?.note && (
-                <div>
-                  <h4 className="font-medium mb-1 text-gray-700">Note:</h4>
-                  <p className="text-gray-600">{data.diagnoses.note}</p>
-                </div>
-              )}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 m-4">
+          {data?.diagnoses?.items?.length && (  
+            data.diagnoses.items.map((diagnosis, index) => (
+              <div key={index} className="p-4 border text-sm rounded-md shadow-sm bg-white">
+                {diagnosis.name}
+              </div>
+            ))
+          )}
+            {data?.diagnoses?.note && (
+              <div>
+                <h4 className="font-medium mb-1 text-gray-700">{t("consultation.details.notes")}</h4>
+                <p className="text-gray-600">{data.diagnoses.note}</p>
+              </div>
+            )}
             </div>
           ) : (
             <div className="p-4 text-gray-500 text-center bg-gray-50 rounded-md">
-              No Diagnosis found.
+              <NotFound text={t("global.text.notFound", { text: "Diagnosis" })} />
             </div>
           )}
         </div>
@@ -151,29 +200,26 @@ export const ConsultationDetails = ({
       component: (
         <div className="flex flex-col gap-4">
           {(data?.symptoms?.items?.length ?? 0) > 0 || data?.symptoms?.note ? (
-            <div className="p-4 border rounded-md shadow-sm bg-white">
+            <>
               {data?.symptoms?.items && data.symptoms.items.length > 0 && (
-                <div className="mb-4">
-                  <h4 className="font-medium mb-2 text-gray-700">Symptoms:</h4>
-                  <ul className="list-disc pl-5 space-y-1">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 m-4">
                     {data.symptoms.items.map((item) => (
-                      <li key={item.id} className="text-gray-800">
+                      <div key={item.id} className="p-4 border text-sm rounded-md shadow-sm bg-white">
                         {item.name}
-                      </li>
+                      </div>
                     ))}
-                  </ul>
                 </div>
               )}
               {data?.symptoms?.note && (
                 <div>
-                  <h4 className="font-medium mb-1 text-gray-700">Note:</h4>
+                  <h4 className="font-medium mb-1 text-gray-700">{t("consultation.details.notes")}</h4>
                   <p className="text-gray-600">{data.symptoms.note}</p>
                 </div>
               )}
-            </div>
+              </>
           ) : (
             <div className="p-4 text-gray-500 text-center bg-gray-50 rounded-md">
-              No Symptoms found.
+              <NotFound text={t("global.text.notFound", { text: "Symptoms" })} />
             </div>
           )}
         </div>
@@ -182,7 +228,7 @@ export const ConsultationDetails = ({
   ];
 
   return (
-    <div className="flex flex-col p-2 gap-2 sm:gap-4">
+    <div className="flex flex-col p-2 gap-2 sm:gap-4 h-full">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
         {/* Reuse PatientDetailsCard. 
             Note: We need to verify if data.patient matches what PatientDetailsCard expects.
@@ -194,7 +240,12 @@ export const ConsultationDetails = ({
         />
       </div>
 
-      <Tabs activeTab={activeTab} setTab={setActiveTab} tabs={tabs} />
+      <Tabs 
+        activeTab={activeTab} 
+        setTab={setActiveTab} 
+        tabs={tabs} 
+        containerClassName="flex-1 overflow-hidden flex flex-col border-2 border-gray-100 rounded-lg"
+      />
     </div>
   );
 };

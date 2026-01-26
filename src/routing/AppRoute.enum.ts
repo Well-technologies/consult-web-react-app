@@ -16,4 +16,5 @@ export enum AppRoute {
   Patients = "/patients",
   PatientDetails = "/patients/:leadId",
   ConsultationDetails = "/consultations/:consultationId",
+  JoinConsultation = "/consultation/join/:appointmentId",
 }

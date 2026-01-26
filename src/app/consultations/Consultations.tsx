@@ -10,7 +10,7 @@ import { ConsultationsProps } from "./Consultations.types";
 import { convertISOToDateTime, convertISOToTime } from "@/utils/timeConvertor.utils";
 import { Pagination } from "@/ui/atoms/pagination/Pagination";
 import { AppRoute } from "@/routing/AppRoute.enum";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export const Consultations = ({
   data,
@@ -25,25 +25,28 @@ export const Consultations = ({
 }: ConsultationsProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const isAppointmentsRoute = location.pathname === AppRoute.Appointments;
 
   const columns = useMemo<ColumnDef<ConsultationDetails>[]>(
     () => {
       // Columns for consultations route
       if (isConsultationsRoute) {
-        return [
+        const consultationColumns: ColumnDef<ConsultationDetails>[] = [
+          {
+            accessorKey: "consultationId",
+            id: "consultationId",
+            accessorFn: (row) => row.consultationId,
+            cell: (info) => info.getValue(),
+            header: `${t("consultation.table.consultation_id.header")}`,
+          },
           {
             accessorKey: "appointmentDate",
             id: "appointmentDate",
-            accessorFn: (row) => (convertISOToDateTime(row.appointmentDate) || "").split(" ")[0],
+            accessorFn: (row) => (convertISOToDateTime(row.appointmentDate) || "").split(" ")[0] + ' ' +convertISOToTime(row.appointmentDate),
             cell: (info) => info.getValue(),
             header: `${t("consultation.table.consultation_date.header")}`,
-          },
-          {
-            accessorKey: "appointmentTime",
-            id: "appointmentTime",
-            accessorFn: (row) => convertISOToTime(row.appointmentDate),
-            cell: (info) => info.getValue(),
-            header: `${t("consultation.table.consultation_time.header")}`,
           },
           {
             accessorKey: "patient",
@@ -57,6 +60,7 @@ export const Consultations = ({
             id: "callType",
             accessorFn: (row) => row.callType || "-",
             cell: (info) => info.getValue(),
+            
             header: `${t("consultation.table.call_type.header")}`,
           },
           {
@@ -80,15 +84,50 @@ export const Consultations = ({
             cell: (info) => info.getValue(),
             header: `${t("consultation.table.call_ended_type.header")}`,
           },
-          {
+          // {
+          //   accessorKey: "flashAppointmentId",
+          //   id: "flashAppointmentId",
+            
+          //   accessorFn: (row) => row.flashAppointmentId || "-",
+          //   cell: (info) => info.getValue(),
+          //   // header: `${t("consultation.table.prescription.header")}`,
+          // }
+        ];
+        
+        if (isAppointmentsRoute) {
+          consultationColumns.push({
+            accessorKey: "action",
+            id: "action",
+            accessorFn: (row) =>
+              row.flashAppointmentId && row.appointmentStatus === "Scheduled" ? (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigate(AppRoute.JoinConsultation.replace(':appointmentId', String(row.flashAppointmentId)));
+                  }}
+                  className="flex gap-2 cursor-pointer items-center justify-center md:justify-start rounded-lg px-4 py-2 bg-primary-600 text-white text-sm"
+                >
+                  {"Start"}
+                </button>
+              ) : (
+                <></>
+              ),
+            cell: (info) => info.getValue(),
+            header: "",
+          });
+        } else {
+          consultationColumns.push({
             accessorKey: "prescription",
             id: "prescription",
             accessorFn: (row) => row.prescription || "-",
             cell: (info) => info.getValue(),
-            header: `${t("consultation.table.call_ended_type.header")}`,
-          },
-        ];
+            // header: `${t("consultation.table.prescription.header")}`,
+          });
+        }
+
+        return consultationColumns;
       }
+      
 
       // Columns for patient details route (unchanged)
       const baseColumns: ColumnDef<ConsultationDetails>[] = [
@@ -124,7 +163,7 @@ export const Consultations = ({
 
       return baseColumns;
     },
-    [t, isConsultationsRoute, isPatientDetailsRoute]
+    [t, isConsultationsRoute, isPatientDetailsRoute, isAppointmentsRoute]
   );
 
   if (isLoading) {
@@ -136,12 +175,12 @@ export const Consultations = ({
   }
 
   if (!data?.length) {
-    return <NotFound text={t("consultation.table.notFound.text")} />;
+    return <NotFound text={t("global.text.notFound", { text: "Consultations" })} />;
   }
 
   return (
     <div className="flex flex-col p-2 gap-2 sm:gap-4">
-      <div className="hidden lg:flex">
+      <div className="flex">
         <DataTable
           columns={columns}
           data={data}

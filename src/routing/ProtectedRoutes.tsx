@@ -1,6 +1,6 @@
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 
 import { useGetConsultUserByIdDetails, useGetProfile } from "@/api/user/user";
 // import { ClaimReportContainer } from "@/app/claimReport/ClaimReportContainer";
@@ -21,6 +21,7 @@ import { ConsultationDetailsContainer } from "@/app/consultations/consultationDe
 import { StoreReducerStateTypes } from "@/store/store.types";
 import { allReducerStates } from "@/store/store.utils";
 import { createSelector } from "@reduxjs/toolkit";
+import { JoinConsultationContainer } from "@/app/joinConsultatoin/JoinConsultationContainer";
 
 const selectLeadId = createSelector(
   [(rootState: StoreReducerStateTypes) => 
@@ -33,8 +34,9 @@ export const ProtectedRoutes = () => {
   const consultClient = useClient({ serviceConfigType: ServiceConfigType.Consult });
   
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const leadId = useSelector(selectLeadId);
+
+
 
   const { data: userDetails, isLoading: isFetchingUserDetails, refetch: refetchUserDetails } =
     useGetProfile({ client, options: { enabled: false } });
@@ -50,7 +52,7 @@ export const ProtectedRoutes = () => {
       dispatch(onConsultUserDetailsFetch({ 
         consultUserId: consultUserDetails.payload.id 
       }));
-      navigate(AppRoute.Dashboard);
+      // navigate(AppRoute.Dashboard);
     }
   }, [consultUserDetails]);
 
@@ -58,7 +60,7 @@ export const ProtectedRoutes = () => {
     if (leadId) {
       refetchUserDetails()
     }
-  }, [leadId, refetch]);
+  }, [leadId]);
   
   useEffect(() => {
     console.log(userDetails?.data);
@@ -126,6 +128,12 @@ export const ProtectedRoutes = () => {
           <Sidebar>
             <PatientDetailsContainer/>
           </Sidebar>
+        }
+      />
+      <Route
+        path={AppRoute.JoinConsultation}
+        element={
+            <JoinConsultationContainer />
         }
       />
       

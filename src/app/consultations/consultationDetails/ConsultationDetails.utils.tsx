@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import { Breadcrumb } from "@/ui/molecules/breadcrumbs/Breadcrumbs.types";
 import { AppRoute } from "@/routing/AppRoute.enum";
 
-export const getConsultationDetailsBreadCrumbOptions = (): Breadcrumb[] => {
+export const getConsultationDetailsBreadCrumbOptions = (consultationId: number): Breadcrumb[] => {
   const { t } = useTranslation();
   return [
     {
@@ -11,7 +11,7 @@ export const getConsultationDetailsBreadCrumbOptions = (): Breadcrumb[] => {
       isSeparator: false,
     },
     {
-      name: t("consultation.details.title"),
+      name: t("consultation.details.title", { consultationId }),
       isSeparator: true,
     },
   ];

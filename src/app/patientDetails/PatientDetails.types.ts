@@ -3,6 +3,7 @@
 // import { ConsultUserDetails } from "@/api/user/user.types";
 import { ConsultUserDetails } from "@/api/consult/consult.types";
 import { PatientDetails } from "../../api/patient/patient.types";
+import { GetPreviousLabOrdersResponse, GetPreviousMedOrdersResponse } from "@/api/orders/orders.types";
 
 export enum UserStatus {
   Active = "Active",
@@ -12,12 +13,16 @@ export enum UserStatus {
 export enum PatientDetailsTab {
   Consultations = "Consultations",
   HealthVault = "Health Vault",
+  LabOrders = "Lab Orders",
+  MedOrders = "Med Orders",
 }
 
 export type PatientDetailsProps ={
   isLoading: boolean;
   data: ConsultUserDetails | null | undefined;
   consultations: any | undefined;
+  labOrders: GetPreviousLabOrdersResponse['data'] | undefined;
+  medOrders: GetPreviousMedOrdersResponse['data'] | undefined;
 }
 
 export type PatientsListProps = {

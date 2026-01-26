@@ -47,25 +47,25 @@ export const UsersData = ({
         ),
         header: t("user.table.date_of_birth.header"),
       },
-      {
-        accessorKey: "action",
-        id: "action",
-        accessorFn: (row) => row.isDisabled ? (
-          <button
-                        onClick={() => openAddNewModal(row, FormType.Add)}
-                        className="flex gap-2 cursor-pointer items-center justify-center md:justify-start rounded-lg px-4 py-2 bg-primary-600 text-white text-sm"
-                      >
-                        <img
-                          className="w-4 invert"
-                          src="https://img.icons8.com/ios-glyphs/30/plus-math.png"
-                          alt="plus-math"
-                        />
-                        {t("patient.new_user.button")}
-                      </button>
-        ) : <></>,
-        cell: (info) => info.getValue(),
-        header: "",
-      },
+      // {
+      //   accessorKey: "action",
+      //   id: "action",
+      //   accessorFn: (row) => row.isDisabled ? (
+      //     <button
+      //                   onClick={() => openAddNewModal(row, FormType.Add)}
+      //                   className="flex gap-2 cursor-pointer items-center justify-center md:justify-start rounded-lg px-4 py-2 bg-primary-600 text-white text-sm"
+      //                 >
+      //                   <img
+      //                     className="w-4 invert"
+      //                     src="https://img.icons8.com/ios-glyphs/30/plus-math.png"
+      //                     alt="plus-math"
+      //                   />
+      //                   {t("patient.new_user.button")}
+      //                 </button>
+      //   ) : <></>,
+      //   cell: (info) => info.getValue(),
+      //   header: "",
+      // },
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -80,7 +80,7 @@ export const UsersData = ({
   }
 
   if (!data?.length) {
-    return <NotFound text={t("user.table.notFound.text")} children={
+    return <NotFound text={t("global.text.notFound", { text: "Patients" })} children={
       <button
                     onClick={() => openAddNewModal(null, FormType.Add)}
                     className="flex gap-2 cursor-pointer items-center justify-center md:justify-start rounded-lg px-4 py-2 bg-primary-600 text-white text-sm"

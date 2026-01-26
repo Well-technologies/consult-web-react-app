@@ -109,7 +109,7 @@ export const PatientDetailsCard = ({
           </div>}
         </div>
       </div>
-      <div className="h-0.5 bg-gray-100 mt-2 w-full" />
+      {/* <div className="h-0.5 bg-gray-100 mt-2 w-full" /> */}
       {/* <div className="mt-2 flex gap-2 justify-end">
         {claimFeatures?.talkFamily ? (
           <button

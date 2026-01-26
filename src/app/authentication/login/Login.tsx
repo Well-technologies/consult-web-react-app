@@ -82,7 +82,7 @@ export const Login = ({
               <Button
                 type="button"
                 onClick={() => setLoginType(LoginTypes.PHONE)}
-                isDisabled={isPending}
+                disabled={isPending}
                 variant="outline"
                 isFullWidth
               >
@@ -90,7 +90,7 @@ export const Login = ({
               </Button>
               <Button
                 type="submit"
-                isDisabled={isPending}
+                disabled={isPending}
                 variant="primary"
                 isFullWidth
               >

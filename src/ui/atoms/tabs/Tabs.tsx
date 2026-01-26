@@ -43,7 +43,11 @@ export const Tabs = <T extends string | number>({
       </div>
       {tabs.map(
         ({ value, component }) =>
-          value === activeTab && <div key={value}>{component}</div>
+          value === activeTab && (
+            <div key={value} className="flex-1 overflow-auto">
+              {component}
+            </div>
+          )
       )}
     </div>
   );

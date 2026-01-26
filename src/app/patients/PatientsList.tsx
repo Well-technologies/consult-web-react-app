@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 
 import { PatientsListProps } from "./PatientsList.types";
 import { UsersData } from "./usersData/UsersData";
-import { FormType } from "./addPatientModal/AddPatientModal.types";
 import { UsersFilters } from "./usersFilters/UsersFilters";
 
 export const PatientList = ({
@@ -41,7 +40,7 @@ export const PatientList = ({
               />
               {t("global.text.filter")}
             </button>
-            <button
+            {/* <button
               onClick={() => openAddNewModal(null, FormType.Add)}
               className="flex gap-2 cursor-pointer items-center justify-center md:justify-start rounded-lg px-4 py-2 bg-primary-600 text-white text-sm"
             >
@@ -51,7 +50,7 @@ export const PatientList = ({
                 alt="plus-math"
               />
               {t("patient.new_user.button")}
-            </button>
+            </button> */}
           </div>
         </div>
         <UsersFilters openFilter={openFilter} {...props} searchText={searchText} setSearchText={setSearchText}/>

@@ -1,7 +1,7 @@
 export type ButtonProps = {
   title?: string;
   variant: "primary" | "secondary" | "outline";
-  isDisabled?: boolean;
+  disabled?: boolean;
   onClick?: () => void;
   className?: string;
   type?: "button" | "submit" | "reset";

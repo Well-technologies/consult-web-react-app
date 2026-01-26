@@ -12,9 +12,10 @@ import { LeadIdParamType } from "@/routing/AppRoutes.types";
 import { getPatientDetailsBreadCrumbOptions } from "./PatientDetails.utils";
 import { Breadcrumbs } from "@/ui/molecules/breadcrumbs/Breadcrumbs";
 import { useGetConsultations } from "@/api/consult/consult";
+import { useGetPreviousLabOrders, useGetPreviousMedOrders } from "@/api/orders/orders";
 
 export const PatientDetailsContainer = () => {
-  // const client = useClient({serviceConfigType: ServiceConfigType.Core});
+  const client = useClient({serviceConfigType: ServiceConfigType.Core});
   const consultClient = useClient({serviceConfigType: ServiceConfigType.Consult});
   // const { t } = useTranslation();
 
@@ -79,6 +80,38 @@ export const PatientDetailsContainer = () => {
 
   });
 
+
+  const {
+    data: labOrders,
+  } = useGetPreviousLabOrders({
+    client: client,
+    params: {
+      lead_id: consultPatient?.payload?.lead_id,
+      page: 1,
+      take: 20
+    },
+    options: {
+      enabled: !!consultPatient?.payload?.lead_id,
+    }
+    
+  });
+
+    const {
+    data: medOrders,
+  } = useGetPreviousMedOrders({
+    client: client,
+    params: {
+      lead_id: consultPatient?.payload?.lead_id,
+      page: 1,
+      take: 20
+    },
+    options: {
+      enabled: !!consultPatient?.payload?.lead_id,
+    }
+    
+  });
+
+
   useEffect(()=>{
     console.log(consultPatient)
     refatchConsultations();
@@ -93,6 +126,8 @@ export const PatientDetailsContainer = () => {
       data={consultPatient?.payload}
       isLoading={isLoadingConsultPatient || isLoadingConsultations}
       consultations={consultations?.payload}
+      labOrders={labOrders?.data}
+      medOrders={medOrders?.data}
         // openAddNewModal={onOpenUserModal}
         // openFilter={openFilter}
         // openAndCloseFilter={openAndCloseFilter}

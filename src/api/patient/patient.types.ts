@@ -69,7 +69,9 @@ export type UserDetails = Pick<
   | "mobile_no"
   | "email"
   | "date_of_birth"
->;
+> & {
+  appointment_id?: number;
+}
 
 export type UpdatePatientProps = {
   client: AxiosInstance;

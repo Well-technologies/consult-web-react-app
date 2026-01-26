@@ -182,7 +182,7 @@ return (
         </Button> */}
         <Button
             type="submit"
-            isDisabled={isPending}
+            disabled={isPending}
             variant="primary"
             isFullWidth
         >

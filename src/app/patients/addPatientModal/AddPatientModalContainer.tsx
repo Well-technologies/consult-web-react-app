@@ -11,7 +11,7 @@ import { useClient } from "@/hooks/useClient/useClient";
 
 import { AddPatientModal } from "./AddPatientModal";
 import { FormType } from "@/types";
-import { AddPatientModalContainerProps, AddUserFormInputs } from "./AddPatientModal.types";
+import { AddPatientModalContainerProps, AddUserFormInputs, AppointmentType } from "./AddPatientModal.types";
 import { AddUserSchema } from "./AddPatientModal.utils";
 import { useSelector } from "react-redux";
 import { StoreReducerStateTypes } from "@/store/store.types";
@@ -19,11 +19,13 @@ import { allReducerStates } from "@/store/store.utils";
 
 export const AddPatientModalContainer = ({
   onClose,
-  refetch,
+  // refetch,
   formType,
   data,
-  myPatients,
+  // myPatients,
   setSearchText,
+  appointmentType,
+  onConfirm,
   ...props
 }: AddPatientModalContainerProps) => {
   const { t } = useTranslation();
@@ -43,17 +45,16 @@ export const AddPatientModalContainer = ({
     watch,
     setValue,
     trigger,
+    // appointmentType,
     formState: { errors, isValid },
   } = useForm<AddUserFormInputs>({
     resolver: AddUserSchema(t),
-    mode: "all",
-    reValidateMode: "onBlur",
+    mode: "onChange",
+    reValidateMode: "onChange",
     defaultValues: {
       name: "",
     },
   });
-  
-  console.log('isMyPatient', isMyPatient)
 
   const {mobile_no: search_text_mobile} = watch();
 
@@ -71,7 +72,8 @@ export const AddPatientModalContainer = ({
 
   const { isPending } = useCreatePatient({
     onSuccess: (res) => {
-      refetch();
+      console.log('res', res);
+      // refetch();
       reset({
         name: "",
         gender: "",
@@ -80,11 +82,15 @@ export const AddPatientModalContainer = ({
         dob: "",
       });
       onClose();
-      res.success ? toast.success(t("user.alert.create.success")) : toast.error(t("user.alert.create.failure"));
+      // if(appointmentType === AppointmentType.Consultation){
+      //   // navigate(AppRoute.JoinConsultation.replace(':appointmentId', res?.data?.appointment_id?.toString() || ''));
+      // }
+      onConfirm?.(appointmentType === AppointmentType.Consultation ? res?.data?.appointment_id : parseInt( res.data.id));
+      // res.success ? toast.success(t("user.alert.create.success")) : toast.error(t("user.alert.create.failure"));
     },
     onError: ({ data }) => {
       toast.error(
-        data.message.replace("Lead", "Employee") ||
+        data.message ||
           t("global.alert.common.error")
       );
     },
@@ -104,11 +110,13 @@ export const AddPatientModalContainer = ({
     });
 
   useEffect(() => {
+    console.log('searchedPatients...')
 
     setIsMyPatient(false)
     setIsRegisteredPatient(!!searchedPatients?.data)
     if(!!searchedPatients?.data){
       const patient = searchedPatients?.data[0];
+      setIsMyPatient(true)
 
     setValue('name', patient.name)
     setValue('dob', patient.date_of_birth)
@@ -134,7 +142,7 @@ export const AddPatientModalContainer = ({
     isPending: isPendingCreatePatient,
   } = useUpdatePatient({
     onSuccess: (res) => {
-      refetch();
+      // refetch();
       reset({
         name: "",
         gender: "",
@@ -155,8 +163,9 @@ export const AddPatientModalContainer = ({
     isPending: isPendingUpdatePatient,
   } = useCreatePatient({
     onSuccess: (res) => {
+      console.log('useCreatePatient', res)
       setSearchText?.("");
-      refetch();
+      // refetch();
       reset({
         name: "",
         gender: "",
@@ -165,6 +174,7 @@ export const AddPatientModalContainer = ({
         dob: "",
       });
       onClose();
+      onConfirm?.(res?.data?.appointment_id);
       res.success ? toast.success(t("user.alert.create.success")) : toast.error(t("user.alert.create.failure"));;
     },
     onError: () => {
@@ -185,22 +195,31 @@ export const AddPatientModalContainer = ({
           // patient_id: patient_id
         }
         console.log('handleOnSubmit', data)
-      await mutateOnCreatePatient({
-        client,
-        body: data,
-      });
+      
+      if(appointmentType === AppointmentType.Consultation || (appointmentType === AppointmentType.Appointment && !isMyPatient)){
+        await mutateOnCreatePatient({
+          client,
+          body: data,
+        });
+      } 
+      if(appointmentType === AppointmentType.Appointment && isMyPatient) {
+        if(patient_id){
+        onConfirm?.(parseInt(patient_id));
+        }
+      }
     }
-    // if ((formType === FormType.Edit && searchedPatients) || (isRegisteredPatient && searchedPatients?.data)) {
-    //   await mutateOnUpdatePatient({
-    //     client,
-    //     userId: isRegisteredPatient ? searchedPatients.data[0].id : data ? data.id : '',
-    //     body: {
-    //       ...values,
-    //       mobile_no: `+94${values.mobile_no}`,
-    //     },
-    //   });
-    // }
   };
+
+  // const handleCreatingAppointment = () => {
+    
+  // }
+
+  // const handleCreatingConsultation = (res: any) => {
+  //     onConfirm?.(res?.data?.appointment_id);
+  // }
+
+
+  console.log('======== isMyPatient', isMyPatient)
 
   return (
     <AddPatientModal
@@ -216,6 +235,7 @@ export const AddPatientModalContainer = ({
       onSubmit={handleSubmit(handleOnSubmit)}
       isMyPatient={isMyPatient}
       isRegisteredPatient={isRegisteredPatient}
+      mutateOnCreatePatient={mutateOnCreatePatient}
       isValidForm={isValid}
       trigger={data?.id ? trigger : undefined}
       // isVerifyOtpDivEnabled={!data?.isDisabled || isVerifyOtpDivEnabled}

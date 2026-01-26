@@ -8,14 +8,14 @@ import { FormLabel } from "@/ui/atoms/formLabel/FormLabel";
 import { Input } from "@/ui/atoms/input/input";
 import { FormInput } from "@/ui/molecules/formInput/FormInput";
 import { FormSelect } from "@/ui/molecules/formSelect/FormSelect";
-import { Modal } from "@/ui/molecules/modal/Modal";
 
 import { AddPatientModalProps } from "./AddPatientModal.types";
-import { getConfirmButtonText, getModalTitle, getIsConfirmButtonHide, getCancelButtonText, getIsDisabledFormItem, getUserGenderOptions } from "./AddPatientModal.utils";
+import { getIsDisabledFormItem, getUserGenderOptions } from "./AddPatientModal.utils";
 import { DatePickerType } from "@/ui/atoms/datePicker/DatePicker.types";
 import { FormDatePicker } from "@/ui/molecules/formDatePicker/FormDatePicker";
 import { cn } from "@/lib/utils";
 import { OtpVerificationContainer } from "../otpVerification/OtpVerificationContainer";
+import { Button } from "@/ui/atoms/button/Button";
 
 
 export const AddPatientModal = ({
@@ -23,47 +23,55 @@ export const AddPatientModal = ({
   data,
   errors,
   formType,
-  isLoading,
+  // isLoading,
   isValidForm,
   onClose,
   onSubmit,
-  open,
+  // open,
   watch,
   register,
   setValue,
   isMyPatient,
   isRegisteredPatient,
+  cancelButtonText,
+  confirmButtonText,
+  mutateOnCreatePatient
   // isVerifyOtpDivEnabled
 }: AddPatientModalProps) => {
   const { t } = useTranslation();
-  const {mobile_no} = watch();
+
+  console.log('errors', errors);
+  // console.log('isValidForm', isValidForm);
 
   
   const [isVerifyOtp, setVerifyOtp] = useState(!isMyPatient);
-  const [isOtpVerified, setOtpVerified] = useState(false);
+  const [isOtpVerified, setOtpVerified] = useState(isMyPatient);
 
   useEffect(() => {
     setOtpVerified(!!isRegisteredPatient && !!isMyPatient)
   }, [isRegisteredPatient, isMyPatient]);
+console.log('isMyPatient', isMyPatient)
+console.log('isOtpVerified', isOtpVerified)
 
-  console.log('mobile_no', mobile_no)
+  // console.log('mobile_no', mobile_no)
   return (
-    <Modal
-      onClose={onClose}
-      open={open}
-      confirmButtonText={getConfirmButtonText(formType)}
-      onConfirm={onSubmit}
-      title={getModalTitle(formType, data)}
-      isLoading={isLoading}
-      isConfirmButtonHide={getIsConfirmButtonHide(formType)}
-      cancelButtonText={getCancelButtonText(formType)}
-      isCloseOnOutsideClickDisabled
-      isCloseIcon
-      disabled={!isOtpVerified || !isValidForm}
-    >
-      <form className="space-y-4 md:space-y-6" action="#">
+    // <Modal
+    //   onClose={onClose}
+    //   open={open}
+    //   confirmButtonText={getConfirmButtonText(formType)}
+    //   onConfirm={onSubmit}
+    //   title={getModalTitle(formType, data)}
+    //   isLoading={isLoading}
+    //   isConfirmButtonHide={getIsConfirmButtonHide(formType)}
+    //   cancelButtonText={getCancelButtonText(formType)}
+    //   isCloseOnOutsideClickDisabled
+    //   isCloseIcon
+    //   disabled={!isOtpVerified || !isValidForm}
+    // >
+      <form className="space-y-4 md:space-y-6" action="#" onSubmit={onSubmit}>
         <div className="flex flex-col gap-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
             <div className="flex flex-col w-full">
               <FormLabel label={t("user.form.mobile_no.label")} required />
               <div className="flex w-full gap-1">
@@ -81,7 +89,8 @@ export const AddPatientModal = ({
                   containerClassName="w-full"
                   id="name"
                   type="number"
-                  max={9}
+                  maxLength={9}
+                  minLength={9}
                   name="mobile_no"
                   placeholder={t("user.form.mobile_no.placeholder")}
                   error={!!errors?.mobile_no}
@@ -90,12 +99,13 @@ export const AddPatientModal = ({
                   autoFocus={true}
                 />
               </div>
-            </div>
-                        
+
+              </div>
+                  
             <FormInput
               register={register}
               label={t("user.form.name.label")}
-              disabled={getIsDisabledFormItem(formType, "name") || !isOtpVerified}
+              // disabled={getIsDisabledFormItem(formType, "name") || (isRegisteredPatient && !isOtpVerified)}
               id="name"
               type="text"
               name="name"
@@ -113,6 +123,7 @@ export const AddPatientModal = ({
               hidden
               value={data?.id}
             />
+            
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormDatePicker
@@ -129,14 +140,14 @@ export const AddPatientModal = ({
               helperText={errors?.dob?.message}
               isHiddenActions
               required
-              disabled={!isOtpVerified}
+              disabled={(isRegisteredPatient && !isOtpVerified)}
               pastOnly={true}
               />
 
             <FormSelect
               id="gender"
               name="gender"
-              isDisabled={getIsDisabledFormItem(formType, "gender") || !isOtpVerified}
+              isDisabled={getIsDisabledFormItem(formType, "gender") || (isRegisteredPatient && !isOtpVerified)}
               label={t("user.form.gender.label")}
               control={control}
               placeholder={t("user.form.gender.placeholder")}
@@ -152,7 +163,7 @@ export const AddPatientModal = ({
             <FormInput
               register={register}
               label={t("user.form.email.label")}
-              disabled={getIsDisabledFormItem(formType, "email") || !isOtpVerified}
+              disabled={getIsDisabledFormItem(formType, "email") || (isRegisteredPatient && !isOtpVerified)}
               id="email"
               type="email"
               name="email"
@@ -196,11 +207,38 @@ export const AddPatientModal = ({
             )}
           >
             <div className={"py-4 justify-center items-center flex w-full"}>
-                <OtpVerificationContainer mobileNo={mobile_no} isOtpVerified={isOtpVerified} setIsOtpVerified={setOtpVerified} />
+                <OtpVerificationContainer mutateOnCreatePatient={mutateOnCreatePatient} mobileNo={control._formValues.mobile_no} disabled={isRegisteredPatient ? false : !isValidForm} isOtpVerified={isMyPatient ? true : isOtpVerified} setIsOtpVerified={setOtpVerified} />
             </div>
           </div>
         </div>
+        <div
+              // className={clsx(
+              //   // "flex shrink-0 flex-wrap items-center justify-end sticky sm:relative bottom-0 right-0 w-full sm:pt-0 gap-2 bg-white p-4",
+              //   // modalFooterClassName
+              // )}
+              className="flex shrink-0 flex-wrap items-center justify-end sticky sm:relative bottom-0 right-0 w-full sm:pt-0 gap-2 bg-white p-4"
+            >
+              
+                <Button
+                variant="outline"
+                  type="button"
+                  // disabled={isLoading}
+                  onClick={onClose}
+                >
+                  {cancelButtonText || t("global.modal.cancel")}
+                </Button>
+              
+                <Button
+                variant="primary"
+                  // onClick={onConfirm}
+                  disabled={!isOtpVerified}
+                  type="submit"
+                >
+                  {confirmButtonText || t("global.modal.submit")}
+                </Button>
+              
+            </div>
       </form>
-    </Modal>
+    // </Modal>
   );
 };

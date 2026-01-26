@@ -91,6 +91,8 @@ import {
   CreateHealthDocumentResponse,
   GetConsultReviewProps,
   GetConsultReviewResponse,
+  GetPatientsSummaryProps,
+  GetPatientsSummaryResponse,
 } from './consult.types';
 
 const getAllAdvisers = ({ client, params }: GetAllAdvisersProps) =>
@@ -749,6 +751,27 @@ export const useGetConsultationById = ({
   useQuery({
     queryKey: [ConsultKeyTypes.GetConsultationById, consultationId],
     queryFn: () => getConsultationById({ client, consultationId }),
+    placeholderData: keepPreviousData,
+    staleTime: Infinity,
+    ...options,
+  });
+
+const getPatientsSummary = ({
+  client,
+  doctorId,
+}: GetPatientsSummaryProps) =>
+  client
+    .get<GetPatientsSummaryResponse>(`consultations/patients-summary/${doctorId}`)
+    .then(({ data }) => data);
+
+export const useGetPatientsSummary = ({
+  client,
+  doctorId,
+  options,
+}: GetPatientsSummaryProps) =>
+  useQuery({
+    queryKey: [ConsultKeyTypes.GetPatientsSummary, doctorId],
+    queryFn: () => getPatientsSummary({ client, doctorId }),
     placeholderData: keepPreviousData,
     staleTime: Infinity,
     ...options,

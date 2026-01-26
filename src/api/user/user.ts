@@ -64,6 +64,7 @@ export const useGetConsultUserDetails = ({ client, options, leadId }: GetConsult
     queryFn: () => getConsultUserDetails({ client, leadId }),
     placeholderData: keepPreviousData,
     ...options,
+    
   });
 
 
@@ -74,7 +75,7 @@ export const useGetProfile = ({ client, options }: GetProfileProps) =>
   useQuery({
     queryKey: [ProfileKeyTypes.GetProfile],
     queryFn: () => getProfile({ client }),
-    placeholderData: keepPreviousData,
+    // placeholderData: keepPreviousData,
     staleTime: Infinity,
     ...options,
   });

@@ -21,6 +21,11 @@ export type CommonSuccessResponse<T> = {
   message: string;
 };
 
+export type CommonOptions = {
+  label: string;
+  value: string;
+};
+
 export type ConsultSuccessResponse<T, D> = {
   success: boolean;
   message: string;
@@ -73,3 +78,26 @@ export type GetClientConfigProps = Pick<
   CreateClientProps,
   'serviceConfig' | 'serviceConfigType' | 'previousToken' | 'type'
 >;
+
+export type PaginatedResponse<T> = {
+  current_page: number;
+  data: T[];
+  first_page_url: string;
+  from: number;
+  last_page: number;
+  last_page_url: string;
+  next_page_url: string | null;
+  path: string;
+  per_page: string;
+  prev_page_url: string | null;
+  to: number;
+  total: number;
+};
+
+
+export type CommonSuccessPaginatedResponse<T> = {
+  success: boolean;
+  data: PaginatedResponse<T>;
+  message: string;
+};
+

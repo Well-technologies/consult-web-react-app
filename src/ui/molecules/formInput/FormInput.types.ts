@@ -1,3 +1,4 @@
+import { CommonOptions } from "@/api/index.types";
 import { ReactNode } from "react";
 import { UseFormRegister } from "react-hook-form";
 
@@ -10,4 +11,5 @@ export type FormInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   helperText?: string;
   label?: ReactNode;
   success?: boolean;
+  options?: CommonOptions[]
 };

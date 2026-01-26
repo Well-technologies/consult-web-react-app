@@ -7,17 +7,24 @@ import { Tabs } from "@/ui/atoms/tabs/Tabs";
 import { useState } from "react";
 import { PatientDetailsCard } from "./patientDetailsCard/PatientDetailsCard";
 import { Consultations } from "../consultations/Consultations";
+import { PreviousLabOrders } from "./previousLabOrders/PreviousLabOrders";
+import { PreviousMedOrders } from "./previousMedOrders/PreviousMedOrders";
 // import { UsersData } from "./usersData/UsersData";
 
 export const PatientDetails = ({
   // openAddNewModal,
   data,
   consultations,
+  labOrders,
+  medOrders,
   // openFilter,
   isLoading,
   // openAndCloseFilter,
   ...props
 }: PatientDetailsProps) => {
+
+  console.log('labOrders', labOrders)
+  console.log('medOrders', medOrders)
   
   const [activeTab, setActiveTab] = useState(PatientDetailsTab.Consultations);
   const { t } = useTranslation();
@@ -47,6 +54,20 @@ export const PatientDetails = ({
       component: <>Health Vault</>
       // <TransactionData {...transactionForm} {...props}
       //  />,
+    },
+    {
+      value: PatientDetailsTab.LabOrders,
+      label: t("patient.details.tab.lab_orders"),
+      component: (
+        <PreviousLabOrders data={labOrders?.data} />
+      )
+    },
+    {
+      value: PatientDetailsTab.MedOrders,
+      label: t("patient.details.tab.med_orders"),
+      component: (
+        <PreviousMedOrders data={medOrders?.data} />
+      ),
     },
   ];
 

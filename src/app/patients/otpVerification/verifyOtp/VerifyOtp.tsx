@@ -28,7 +28,7 @@ export const VerifyOtp = ({control, handleSubmit, watchOtp}: VerifyOtpProps) => 
       }}/>
     )}
       />
-    <Button variant="primary" type="button" isDisabled={otp?.length !== 4} onClick={() => handleSubmit({mobile, otp})}> {t("user.form.verify_otp.button")}</Button>
+    <Button variant="primary" type="button" disabled={otp?.length !== 4} onClick={() => handleSubmit({mobile, otp})}> {t("user.form.verify_otp.button")}</Button>
         </div>
     )
 };
