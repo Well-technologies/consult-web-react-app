@@ -5,4 +5,4 @@ export type RequestOtpProps = {
     setIsOtpRequested: (isOtpRequested: boolean) => void;
     handleSubmit: (data: PhoneLoginFormInputs) => void;
     showOtpError: boolean;
-} & Pick<OtpVerificationProps, 'disabled' | 'mobileNo'>
+} & Pick<OtpVerificationProps, 'disabled' | 'mobileNo' | 'mutateOnCreatePatient' | 'isRegisteredPatient' | 'formData' | 'onAppointmentIdSet' | 'trigger'>

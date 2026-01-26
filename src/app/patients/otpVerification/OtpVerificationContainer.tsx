@@ -10,7 +10,7 @@ import { useClient } from "@/hooks/useClient/useClient";
 import { VerifyOTPBody } from "@/api/authentication/authentication.types";
 import { OtpVerificationProps } from "./OtpVerification.types";
 
-export const OtpVerificationContainer = ({mobileNo, disabled, isOtpVerified, setIsOtpVerified}: OtpVerificationProps) => {
+export const OtpVerificationContainer = ({mobileNo, disabled, isOtpVerified, setIsOtpVerified, mutateOnCreatePatient, isRegisteredPatient, setIsRegisteredPatient, formData, onAppointmentIdSet, trigger, setIsMyPatient}: OtpVerificationProps) => {
     const [isOtpRequested, setIsOtpRequested] = useState(false);
     const [showOtpError, setShowOtpError] = useState(false);
     const client = useClient({});
@@ -64,6 +64,8 @@ export const OtpVerificationContainer = ({mobileNo, disabled, isOtpVerified, set
           if (success) {
             
             setIsOtpVerified(true);
+            setIsRegisteredPatient(true);
+            setIsMyPatient(true);
             reset({
                 otp: ""
             });
@@ -89,6 +91,17 @@ export const OtpVerificationContainer = ({mobileNo, disabled, isOtpVerified, set
     return (
         isOtpVerified ? <div>{t("user.form.verify_otp.success")}</div>
         : isOtpRequested ? <VerifyOtp control={controlWithPhone} watchOtp={watchOtp} handleSubmit={handleVerifyOtp}/>
-        : <RequestOtp setIsOtpRequested={setIsOtpRequested} mobileNo={mobileNo} handleSubmit={handleRequestOtp} showOtpError={showOtpError} disabled={disabled}/>
+        : <RequestOtp 
+            setIsOtpRequested={setIsOtpRequested} 
+            mobileNo={mobileNo} 
+            handleSubmit={handleRequestOtp} 
+            showOtpError={showOtpError} 
+            disabled={disabled}
+            mutateOnCreatePatient={mutateOnCreatePatient}
+            isRegisteredPatient={isRegisteredPatient}
+            formData={formData}
+            onAppointmentIdSet={onAppointmentIdSet}
+            trigger={trigger}
+          />
     )
 }               

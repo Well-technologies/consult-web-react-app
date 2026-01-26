@@ -86,7 +86,6 @@ export const AddPatientModalContainer = ({
       //   // navigate(AppRoute.JoinConsultation.replace(':appointmentId', res?.data?.appointment_id?.toString() || ''));
       // }
       onConfirm?.(appointmentType === AppointmentType.Consultation ? res?.data?.appointment_id : parseInt( res.data.id));
-      // res.success ? toast.success(t("user.alert.create.success")) : toast.error(t("user.alert.create.failure"));
     },
     onError: ({ data }) => {
       toast.error(
@@ -99,6 +98,7 @@ export const AddPatientModalContainer = ({
   const {
       data: searchedPatients,
       isLoading: isSearchingPatient,
+      refetch: refetchSearchedPatients,
       // error: searchedPatientsError
     } = useSearchPatients({
       client,
@@ -134,7 +134,7 @@ export const AddPatientModalContainer = ({
     const patient = searchedPatients?.data?.filter((patient) => !patient.name.includes('+94'))[0];
     setIsRegisteredPatient(!!patient)
     if(!!patient){
-      setIsMyPatient(myPatientsData?.data?.map((patient) => patient?.id).includes(patient?.id) || false)
+    setIsMyPatient(myPatientsData?.data?.map((patient) => patient?.id).includes(patient?.id) || false)
 
     setValue('name', patient.name)
     setValue('dob', patient.date_of_birth)
@@ -148,37 +148,38 @@ export const AddPatientModalContainer = ({
         gender: "",
         email: "",
         dob: "",
+        patient_id: "",
       });
       // setVerifyOtpDivEnabled(true)
       setIsRegisteredPatient(false)
       setIsMyPatient(false)
     }
+
+    console.log('isRegisteredPatient', isRegisteredPatient)
   }, [searchedPatients?.data, searchedPatients?.success])
-
-
+  
+  // Separate mutation for OTP flow - no side effects in onSuccess
   const {
-    isPending: isPendingCreatePatient,
-  } = useUpdatePatient({
+    mutateAsync: mutateOnCreatePatientForOtp,
+  } = useCreatePatient({
     onSuccess: (res) => {
-      // refetch();
-      reset({
-        name: "",
-        gender: "",
-        email: "",
-        mobile_no: "",
-        dob: "",
-      });
-      onClose();
-      res.success ? toast.success(t("user.alert.create.success")) : toast.error(t("user.alert.create.failure"));
+      setValue('patient_id', res?.data?.id)
+      console.log('useCreatePatient for OTP', res)
+      // Don't close modal or navigate here - let OTP flow complete first
+      if (res.success) {
+        // toast.success(t("user.alert.create.success"));
+      } else {
+        toast.error(res.message || t("user.alert.create.failure"));
+      }
     },
     onError: () => {
       toast.error(t("global.alert.common.error"));
     },
   });
-  
+
   const {
     mutateAsync: mutateOnCreatePatient,
-    isPending: isPendingUpdatePatient,
+    isPending: isPendingCreatePatient,
   } = useCreatePatient({
     onSuccess: (res) => {
       console.log('useCreatePatient', res)
@@ -190,10 +191,10 @@ export const AddPatientModalContainer = ({
         email: "",
         mobile_no: "",
         dob: "",
+        patient_id: "",
       });
       onClose();
       onConfirm?.(res?.data?.appointment_id);
-      res.success ? toast.success(t("user.alert.create.success")) : toast.error(t("user.alert.create.failure"));;
     },
     onError: () => {
       toast.error(t("global.alert.common.error"));
@@ -205,39 +206,44 @@ export const AddPatientModalContainer = ({
     if (formType === FormType.Add) {
       console.log(values)
       const {patient_id, ...restValues} = values
-      const data = {
-          ...(!isRegisteredPatient ? restValues : values),
-          doctor_id,
-          consultation_mode_id: 4,
-          mobile_no: `+94${values.mobile_no}`,
-          // patient_id: patient_id
-        }
-        console.log('handleOnSubmit', data)
       
-      if(appointmentType === AppointmentType.Consultation || (appointmentType === AppointmentType.Appointment && !isMyPatient)){
-        await mutateOnCreatePatient({
-          client,
-          body: data,
-        });
-      } 
-      if(appointmentType === AppointmentType.Appointment && isMyPatient) {
-        if(patient_id){
-        onConfirm?.(parseInt(patient_id));
+      // For registered patients or appointments with existing patients
+      // if(isRegisteredPatient) {
+        const data = {
+            ...restValues,
+            doctor_id,
+            consultation_mode_id: 4,
+            mobile_no: `+94${values.mobile_no}`,
+          }
+          const  registeredPatientData = {
+            ...values,
+            doctor_id,
+            consultation_mode_id: 4,
+            mobile_no: `+94${values.mobile_no}`,
+          }
+          console.log('handleOnSubmit', data)
+        
+        // Create appointment/consultation for registered patient
+        if(appointmentType === AppointmentType.Consultation || (appointmentType === AppointmentType.Appointment && !isMyPatient)){
+          console.log('handleOnSubmit consultation', appointmentType, isMyPatient)
+          await mutateOnCreatePatient({
+            client,
+            body: isRegisteredPatient ? registeredPatientData : data,
+          });
+        } 
+        if(appointmentType === AppointmentType.Appointment && isMyPatient) {
+          console.log('handleOnSubmit appointment', appointmentType, isMyPatient)
+          // if(patient_id){
+          //   onConfirm?.(parseInt(patient_id));
+          // }
         }
-      }
+      // }
+      // For non-registered patients, the flow is handled via OTP verification
+      // Patient creation happens when "Send OTP" is clicked
+      // Navigation happens when "Start Consultation" is clicked after OTP verification
     }
   };
-
-  // const handleCreatingAppointment = () => {
-    
-  // }
-
-  // const handleCreatingConsultation = (res: any) => {
-  //     onConfirm?.(res?.data?.appointment_id);
-  // }
-
-
-  console.log('======== isMyPatient', isMyPatient)
+  // console.log('======== isMyPatient', isMyPatient)
 
   return (
     <AddPatientModal
@@ -245,7 +251,7 @@ export const AddPatientModalContainer = ({
       formType={formType}
       data={!!searchedPatients?.data && searchedPatients?.data?.filter((patient) => !patient.name.includes('+94'))[0] || data}
       control={control}
-      isLoading={isPending || isPendingCreatePatient || isPendingUpdatePatient || isSearchingPatient}
+      isLoading={isPending || isPendingCreatePatient || isSearchingPatient}
       errors={errors}
       watch={watch}
       register={register}
@@ -253,9 +259,13 @@ export const AddPatientModalContainer = ({
       onSubmit={handleSubmit(handleOnSubmit)}
       isMyPatient={isMyPatient}
       isRegisteredPatient={isRegisteredPatient}
+      mutateOnCreatePatientForOtp={mutateOnCreatePatientForOtp}
       mutateOnCreatePatient={mutateOnCreatePatient}
       isValidForm={isValid}
+      setIsRegisteredPatient={setIsRegisteredPatient}
+      setIsMyPatient={setIsMyPatient}
       trigger={data?.id ? trigger : undefined}
+      onConfirm={onConfirm}
       // isVerifyOtpDivEnabled={!data?.isDisabled || isVerifyOtpDivEnabled}
       {...props}
     />

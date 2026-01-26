@@ -45,11 +45,16 @@ export type AddPatientModalProps = Omit<AddPatientModalContainerProps, "refetch"
   // isVerifyOtpDivEnabled: boolean;
   isValidForm?: boolean;
   isRegisteredPatient: boolean | undefined;
+  setIsRegisteredPatient: (value: boolean) => void;
+  setIsMyPatient: (value: boolean) => void;
   cancelButtonText?: string;
   confirmButtonText?: string;
   mutateOnCreatePatient: (variables: CreatePatientProps, options?: MutateOptions<CreatePatientResponse, Errors<{
     message: string;
-}>, CreatePatientProps, unknown> | undefined) => Promise<CreatePatientResponse>
+}>, CreatePatientProps, unknown> | undefined) => Promise<CreatePatientResponse>;
+  mutateOnCreatePatientForOtp: (variables: CreatePatientProps, options?: MutateOptions<CreatePatientResponse, Errors<{
+    message: string;
+}>, CreatePatientProps, unknown> | undefined) => Promise<CreatePatientResponse>;
 }
 
 export enum FormType {

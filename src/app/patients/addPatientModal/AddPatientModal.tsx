@@ -9,7 +9,7 @@ import { Input } from "@/ui/atoms/input/input";
 import { FormInput } from "@/ui/molecules/formInput/FormInput";
 import { FormSelect } from "@/ui/molecules/formSelect/FormSelect";
 
-import { AddPatientModalProps } from "./AddPatientModal.types";
+import { AddPatientModalProps, AddUserFormInputs } from "./AddPatientModal.types";
 import { getIsDisabledFormItem, getUserGenderOptions } from "./AddPatientModal.utils";
 import { DatePickerType } from "@/ui/atoms/datePicker/DatePicker.types";
 import { FormDatePicker } from "@/ui/molecules/formDatePicker/FormDatePicker";
@@ -27,6 +27,7 @@ export const AddPatientModal = ({
   isValidForm,
   onClose,
   onSubmit,
+  onConfirm,
   // open,
   watch,
   register,
@@ -35,7 +36,11 @@ export const AddPatientModal = ({
   isRegisteredPatient,
   cancelButtonText,
   confirmButtonText,
-  mutateOnCreatePatient
+  setIsRegisteredPatient,
+  setIsMyPatient,
+  mutateOnCreatePatient,
+  mutateOnCreatePatientForOtp,
+  trigger
   // isVerifyOtpDivEnabled
 }: AddPatientModalProps) => {
   const { t } = useTranslation();
@@ -46,12 +51,36 @@ export const AddPatientModal = ({
   
   const [isVerifyOtp, setVerifyOtp] = useState(!isMyPatient);
   const [isOtpVerified, setOtpVerified] = useState(isMyPatient);
+  const [appointmentId, setAppointmentId] = useState<number | undefined>(undefined);
 
   useEffect(() => {
     setOtpVerified(!!isRegisteredPatient && !!isMyPatient)
   }, [isRegisteredPatient, isMyPatient]);
-console.log('isMyPatient', isMyPatient)
-console.log('isOtpVerified', isOtpVerified)
+  console.log('isMyPatient', isMyPatient)
+  console.log('isOtpVerified', isOtpVerified)
+
+  const handleStartConsultation = () => {
+    console.log('handleStartConsultation', appointmentId, isOtpVerified)
+    // if (appointmentId && isOtpVerified) {
+    //   onConfirm?.(appointmentId);
+    //   onClose();
+    // }
+    // if(isRegisteredPatient && appointmentId && isOtpVerified){
+    //   onConfirm?.(appointmentId);
+    //   onClose();
+    // }
+  };
+
+  const submitForm = (data: any) => {
+    console.log('data', data)
+  if (!isRegisteredPatient && appointmentId && isOtpVerified) {
+    handleStartConsultation();
+    return;
+  }
+
+  // normal submit logic
+  onSubmit(data);
+};
 
   // console.log('mobile_no', mobile_no)
   return (
@@ -68,7 +97,7 @@ console.log('isOtpVerified', isOtpVerified)
     //   isCloseIcon
     //   disabled={!isOtpVerified || !isValidForm}
     // >
-      <form className="space-y-4 md:space-y-6" action="#" onSubmit={onSubmit}>
+      <form className="space-y-4 md:space-y-6" action="#" onSubmit={submitForm}>
         <div className="flex flex-col gap-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
@@ -212,7 +241,19 @@ console.log('isOtpVerified', isOtpVerified)
             )}
           >
             <div className={"py-4 justify-center items-center flex w-full"}>
-                <OtpVerificationContainer mutateOnCreatePatient={mutateOnCreatePatient} mobileNo={control._formValues.mobile_no} disabled={isRegisteredPatient ? false : !isValidForm} isOtpVerified={isMyPatient ? true : isOtpVerified} setIsOtpVerified={setOtpVerified} />
+                <OtpVerificationContainer 
+                  mutateOnCreatePatient={mutateOnCreatePatientForOtp} 
+                  mobileNo={control._formValues.mobile_no} 
+                  disabled={isRegisteredPatient ? false : !isValidForm} 
+                  isOtpVerified={isMyPatient ? true : isOtpVerified} 
+                  setIsOtpVerified={setOtpVerified}
+                  isRegisteredPatient={isRegisteredPatient}
+                  setIsRegisteredPatient={setIsRegisteredPatient}
+                  setIsMyPatient={setIsMyPatient}
+                  formData={watch()}
+                  onAppointmentIdSet={setAppointmentId}
+                  trigger={trigger}
+                />
             </div>
           </div>
         </div>
@@ -235,9 +276,9 @@ console.log('isOtpVerified', isOtpVerified)
               
                 <Button
                 variant="primary"
-                  // onClick={onConfirm}
                   disabled={!isOtpVerified}
                   type="submit"
+                  // onClick={(!isRegisteredPatient && appointmentId && isOtpVerified) ? handleStartConsultation : undefined}
                 >
                   {confirmButtonText || t("global.modal.submit")}
                 </Button>
