@@ -19,7 +19,7 @@ export const CreateConsultation = (
     const startConsultation = (appointmentId?: number | string) => {
         // setIsCreatingConsultation(true);
         console.log('startConsultation', appointmentId);
-        navigate(AppRoute.JoinConsultation.replace(':appointmentId', appointmentId?.toString() || ''));
+        navigate(AppRoute.JoinConsultation.replace(':appointmentId', appointmentId?.toString() || '').replace(':patientId', ''));
     }
 
     return (
