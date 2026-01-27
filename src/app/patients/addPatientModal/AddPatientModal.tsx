@@ -9,7 +9,7 @@ import { Input } from "@/ui/atoms/input/input";
 import { FormInput } from "@/ui/molecules/formInput/FormInput";
 import { FormSelect } from "@/ui/molecules/formSelect/FormSelect";
 
-import { AddPatientModalProps, AddUserFormInputs } from "./AddPatientModal.types";
+import { AddPatientModalProps } from "./AddPatientModal.types";
 import { getIsDisabledFormItem, getUserGenderOptions } from "./AddPatientModal.utils";
 import { DatePickerType } from "@/ui/atoms/datePicker/DatePicker.types";
 import { FormDatePicker } from "@/ui/molecules/formDatePicker/FormDatePicker";
@@ -27,7 +27,6 @@ export const AddPatientModal = ({
   isValidForm,
   onClose,
   onSubmit,
-  onConfirm,
   // open,
   watch,
   register,
@@ -38,7 +37,6 @@ export const AddPatientModal = ({
   confirmButtonText,
   setIsRegisteredPatient,
   setIsMyPatient,
-  mutateOnCreatePatient,
   mutateOnCreatePatientForOtp,
   trigger
   // isVerifyOtpDivEnabled

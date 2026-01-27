@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
-import { useCreatePatient, useGetMyPatients, useSearchPatients, useUpdatePatient } from "../../../api/patient/patient";
+import { useCreatePatient, useGetMyPatients, useSearchPatients } from "../../../api/patient/patient";
 import { GenderType } from "@/api/user/user.types";
 import { useClient } from "@/hooks/useClient/useClient";
 
@@ -98,7 +98,6 @@ export const AddPatientModalContainer = ({
   const {
       data: searchedPatients,
       isLoading: isSearchingPatient,
-      refetch: refetchSearchedPatients,
       // error: searchedPatientsError
     } = useSearchPatients({
       client,

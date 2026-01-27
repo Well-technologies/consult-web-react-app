@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Card, CardContent, CardHeader } from '@/ui/atoms/card/card';
+import { Card, CardContent } from '@/ui/atoms/card/card';
 import { Button } from '@/ui/atoms/button/Button';
 import { Tabs } from '@/ui/atoms/tabs/Tabs';
 import { ConsultationCardProps, ConsultationType } from './JoinConsultation.types';
