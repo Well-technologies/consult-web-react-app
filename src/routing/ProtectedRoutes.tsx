@@ -23,61 +23,13 @@ import { allReducerStates } from "@/store/store.utils";
 import { createSelector } from "@reduxjs/toolkit";
 import { JoinConsultationContainer } from "@/app/joinConsultatoin/JoinConsultationContainer";
 
-const selectLeadId = createSelector(
-  [(rootState: StoreReducerStateTypes) => 
-    allReducerStates(rootState).user.userDetails.lead_id],
-  (leadId) => leadId
-);
+
 
 export const ProtectedRoutes = () => {
-  const client = useClient({ serviceConfigType: ServiceConfigType.Core });
-  const consultClient = useClient({ serviceConfigType: ServiceConfigType.Consult });
   
-  const dispatch = useDispatch();
-  const leadId = useSelector(selectLeadId);
-
-
-
-  const { data: userDetails, isLoading: isFetchingUserDetails, refetch: refetchUserDetails } =
-    useGetProfile({ client, options: { enabled: false } });
-
-  const { data: consultUserDetails, refetch } = useGetConsultUserByIdDetails({
-    client: consultClient,
-    leadId: userDetails?.data?.userDetail?.id,
-    options: { enabled: !!userDetails?.data?.userDetail?.id }
-  });
-
-  useEffect(() => {
-    if (consultUserDetails?.payload?.id) {
-      dispatch(onConsultUserDetailsFetch({ 
-        consultUserId: consultUserDetails.payload.id 
-      }));
-      // navigate(AppRoute.Dashboard);
-    }
-  }, [consultUserDetails]);
-
-  useEffect(() => {
-    if (leadId) {
-      refetchUserDetails()
-    }
-  }, [leadId]);
-  
-  useEffect(() => {
-    console.log(userDetails?.data);
-    if (userDetails?.data?.userDetail?.id) {
-      refetch();
-    }
-  }, [userDetails?.data?.userDetail?.id]);
-
-  useEffect(() => {
-    if (userDetails?.data) {
-      dispatch(onProfileFetch({ profile: userDetails.data }));
-    }
-  }, [userDetails, dispatch]);
-
-  if (isFetchingUserDetails) {
-    return <LogoLoader />;
-  }
+  // if (isFetchingUserDetails) {
+  //   return <LogoLoader />;
+  // }
   return (
     <Routes>
         <Route
@@ -137,7 +89,8 @@ export const ProtectedRoutes = () => {
         }
       />
       
-      <Route path="*" element={<Navigate to={AppRoute.Login} replace />} />
+      <Route path="/" element={<Navigate to={AppRoute.Dashboard} replace />} />
+      <Route path="*" element={<Navigate to={AppRoute.Dashboard} replace />} />
     </Routes>
   );
 };
