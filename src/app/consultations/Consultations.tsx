@@ -103,7 +103,7 @@ export const Consultations = ({
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    navigate(AppRoute.JoinConsultation.replace(':appointmentId', String(row.flashAppointmentId)).replace(':patientId', String(row.patient?.id)));
+                    navigate(AppRoute.JoinConsultation.replace(':appointmentId', String(row.flashAppointmentId)).replace(':patientId', String(row.patient?.lead_id)));
                   }}
                   className="flex gap-2 cursor-pointer items-center justify-center md:justify-start rounded-lg px-4 py-2 bg-primary-600 text-white text-sm"
                 >

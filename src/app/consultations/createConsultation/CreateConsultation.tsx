@@ -16,10 +16,10 @@ export const CreateConsultation = (
     const { t } = useTranslation();
     const navigate = useNavigate();
 
-    const startConsultation = (appointmentId?: number | string) => {
+    const startConsultation = (appointmentId?: number | string, patientId?: number | string) => {
         // setIsCreatingConsultation(true);
-        console.log('startConsultation', appointmentId);
-        navigate(AppRoute.JoinConsultation.replace(':appointmentId', appointmentId?.toString() || '').replace(':patientId', ''));
+        console.log('startConsultation', appointmentId, patientId);
+        navigate(AppRoute.JoinConsultation.replace(':appointmentId', appointmentId?.toString() || '').replace(':patientId', patientId?.toString() || ''));
     }
 
     return (

@@ -28,7 +28,7 @@ export type AddPatientModalContainerProps = Pick<
   data: PatientDetails | null;
   formType: FormType;
   myPatients?: UserDetails[]
-  onConfirm?: (value?: number) => void;
+  onConfirm?: (appointmentId?: number, patientId?: number) => void;
   appointmentType?: AppointmentType;
 } & Partial<Pick<UsersFiltersProps, "setSearchText">>;
 

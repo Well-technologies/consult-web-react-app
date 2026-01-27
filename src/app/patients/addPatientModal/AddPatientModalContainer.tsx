@@ -73,6 +73,7 @@ export const AddPatientModalContainer = ({
   const { isPending } = useCreatePatient({
     onSuccess: (res) => {
       console.log('res', res);
+      console.log('onConfirm', res?.data?.appointment_id, res.data.id);
       // refetch();
       reset({
         name: "",
@@ -85,7 +86,7 @@ export const AddPatientModalContainer = ({
       // if(appointmentType === AppointmentType.Consultation){
       //   // navigate(AppRoute.JoinConsultation.replace(':appointmentId', res?.data?.appointment_id?.toString() || ''));
       // }
-      onConfirm?.(appointmentType === AppointmentType.Consultation ? res?.data?.appointment_id : parseInt( res.data.id));
+      onConfirm?.(res?.data?.appointment_id, parseInt(res.data.id));
     },
     onError: ({ data }) => {
       toast.error(
@@ -193,7 +194,7 @@ export const AddPatientModalContainer = ({
         patient_id: "",
       });
       onClose();
-      onConfirm?.(res?.data?.appointment_id);
+      onConfirm?.(res?.data?.appointment_id, parseInt(res.data.id));
     },
     onError: () => {
       toast.error(t("global.alert.common.error"));
