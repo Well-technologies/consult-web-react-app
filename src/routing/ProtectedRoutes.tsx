@@ -1,26 +1,16 @@
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { Navigate, Route, Routes } from "react-router-dom";
 
-import { useGetConsultUserByIdDetails, useGetProfile } from "@/api/user/user";
 // import { ClaimReportContainer } from "@/app/claimReport/ClaimReportContainer";
-import { useClient } from "@/hooks/useClient/useClient";
 import { Sidebar } from "@/layout/sidebar/Sidebar";
-import { onConsultUserDetailsFetch, onProfileFetch } from "@/store/userReducer/userReducer";
-import { LogoLoader } from "@/ui/atoms/logoLoader/LogoLoader";
 // import { setCustomUserId } from "@/utils/Clarity/clarity";
 
 import { AppRoute } from "./AppRoute.enum";
-import { ServiceConfigType } from "@/api/index.types";
 import { Dashboard } from "@/app/dashboard/Dashboard";
 import { PatientsListContainer } from "../app/patients/PatientsListContainer";
 import { PatientDetailsContainer } from "@/app/patientDetails/PatientDetailsContainer";
 import { ConsultationsContainer } from "@/app/consultations/ConsultationsContainer";
 import { AppointmentsContainer } from "@/app/appointments/AppointmentsContainer";
 import { ConsultationDetailsContainer } from "@/app/consultations/consultationDetails/ConsultationDetailsContainer";
-import { StoreReducerStateTypes } from "@/store/store.types";
-import { allReducerStates } from "@/store/store.utils";
-import { createSelector } from "@reduxjs/toolkit";
 import { JoinConsultationContainer } from "@/app/joinConsultatoin/JoinConsultationContainer";
 
 

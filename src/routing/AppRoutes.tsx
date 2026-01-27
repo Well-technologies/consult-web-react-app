@@ -32,7 +32,7 @@ export const AppRoutes = () => {
     const dispatch = useDispatch();
     const leadId = useSelector(selectLeadId);
   
-    const { data: userDetails, isLoading: isFetchingUserDetails, refetch: refetchUserDetails } =
+    const { data: userDetails, refetch: refetchUserDetails } =
       useGetProfile({ client, options: { enabled: false } });
   
     const { data: consultUserDetails, refetch } = useGetConsultUserByIdDetails({
