@@ -11,5 +11,5 @@ export type FormInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   helperText?: string;
   label?: ReactNode;
   success?: boolean;
-  options?: CommonOptions[]
+  options?: CommonOptions[];
 };

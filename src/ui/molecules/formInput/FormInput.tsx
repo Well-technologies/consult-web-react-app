@@ -33,7 +33,7 @@ export const FormInput = ({
           render={({ field }) => (<>
             <Input {...props} {...field}
               value={value}
-              onChange={(e) =>{ setValue(e.target.value); console.log('optoins', options)}} />
+              onChange={(e) =>{ setValue(e.target.value)}} />
             {value && (
               <ul style={{ border: "1px solid #ccc" }}>
                 {options?.map((item: any) => (

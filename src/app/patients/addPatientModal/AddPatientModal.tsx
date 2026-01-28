@@ -116,6 +116,12 @@ export const AddPatientModal = ({
                   containerClassName="w-full"
                   id="name"
                   type="number"
+                  onWheel={(e) => (e.target as HTMLInputElement).blur()}
+                  onKeyDown={(e) => {
+                    if (["ArrowUp", "ArrowDown"].includes(e.key)) {
+                      e.preventDefault();
+                    }
+                  }}
                   maxLength={9}
                   minLength={9}
                   name="mobile_no"
@@ -124,11 +130,6 @@ export const AddPatientModal = ({
                   helperText={errors?.mobile_no?.message}
                   required
                   autoFocus={true}
-                  onKeyDown={(e: any) => {
-                    if (["e", "E", "+", "-"].includes(e.key)) {
-                      e.preventDefault();
-                    }
-                  }}
                 />
               </div>
 
