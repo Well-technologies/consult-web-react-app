@@ -11,13 +11,11 @@ import { UsersDataProps } from "./UsersData.types";
 import { PatientDetails } from "../../../api/patient/patient.types";
 import { ColumnDef } from "@tanstack/react-table";
 import { AppRoute } from "@/routing/AppRoute.enum";
-import { FormType } from "@/types";
 
 export const UsersData = ({
   data,
   // setValue,
   isLoading,
-  openAddNewModal,
   // onOpenEmployeeDeleteModal,
 }: UsersDataProps) => {
   const { t } = useTranslation();
