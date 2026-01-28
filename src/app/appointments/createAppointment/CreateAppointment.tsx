@@ -166,6 +166,7 @@ export const CreateAppointment = ({
                             setValue={setValue}
                             value={appointmentDate}
                             type={DatePickerType.SingleDate}
+                            futureOnly={true}
                             required
                         />
                     </div>

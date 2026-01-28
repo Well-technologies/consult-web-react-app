@@ -54,19 +54,19 @@ export const getCalendarClassName = ({
   pastOnly,
   futureOnly,
 }: GetCalendarClassNameProps) => {
-  const today = new Date().toLocaleDateString("en-US");
+  const now = new Date();
+  const today = `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, "0")}/${String(now.getDate()).padStart(2, "0")}`;
 
   let className =
     "flex items-center justify-center text-sm cursor-pointer w-11 aspect-square rounded-full text-secondary dark:text-secondary hover:z-10 hover:bg-secondary hover:text-white";
 
   // Today Date
   if (dayString === today) {
-    className += "z-5 bg-secondary-50 dark:bg-secondary-600";
+    className += " z-5 bg-secondary-50 dark:bg-secondary-600";
   }
 
   const date = new Date(day);
-  const now = new Date();
-  
+
   // Reset time for accurate date comparison
   date.setHours(0, 0, 0, 0);
   const todayDate = new Date(now.setHours(0, 0, 0, 0));

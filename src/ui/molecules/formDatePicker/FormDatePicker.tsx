@@ -4,7 +4,7 @@ import DatePicker from "@/ui/atoms/datePicker/DatePicker";
 import { FormLabel } from "@/ui/atoms/formLabel/FormLabel";
 
 import { FormDatePickerProps } from "./FormDatePicker.types";
-import { formatDate, reverseFormatDates } from "./FormDatePicker.utils";
+import { formatDate, reverseFormatDate, reverseFormatDates } from "./FormDatePicker.utils";
 
 export const FormDatePicker = ({
   register,
@@ -40,7 +40,11 @@ export const FormDatePicker = ({
             setValue(startedDateName, formatDate(value));
           }
         }}
-        value={typeof value === "object" ? reverseFormatDates(value) : value}
+        value={
+          typeof value === "object"
+            ? reverseFormatDates(value)
+            : reverseFormatDate(value)
+        }
         {...props}
       />
 

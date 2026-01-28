@@ -14,6 +14,7 @@ export type DatePickerProps = {
   isHiddenActions?: boolean;
   pastOnly?: boolean;
   futureOnly?: boolean;
+  isTypable?: boolean;
 };
 
 export type GetCalendarClassNameProps = {

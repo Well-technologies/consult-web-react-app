@@ -124,6 +124,11 @@ export const AddPatientModal = ({
                   helperText={errors?.mobile_no?.message}
                   required
                   autoFocus={true}
+                  onKeyDown={(e: any) => {
+                    if (["e", "E", "+", "-"].includes(e.key)) {
+                      e.preventDefault();
+                    }
+                  }}
                 />
               </div>
 
@@ -169,6 +174,7 @@ export const AddPatientModal = ({
               error={!!errors?.dob}
               helperText={errors?.dob?.message}
               isHiddenActions
+              isTypable
               required
               disabled={(isRegisteredPatient && !isOtpVerified)}
               pastOnly={true}

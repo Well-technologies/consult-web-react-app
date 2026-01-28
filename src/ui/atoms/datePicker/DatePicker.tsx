@@ -24,6 +24,7 @@ export default function DatePicker({
   isHiddenActions,
   pastOnly,
   futureOnly,
+  isTypable,
 }: DatePickerProps) {
 
 
@@ -37,6 +38,7 @@ export default function DatePicker({
   );
   const [selectedEndDate, setSelectedEndDate] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [typedValue, setTypedValue] = useState("");
 
   const datepickerRef = useRef<HTMLDivElement>(null);
 
@@ -52,6 +54,84 @@ export default function DatePicker({
     }
   }, [value]);
 
+  useEffect(() => {
+    setTypedValue(updateInput());
+  }, [selectedStartDate, selectedEndDate]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let val = e.target.value;
+
+    if (/[^0-9/]/.test(val)) return;
+
+    if (val.length > typedValue.length) {
+      if (val.length === 4) {
+        val += "/";
+      } else if (val.length === 7) {
+        val += "/";
+      }
+    }
+    setTypedValue(val);
+
+    // Navigate calendar logic
+    const yearMatch = val.match(/^(\d{4})/);
+    if (yearMatch) {
+      const year = parseInt(yearMatch[1]);
+      if (year >= 1900 && year <= 2100) {
+        const monthMatch = val.match(/^\d{4}\/(\d{1,2})/);
+        const newDate = new Date(currentDate);
+        newDate.setFullYear(year);
+
+        if (monthMatch) {
+          const month = parseInt(monthMatch[1]) - 1;
+          if (month >= 0 && month <= 11) {
+            newDate.setMonth(month);
+          }
+        }
+        setCurrentDate(newDate);
+      }
+    }
+
+    const datePattern = /^(\d{4})\/(\d{1,2})\/(\d{1,2})$/;
+    const match = val.match(datePattern);
+    if (match) {
+      const year = parseInt(match[1]);
+      const month = parseInt(match[2]) - 1;
+      const day = parseInt(match[3]);
+      const date = new Date(year, month, day);
+
+      if (
+        date.getFullYear() === year &&
+        date.getMonth() === month &&
+        date.getDate() === day
+      ) {
+        const formattedDate = `${year}/${String(month + 1).padStart(2, "0")}/${String(day).padStart(2, "0")}`;
+
+        const now = new Date();
+        now.setHours(0, 0, 0, 0);
+        const inputDate = new Date(year, month, day);
+        inputDate.setHours(0, 0, 0, 0);
+
+        if (pastOnly && inputDate > now) return;
+        if (futureOnly && inputDate < now) return;
+
+        setSelectedStartDate(formattedDate);
+        setSelectedEndDate(formattedDate);
+
+        if (isHiddenActions || type === DatePickerType.SingleDate) {
+          onChange(formattedDate);
+        }
+      }
+    } else if (val === "") {
+      setSelectedStartDate(null);
+      setSelectedEndDate(null);
+      if (type === DatePickerType.DateRange) {
+        onChange({ startDate: "", endDate: "" });
+      } else {
+        onChange("");
+      }
+    }
+  };
+
   const renderCalendar = () => {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
@@ -66,7 +146,7 @@ export default function DatePicker({
 
     for (let i = 1; i <= daysInMonth; i++) {
       const day = new Date(year, month, i);
-      const dayString = day.toLocaleDateString("en-US");
+      const dayString = `${day.getFullYear()}/${String(day.getMonth() + 1).padStart(2, "0")}/${String(day.getDate()).padStart(2, "0")}`;
 
       const className = getCalendarClassName({
         day,
@@ -263,10 +343,11 @@ export default function DatePicker({
               ? "bg-gray-50 opacity-50 cursor-not-allowed"
               : "bg-transparent"
           )}
-          value={updateInput()}
+          value={isTypable ? typedValue : updateInput()}
+          onChange={isTypable ? handleInputChange : undefined}
           onClick={toggleDatepicker}
           disabled={disabled}
-          readOnly
+          readOnly={!isTypable}
         />
 
         <span className="absolute right-0 h-full py-2 items-center flex cursor-pointer pl-1.5 text-secondary">
