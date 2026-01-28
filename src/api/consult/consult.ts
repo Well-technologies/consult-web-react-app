@@ -93,6 +93,10 @@ import {
   GetConsultReviewResponse,
   GetPatientsSummaryProps,
   GetPatientsSummaryResponse,
+  GetAllLabTestsProps,
+  GetAllLabTestsResponse,
+  GetBookedConsultationProps,
+  GetBookedConsultationResponse,
 } from './consult.types';
 
 const getAllAdvisers = ({ client, params }: GetAllAdvisersProps) =>
@@ -176,6 +180,26 @@ export const useGetAdviserScheduleDetails = ({
     queryFn: () => getAdviserScheduleDetails({ client, adviserId, params }),
     placeholderData: keepPreviousData,
     // enabled: !!adviserId && !!params.speciality_id,
+  });
+
+const getBookedConsultation = ({
+  client,
+  params,
+}: GetBookedConsultationProps) =>
+  client
+    .get<GetBookedConsultationResponse>(`consultations/booked-consultation`, {
+      params,
+    })
+    .then(({ data }) => data);
+
+export const useGetBookedConsultation = ({
+  client,
+  params,
+}: GetBookedConsultationProps) =>
+  useQuery({
+    queryKey: [ConsultKeyTypes.GetBookedConsultation, params],
+    queryFn: () => getBookedConsultation({ client, params }),
+    enabled: !!params?.appointmentId && !!params?.patientId && !!params?.doctorId,
   });
 
 const prebookAdviserTimeSlot = ({
@@ -580,6 +604,23 @@ export const useGetAllDiagnoses = ({
   useQuery({
     queryKey: [ConsultKeyTypes.GetAllDiagnoses, params],
     queryFn: () => getAllDiagnoses({ client, params }),
+    placeholderData: keepPreviousData,
+    ...options,
+  });
+
+const getAllLabTests = ({ client, params }: GetAllLabTestsProps) =>
+  client
+    .get<GetAllLabTestsResponse>('/commons/labs', { params })
+    .then(({ data }) => data);
+
+export const useGetAllLabTests = ({
+  client,
+  params,
+  options,
+}: GetAllLabTestsProps) =>
+  useQuery({
+    queryKey: [ConsultKeyTypes.GetAllLabTests, params],
+    queryFn: () => getAllLabTests({ client, params }),
     placeholderData: keepPreviousData,
     ...options,
   });

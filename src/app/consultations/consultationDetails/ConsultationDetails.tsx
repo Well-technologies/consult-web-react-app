@@ -7,6 +7,7 @@ import { TabType } from "@/ui/atoms/tabs/Tabs.types";
 import { useTranslation } from "react-i18next";
 import { NotFound } from "@/ui/molecules/notFound/NotFound";
 import { PrescriptionViewer } from "./PrescriptionViewer";
+import { MedicationCard } from "@/ui/molecules/medicationCard";
 
 export const ConsultationDetails = ({
   data,
@@ -115,46 +116,16 @@ export const ConsultationDetails = ({
           {data?.medications?.length ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 m-4">
               {data.medications.map((med, index) => (
-                <div
+                <MedicationCard
                   key={index}
-                  className="p-3 border rounded-md shadow-sm bg-white flex flex-col h-full"
-                >
-                  <h4
-                    className="font-semibold text-sm text-primary mb-2 line-clamp-2"
-                    title={med.medicineName}
-                  >
-                    {med.medicineName}
-                  </h4>
-                  <ul className="text-xs text-gray-600 space-y-1 uppercase">
-                    <li>
-                      {med.dosage}
-                    </li>
-                    {med.schedules.map((schedule, index) => (
-                      schedule.count > 0 && <li key={index}>
-                        {`${schedule.title}(${schedule.count})`}
-                      </li>
-                    ))}
-                    <li>
-                      {med.frequency}
-                    </li>
-                    <li>
-                      {med.timing}
-                    </li>
-                    {/* <li>
-                      {med.duration} days
-                    </li> */}
-                    <h2
-                    className="font-semibold text-[12px] text-primary mb-2 line-clamp-2 mt-4"
-                  >
-                    {t("consultation.details.notes")}
-                  </h2>
-                    {med.notes && (
-                      <li>
-                        {med.notes}
-                      </li>
-                    )}
-                  </ul>
-                </div>
+                  variant="simple"
+                  name={med.medicineName}
+                  dosage={med.dosage}
+                  frequency={med.frequency}
+                  timing={med.timing}
+                  notes={med.notes}
+                  schedules={med.schedules.map(s => ({ label: s.title, count: s.count }))}
+                />
               ))}
             </div>
           ) : (

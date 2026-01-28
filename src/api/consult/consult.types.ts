@@ -34,6 +34,8 @@ export enum ConsultKeyTypes {
   GetHealthLogs = 'GetHealthLogs',
   GetConsultReview = 'GetConsultReview',
   GetPatientsSummary = 'GetPatientsSummary',
+  GetAllLabTests = 'GetAllLabTests',
+  GetBookedConsultation = 'GetBookedConsultation',
 }
 
 export type GetAllAdvisersProps = {
@@ -814,6 +816,25 @@ export type RemoveAllergenReactionHistoryByIdResponse = ConsultSuccessResponse<
   null
 >;
 
+export type GetBookedConsultationProps = {
+  client: AxiosInstance;
+  params: GetBookedConsultationParams;
+  options?: CommonQueryOptions;
+};
+
+export type GetBookedConsultationParams = {
+  appointmentId: string;
+  patientId: string;
+  doctorId: string;
+};
+
+export type GetBookedConsultationResponse = ConsultSuccessResponse<
+  BookedConsultation,
+  null
+>;
+
+export type BookedConsultation = ConsultationDetails;
+
 export type CreatePrescriptionProps = {
   client: AxiosInstance;
   consultationId: string;
@@ -872,6 +893,51 @@ export type GetAllDiagnosesResponse = ConsultSuccessResponse<
   ClinicalCommonDataDetails[],
   null
 >;
+
+export type GetAllLabTestsProps = {
+  client: AxiosInstance;
+  params: GetAllLabTestsParams;
+  options?: CommonQueryOptions;
+};
+
+export type GetAllLabTestsParams = {
+  doctorId?: string;
+};
+
+export type GetAllLabTestsResponse = ConsultSuccessResponse<
+  LabTestProps[],
+  null
+>;
+
+export type LabTestProps = {
+  container_name: string;
+  created_at: string;
+  department_id: number;
+  description: string;
+  display_name: string;
+  district: string;
+  emergency_process_time: string;
+  icon_url: string;
+  id: number;
+  is_active: number;
+  is_featured: number;
+  method_name: string;
+  min_process_time: string;
+  package_id: number;
+  parent_test: string;
+  price: string;
+  report_packages: string[];
+  report_type: string;
+  reporting_days: string;
+  short_name: string;
+  specimen_name: string;
+  tags: string;
+  tat: string;
+  test_code: string;
+  title: string;
+  unit_price: string;
+  updated_at: string;
+};
 
 export type GetMedicationDosagesProps = {
   client: AxiosInstance;
