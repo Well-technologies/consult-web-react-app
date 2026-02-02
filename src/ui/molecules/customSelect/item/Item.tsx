@@ -11,7 +11,7 @@ import {
 import { COLORS, DEFAULT_COLOR, styles } from "../CustomSelect.utils";
 
 // CustomSelectComponent
-export const Item: React.FC<ItemProps> = ({ item, primaryColor }) => {
+export const Item = ({ item, primaryColor }: ItemProps) => {
   const { classNames, value, handleValueChange, formatOptionLabel } =
     useSelectContext();
 
@@ -86,7 +86,7 @@ export const Item: React.FC<ItemProps> = ({ item, primaryColor }) => {
   );
 };
 
-export const GroupItem: React.FC<GroupItemProps> = ({ item, primaryColor }) => {
+export const GroupItem = ({ item, primaryColor }: GroupItemProps) => {
   const { classNames, formatGroupLabel } = useSelectContext();
 
   return (
@@ -116,7 +116,7 @@ export const GroupItem: React.FC<GroupItemProps> = ({ item, primaryColor }) => {
   );
 };
 
-export const DisabledItem: React.FC<DisabledItemProps> = ({ children }) => {
+export const DisabledItem = ({ children }: DisabledItemProps) => {
   const { classNames } = useContext(SelectContext);
   return (
     <div

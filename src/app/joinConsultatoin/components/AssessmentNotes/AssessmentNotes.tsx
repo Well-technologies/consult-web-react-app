@@ -1,11 +1,12 @@
-import { FC, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Prescription } from '../../JoinConsultation.types';
-import { MedicationCard } from '@/ui/molecules/medicationCard';
+import { MedicationCard } from '@/ui/molecules/medicationCard/MedicationCard';
 import { AssessmentNotesProps } from './AssessmentNotes.types';
 import { ClinicalItemSelector } from './ClinicalItemSelector';
+import { MedicationNameSelector } from './MedicationNameSelector';
+import { AddMedicationProps } from '@/api/consult/consult.types';
 
-export const AssessmentNotes: FC<AssessmentNotesProps> = ({ 
+export const AssessmentNotes = ({ 
   onAddMedication,
   diagnoses,
   onDiagnosesChange,
@@ -30,25 +31,36 @@ export const AssessmentNotes: FC<AssessmentNotesProps> = ({
   onLabTestNotesChange,
   medications,
   onMedicationsChange,
-}) => {
+  medicationSuggestions,
+  onMedicationSearch,
+  isLoadingMedications,
+}: AssessmentNotesProps) => {
   const { t } = useTranslation();
-  const [snapshots, setSnapshots] = useState<Record<string, Prescription>>({});
+  const [snapshots, setSnapshots] = useState<Record<string, AddMedicationProps>>({});
 
-  const updatePrescription = (id: string, field: keyof Prescription, value: any) => {
+  const updatePrescription = (id: string, field: keyof AddMedicationProps, value: any) => {
     onMedicationsChange(
-      medications.map((p) => (p.id === id ? { ...p, [field]: value } : p))
+      medications.map((p) => (p.medicineId === id ? { ...p, [field]: value } : p))
     );
   };
 
-  const updateSchedule = (id: string, key: keyof Prescription['schedule'], delta: number) => {
+  const updateSchedule = (id: string, key: string, delta: number) => {
     onMedicationsChange(
       medications.map((p) => {
-        if (p.id === id) {
+        if (p.medicineId === id) {
+          const currentSchedule = p.schedule || {
+            morning: 0,
+            afternoon: 0,
+            evening: 0,
+            night: 0,
+            ifNecessary: 0,
+            everyOtherDay: 0,
+          };
           return {
             ...p,
             schedule: {
-              ...p.schedule,
-              [key]: Math.max(0, p.schedule[key] + delta)
+              ...currentSchedule,
+              [key]: Math.max(0, Number(currentSchedule[key] || 0) + delta)
             }
           };
         }
@@ -58,13 +70,13 @@ export const AssessmentNotes: FC<AssessmentNotesProps> = ({
   };
 
   const removePrescription = (id: string) => {
-    onMedicationsChange(medications.filter((p) => p.id !== id));
+    onMedicationsChange(medications.filter((p) => p.medicineId !== id));
   };
 
   const resetPrescription = (id: string) => {
     onMedicationsChange(
       medications.map((p) =>
-        p.id === id
+        p.medicineId === id
           ? {
               ...p,
               medicationName: '',
@@ -90,7 +102,18 @@ export const AssessmentNotes: FC<AssessmentNotesProps> = ({
 
   const handleAddSubmit = (id: string) => {
     onMedicationsChange(
-      medications.map((p) => (p.id === id ? { ...p, isEditing: false, isNew: false } : p))
+      medications.map((p) => {
+        if (p.medicineId === id) {
+          const schedules = Object.entries(p.schedule || {}).map(([key, count], index) => ({
+            id: String(index), 
+            title: key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()),
+            count,
+            status: count > 0
+          }));
+          return { ...p, isEditing: false, isNew: false, schedules };
+        }
+        return p;
+      })
     );
     setSnapshots((prev) => {
       const next = { ...prev };
@@ -99,16 +122,35 @@ export const AssessmentNotes: FC<AssessmentNotesProps> = ({
     });
   };
 
-  const handleStartEdit = (p: Prescription) => {
-    setSnapshots((prev) => ({ ...prev, [p.id]: { ...p } }));
-    updatePrescription(p.id, 'isEditing', true);
+  const handleStartEdit = (p: AddMedicationProps) => {
+    const schedule = p.schedule || (p.schedules || []).reduce((acc, curr) => {
+      const key = curr.title.toLowerCase().replace(/ /g, '');
+      if (key.includes('morning')) acc.morning = curr.count;
+      else if (key.includes('afternoon')) acc.afternoon = curr.count;
+      else if (key.includes('evening')) acc.evening = curr.count;
+      else if (key.includes('night')) acc.night = curr.count;
+      else if (key.includes('necessary')) acc.ifNecessary = curr.count;
+      else if (key.includes('other')) acc.everyOtherDay = curr.count;
+      return acc;
+    }, {
+      morning: 0,
+      afternoon: 0,
+      evening: 0,
+      night: 0,
+      ifNecessary: 0,
+      everyOtherDay: 0,
+    } as Record<string, number>);
+
+    const updatedP = { ...p, schedule };
+    setSnapshots((prev) => ({ ...prev, [p.medicineId]: updatedP }));
+    onMedicationsChange(medications.map(m => m.medicineId === p.medicineId ? { ...m, isEditing: true, schedule } : m));
   };
 
   const handleCancel = (id: string) => {
     const snapshot = snapshots[id];
     if (snapshot) {
       onMedicationsChange(
-        medications.map((m) => (m.id === id ? { ...snapshot, isEditing: false } : m))
+        medications.map((m) => (m.medicineId === id ? { ...snapshot, isEditing: false } : m))
       );
       setSnapshots((prev) => {
         const next = { ...prev };
@@ -117,47 +159,29 @@ export const AssessmentNotes: FC<AssessmentNotesProps> = ({
       });
     } else {
       onMedicationsChange(
-        medications.map((p) => (p.id === id ? { ...p, isEditing: false } : p))
+        medications.map((p) => (p.medicineId === id ? { ...p, isEditing: false } : p))
       );
     }
   };
 
-  const renderMedicationCard = (p: Prescription) => {
-    const schedules = [
-      { key: 'morning', label: t('joinConsultation.assessment.medications.morning') },
-      { key: 'afternoon', label: t('joinConsultation.assessment.medications.afternoon') },
-      { key: 'evening', label: t('joinConsultation.assessment.medications.evening') },
-      { key: 'night', label: t('joinConsultation.assessment.medications.night') },
-      { key: 'ifNecessary', label: t('joinConsultation.assessment.medications.ifNecessary') },
-      { key: 'everyOtherDay', label: t('joinConsultation.assessment.medications.everyOtherDay') },
-    ];
+  const renderMedicationCard = (p: AddMedicationProps) => {
 
     return (
       <MedicationCard
-        key={p.id}
-        name={p.medicationName}
-        dosage={`${p.dosage} ${p.dosage ? p.dosageUnit : ''}`}
-        frequency={p.frequency}
-        timing={p.timing}
-        notes={p.notes}
-        duration={p.noOfDays}
-        schedules={schedules.map(s => ({
-          label: s.label,
-          count: p.schedule[s.key as keyof Prescription['schedule']]
-        }))}
+        medicine={p}
         onEdit={() => handleStartEdit(p)}
-        onDelete={() => removePrescription(p.id)}
+        onDelete={() => removePrescription(p.medicineId)}
       />
     );
   };
 
-  const renderMedicationForm = (p: Prescription) => {
+  const renderMedicationForm = (p: AddMedicationProps) => {
     return (
-      <div key={p.id}
+      <div key={p.medicineId}
        className="border border-gray-100 rounded-xl overflow-hidden shadow-sm bg-white p-5 md:p-6 lg:p-8 space-y-5 md:space-y-6 relative"
        >
         <button 
-          onClick={() => removePrescription(p.id)}
+          onClick={() => removePrescription(p.medicineId)}
           className="absolute top-5 right-5 text-gray-300 hover:text-red-500 transition-colors p-2 hover:bg-red-50 rounded-full z-10"
           title="Close Form"
         >
@@ -170,13 +194,15 @@ export const AssessmentNotes: FC<AssessmentNotesProps> = ({
           {/* Medication Name */}
           <div className="space-y-1.5">
             <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{t('joinConsultation.assessment.medications.medicationName')}</label>
-            <input
-              type="text"
-              autoFocus={true}
-              value={p.medicationName}
-              onChange={(e) => updatePrescription(p.id, 'medicationName', e.target.value)}
-              className="w-full px-4 py-2 bg-gray-50 border border-gray-100 rounded-xl text-sm focus:ring-1 focus:ring-[#e32933] outline-none transition-all"
+            <MedicationNameSelector
+              value={p.medicineName}
+              onChange={(val) => updatePrescription(p.medicineId, 'medicineName', val)}
+              suggestions={medicationSuggestions}
+              onSearch={onMedicationSearch}
+              isLoading={isLoadingMedications}
               placeholder={t('joinConsultation.assessment.medications.medicationName')}
+              autoFocus={true}
+              className="w-full px-4 py-2 bg-gray-50 border border-gray-100 rounded-xl text-sm focus:ring-1 focus:ring-[#e32933] outline-none transition-all"
             />
           </div>
 
@@ -186,16 +212,22 @@ export const AssessmentNotes: FC<AssessmentNotesProps> = ({
             <div className="flex items-center bg-gray-50 border border-gray-100 rounded-xl focus-within:ring-1 focus-within:ring-[#e32933] focus-within:border-[#e32933] transition-all overflow-hidden group">
               <input
                 type="text"
-                value={p.dosage}
-                onChange={(e) => updatePrescription(p.id, 'dosage', e.target.value)}
+                value={p.dosage ? p.dosage.split(' ')[0] : ''}
+                onChange={(e) => {
+                  const unit = p.dosage ? p.dosage.split(' ')[1] : 'mg';
+                  updatePrescription(p.medicineId, 'dosage', `${e.target.value} ${unit || 'mg'}`);
+                }}
                 className="flex-1 px-4 py-2 bg-transparent outline-none text-sm placeholder:text-gray-300 min-w-0"
                 placeholder="0"
               />
               <div className="w-px h-6 bg-gray-200 shrink-0"></div>
               <div className="relative shrink-0">
                 <select
-                  value={p.dosageUnit}
-                  onChange={(e) => updatePrescription(p.id, 'dosageUnit', e.target.value)}
+                  value={(p.dosage && p.dosage.split(' ')[1]) || 'mg'}
+                  onChange={(e) => {
+                    const val = p.dosage ? p.dosage.split(' ')[0] : '';
+                    updatePrescription(p.medicineId, 'dosage', `${val} ${e.target.value}`);
+                  }}
                   className="pl-3 pr-8 py-2 bg-transparent outline-none text-sm cursor-pointer appearance-none text-gray-600 font-medium hover:text-[#e32933] transition-colors"
                 >
                   <option value="mg">mg</option>
@@ -217,11 +249,21 @@ export const AssessmentNotes: FC<AssessmentNotesProps> = ({
             <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{t('joinConsultation.assessment.medications.frequency')}</label>
             <input
               type="text"
+              list={`frequency-options-${p.medicineId}`}
               value={p.frequency}
-              onChange={(e) => updatePrescription(p.id, 'frequency', e.target.value)}
+              onChange={(e) => updatePrescription(p.medicineId, 'frequency', e.target.value)}
               className="w-full px-4 py-2 bg-gray-50 border border-gray-100 rounded-xl text-sm focus:ring-1 focus:ring-[#e32933] outline-none transition-all"
               placeholder="e.g. Twice daily"
             />
+            <datalist id={`frequency-options-${p.medicineId}`}>
+              <option value={t('joinConsultation.assessment.medications.frequency.twiceDaily')} />
+              <option value={t('joinConsultation.assessment.medications.frequency.threeTimesDay')} />
+              <option value={t('joinConsultation.assessment.medications.frequency.fourTimesDay')} />
+              <option value={t('joinConsultation.assessment.medications.frequency.every4Hours')} />
+              <option value={t('joinConsultation.assessment.medications.frequency.every6Hours')} />
+              <option value={t('joinConsultation.assessment.medications.frequency.every8Hours')} />
+              <option value={t('joinConsultation.assessment.medications.frequency.asNeeded')} />
+            </datalist>
           </div>
 
           {/* No of Days */}
@@ -229,8 +271,8 @@ export const AssessmentNotes: FC<AssessmentNotesProps> = ({
             <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{t('joinConsultation.assessment.medications.noOfDays')}</label>
             <input
               type="text"
-              value={p.noOfDays}
-              onChange={(e) => updatePrescription(p.id, 'noOfDays', e.target.value)}
+              value={p.duration}
+              onChange={(e) => updatePrescription(p.medicineId, 'duration', e.target.value)}
               className="w-full px-4 py-2 bg-gray-50 border border-gray-100 rounded-xl text-sm focus:ring-1 focus:ring-[#e32933] outline-none transition-all"
               placeholder="0"
             />
@@ -250,21 +292,22 @@ export const AssessmentNotes: FC<AssessmentNotesProps> = ({
                 { key: 'night', label: t('joinConsultation.assessment.medications.night') },
                 { key: 'ifNecessary', label: t('joinConsultation.assessment.medications.ifNecessary') },
                 { key: 'everyOtherDay', label: t('joinConsultation.assessment.medications.everyOtherDay') },
-              ].map((item) => (
+              ].map((item: { key: string; label: string }) => (
                 <div key={item.key} className="flex flex-col items-center gap-2 min-w-0">
                   <span className="text-[10px] font-bold text-gray-400 uppercase text-center w-full truncate px-1" title={item.label}>
                     {item.label}
                   </span>
                   <div className="flex items-center bg-gray-50 rounded-xl border border-gray-100 p-1 w-full max-w-[110px] justify-between">
                     <button 
-                      onClick={() => updateSchedule(p.id, item.key as keyof Prescription['schedule'], -1)}
+                      onClick={() => updateSchedule(p.medicineId, item.key, -1)}
                       className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-red-50 text-red-500 transition-colors shrink-0"
                     >
                       <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M20 12H4" /></svg>
                     </button>
-                    <span className="flex-1 text-center text-xs font-bold text-gray-700">{p.schedule[item.key as keyof typeof p.schedule]}</span>
+                    {/* {console.log(p.schedule?.[item.key])} */}
+                    <span className="flex-1 text-center text-xs font-bold text-gray-700">{p.schedule?.[item.key] || 0}</span>
                     <button 
-                      onClick={() => updateSchedule(p.id, item.key as keyof Prescription['schedule'], 1)}
+                      onClick={() => updateSchedule(p.medicineId, item.key, 1)}
                       className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-blue-50 text-blue-500 transition-colors shrink-0"
                     >
                       <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 4v16m8-8H4" /></svg>
@@ -289,7 +332,7 @@ export const AssessmentNotes: FC<AssessmentNotesProps> = ({
                 ].map((tLabel) => (
                   <button
                     key={tLabel}
-                    onClick={() => updatePrescription(p.id, 'timing', tLabel)}
+                    onClick={() => updatePrescription(p.medicineId, 'timing', tLabel)}
                     className={`px-4 py-1.5 rounded-xl text-xs font-semibold border transition-all ${
                       p.timing === tLabel 
                         ? 'bg-[#e32933] text-white border-[#e32933] shadow-md shadow-red-100' 
@@ -306,7 +349,7 @@ export const AssessmentNotes: FC<AssessmentNotesProps> = ({
               <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{t('joinConsultation.assessment.medications.notes')}</label>
               <textarea
                 value={p.notes}
-                onChange={(e) => updatePrescription(p.id, 'notes', e.target.value)}
+                onChange={(e) => updatePrescription(p.medicineId, 'notes', e.target.value)}
                 className="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl text-sm focus:ring-1 focus:ring-[#e32933] outline-none transition-all resize-none min-h-[60px]"
                 placeholder={t('joinConsultation.assessment.medications.notes') + '...'}
               />
@@ -317,13 +360,13 @@ export const AssessmentNotes: FC<AssessmentNotesProps> = ({
         {/* Action Buttons */}
         <div className="flex justify-end gap-2 md:gap-3 pt-3 md:pt-4 border-t border-gray-50">
           <button 
-            onClick={() => p.isNew ? resetPrescription(p.id) : handleCancel(p.id)}
+            onClick={() => p.isNew ? resetPrescription(p.medicineId) : handleCancel(p.medicineId)}
             className="px-6 py-2 border border-gray-200 text-gray-500 rounded-xl text-sm font-bold hover:bg-gray-50 transition-all active:scale-95"
           >
             {p.isNew ? t('global.button.reset') : t('global.modal.cancel')}
           </button>
           <button 
-            onClick={() => handleAddSubmit(p.id)}
+            onClick={() => handleAddSubmit(p.medicineId)}
             className="px-8 py-2 bg-[#e32933] text-white rounded-xl text-sm font-bold hover:bg-[#c2242b] shadow-lg shadow-red-100 transition-all active:scale-95"
           >
             {t('global.button.add')}

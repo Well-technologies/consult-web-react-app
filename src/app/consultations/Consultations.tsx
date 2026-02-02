@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { useMemo } from "react";
+import { useMemo, MouseEvent } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 
 import { DataTable } from "@/ui/organisms/dataTable/DataTable";
@@ -11,6 +11,7 @@ import { convertISOToDateTime, convertISOToTime } from "@/utils/timeConvertor.ut
 import { Pagination } from "@/ui/atoms/pagination/Pagination";
 import { AppRoute } from "@/routing/AppRoute.enum";
 import { useNavigate, useLocation } from "react-router-dom";
+import { Button } from "@/ui/atoms/button/Button";
 
 export const Consultations = ({
   data,
@@ -101,7 +102,7 @@ export const Consultations = ({
             accessorFn: (row) =>
               row.flashAppointmentId && row.appointmentStatus === "Scheduled" ? (
                 <button
-                  onClick={(e) => {
+                  onClick={(e: MouseEvent<HTMLButtonElement>) => {
                     e.stopPropagation();
                     navigate(AppRoute.JoinConsultation.replace(':appointmentId', String(row.flashAppointmentId)).replace(':patientId', String(row.patient?.lead_id)));
                   }}
@@ -119,8 +120,14 @@ export const Consultations = ({
           consultationColumns.push({
             accessorKey: "prescription",
             id: "prescription",
-            accessorFn: (row) => row.prescription || "-",
             cell: (info) => info.getValue(),
+            accessorFn: (row) => row.prescription ? 
+            <Button 
+                variant="outline"
+                  type="button" onClick={(e: MouseEvent<HTMLButtonElement>) => {
+              e.stopPropagation();
+              // navigate(AppRoute.Prescription.replace(':consultationId', String(row.id)));
+            }}>{"View"}</Button> : "-",
             // header: `${t("consultation.table.prescription.header")}`,
           });
         }

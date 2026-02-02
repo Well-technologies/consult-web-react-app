@@ -1,15 +1,15 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 
 import { SelectContext } from "@/hooks/useSelectContext/selectContext";
 
 import { SelectProviderProps } from "./SelectProvider.types";
 
-const SelectProvider: React.FC<SelectProviderProps> = ({
+const SelectProvider = ({
   value,
   handleValueChange,
   otherData,
   children,
-}) => {
+}: SelectProviderProps) => {
   const store = useMemo(() => {
     return {
       value,

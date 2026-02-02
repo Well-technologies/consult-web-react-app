@@ -35,6 +35,7 @@ export enum ConsultKeyTypes {
   GetConsultReview = 'GetConsultReview',
   GetPatientsSummary = 'GetPatientsSummary',
   GetAllLabTests = 'GetAllLabTests',
+  GetAllMedications = 'GetAllMedications',
   GetBookedConsultation = 'GetBookedConsultation',
 }
 
@@ -534,6 +535,14 @@ export type Medication = {
   timing: string;
 };
 
+export type AddMedicationProps = 
+  Medication
+& {
+  isEditing?: boolean;
+  isNew?: boolean;
+  schedule?: Record<string, number>;
+};
+
 export type Schedule = {
   count: number;
   id: string;
@@ -605,6 +614,8 @@ export type GetConsultationMessagesProps = Pick<
 export type GetConsultationsProps = {
   client: AxiosInstance;
   params: GetConsultationsParams;
+  options?: CommonQueryOptions;
+    
 };
 
 export type GetConsultationsParams = {
@@ -904,10 +915,86 @@ export type GetAllLabTestsParams = {
   doctorId?: string;
 };
 
+export type GetAllMedicationsProps = {
+  client: AxiosInstance;
+  params: GetAllMedicationsParams;
+  options?: CommonQueryOptions;
+};
+
+export type GetAllMedicationsParams = {
+  doctorId?: string;
+  title?: string;
+};
+
+export type GetAllMedicationsResponse = ConsultSuccessResponse<
+  MedicationProps[],
+  null
+>;
+
 export type GetAllLabTestsResponse = ConsultSuccessResponse<
   LabTestProps[],
   null
 >;
+
+export type MedicationProps = {
+  medication_name: string;
+  id: number;
+  title: string;
+  item_code: string;
+  category_id: string;
+  price: string;
+  is_active: number;
+  created_at: string;
+  updated_at: string;
+  unit_price: string;
+  add_commision: number;
+  city: string | null;
+  description: string | null;
+  is_featured: number;
+  country_id: number;
+  is_flash_medicine: number;
+  quantity: number | null;
+  barcode: string | null;
+  discounted_price: string | null;
+  supplier_id: number;
+  sort_order: number | null;
+  is_available: number;
+  generic_name: string | null;
+  xero_id: string | null;
+  xero_inventory_id: string | null;
+  deliver_within: string | null;
+  quantity_type: number;
+  quantity_per_box: string;
+  total_quantity: number | null;
+  is_out_of_stock: number | null;
+  slug: string;
+  tags: string | null;
+  mrp: string | null;
+  country_code: string;
+  predict_url: string | null;
+  bulk_uploaded: boolean;
+  xcoord: string;
+  ycoord: string;
+  total_allocated: number | null;
+  buying_price: string;
+  medication_category: MedicationCategory;
+  medication_city: string | null;
+  tag: any[];
+  suppliers_data: any[];
+};
+
+export type MedicationCategory = {
+  id: number;
+  category_name: string;
+  wt_commision: string;
+  is_active: number;
+  created_at: string;
+  updated_at: string;
+  is_featured: number;
+  image: string;
+  category_order: string;
+  background_image: string | null;
+};
 
 export type LabTestProps = {
   container_name: string;

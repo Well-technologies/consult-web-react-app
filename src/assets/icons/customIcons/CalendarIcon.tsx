@@ -2,7 +2,7 @@ import clsx from "clsx";
 
 import { CommonProps } from "./customIcons.types";
 
-export const CalendarIcon: React.FC<CommonProps> = ({ className = "" }) => {
+export const CalendarIcon = ({ className = "" }: CommonProps) => {
   return (
     <svg
       className={clsx(className, "fill-current")}

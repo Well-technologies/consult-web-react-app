@@ -8,14 +8,14 @@ import { MultiOptions, OptionsProps } from "../CustomSelect.types";
 import { DEFAULT_COLOR } from "../CustomSelect.utils";
 import { DisabledItem, GroupItem, Item } from "../item/Item";
 
-export const Options: React.FC<OptionsProps> = ({
+export const Options = ({
   list,
   noOptionsMessage,
   text,
   isMultiple,
   value,
   primaryColor,
-}) => {
+}: OptionsProps) => {
   const { classNames } = useContext(SelectContext);
   const filterByText = useCallback(() => {
     const filterItem = (item: Option) => {

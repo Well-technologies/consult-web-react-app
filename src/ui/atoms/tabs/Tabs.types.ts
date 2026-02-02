@@ -13,4 +13,6 @@ export type TabsProps<T> = {
   activeTab: T;
   setTab: (tab: T) => void;
   containerClassName?: string;
+  variant?: 'default' | 'chips';
 };
+

@@ -1,5 +1,4 @@
-import { Prescription } from '../../JoinConsultation.types';
-import { ClinicalCommonDataDetails } from '@/api/consult/consult.types';
+import { AddMedicationProps, ClinicalCommonDataDetails } from '@/api/consult/consult.types';
 
 export interface AssessmentNotesProps {
   onAddMedication?: () => void;
@@ -24,7 +23,9 @@ export interface AssessmentNotesProps {
   isLoadingLabTests: boolean;
   labTestNotes: string;
   onLabTestNotesChange: (notes: string) => void;
-  medications: Prescription[];
-  onMedicationsChange: (medications: Prescription[]) => void;
+  medications: AddMedicationProps[];
+  onMedicationsChange: (medications: AddMedicationProps[]) => void;
+  medicationSuggestions: ClinicalCommonDataDetails[];
+  onMedicationSearch: (query: string) => void;
+  isLoadingMedications?: boolean;
 }
-

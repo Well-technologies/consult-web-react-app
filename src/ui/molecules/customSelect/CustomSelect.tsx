@@ -22,7 +22,7 @@ import { Options } from "./options/Options";
 import SelectProvider from "./selectProvider/SelectProvider";
 import { Spinner } from "./spinner/Spinner";
 
-export const CustomSelect: React.FC<CustomSelectProps> = ({
+export const CustomSelect = ({
   options = [],
   value = null,
   onChange,
@@ -42,7 +42,7 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
   classNames,
   isDividerHidden,
   optionPosition = OptionPosition.Bottom,
-}) => {
+}: CustomSelectProps) => {
   const [open, setOpen] = useState<boolean>(menuIsOpen);
   const [list, setList] = useState<ListOption>(options);
   const [inputValue, setInputValue] = useState<string>("");

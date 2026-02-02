@@ -36,13 +36,8 @@ export const ConsultationsContainer = () => {
       patient: "",
       start: "",
       end: "",
-      // org_id: "",
-      // status: "",
-      // type: "",
     },
   });
-
-  // const { start, end } = watch();
 
   const openAndCloseFilter = () => {
     setOpenFilter(!openFilter);
@@ -79,11 +74,6 @@ export const ConsultationsContainer = () => {
       enabled: !!user?.userDetails.consult_user_id,
     },
   });
-
-  // const onSubmit = (data: any) => {
-  //   console.log("onSubmit", data);
-  //   setIsCreatingConsultation(false);
-  // };
 
   const refetch = () => {
     console.log("refetch");

@@ -7,7 +7,7 @@ import { TabType } from "@/ui/atoms/tabs/Tabs.types";
 import { useTranslation } from "react-i18next";
 import { NotFound } from "@/ui/molecules/notFound/NotFound";
 import { PrescriptionViewer } from "./PrescriptionViewer";
-import { MedicationCard } from "@/ui/molecules/medicationCard";
+import { MedicationCard } from '@/ui/molecules/medicationCard/MedicationCard';
 
 export const ConsultationDetails = ({
   data,
@@ -96,7 +96,7 @@ export const ConsultationDetails = ({
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 m-4">
             {data.labTests.map((test, index) => (
               <div key={index} className="p-4 border text-sm rounded-md shadow-sm bg-white">
-                {test.data.title}
+                {test.data.name}
               </div>
             ))}
           </div>
@@ -115,17 +115,11 @@ export const ConsultationDetails = ({
         <div>
           {data?.medications?.length ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 m-4">
-              {data.medications.map((med, index) => (
+              {data.medications.map((medicine, index) => (
                 <MedicationCard
                   key={index}
                   variant="simple"
-                  name={med.medicineName}
-                  dosage={med.dosage}
-                  frequency={med.frequency}
-                  timing={med.timing}
-                  notes={med.notes}
-                  schedules={med.schedules.map(s => ({ label: s.title, count: s.count }))}
-                />
+                  medicine={medicine}/>
               ))}
             </div>
           ) : (

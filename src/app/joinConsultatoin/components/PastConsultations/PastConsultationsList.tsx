@@ -1,8 +1,7 @@
-import { FC } from 'react';
 import { PastConsultationsListProps } from './PastConsultations.types';
 import { PastConsultationCard } from './PastConsultationCard';
 
-export const PastConsultationsList: FC<PastConsultationsListProps> = ({ consultations }) => {
+export const PastConsultationsList = ({ consultations }: PastConsultationsListProps) => {
   return (
     <div className="space-y-4">
       {consultations.map((consultation) => (

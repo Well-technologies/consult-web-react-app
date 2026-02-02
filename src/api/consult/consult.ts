@@ -97,6 +97,8 @@ import {
   GetAllLabTestsResponse,
   GetBookedConsultationProps,
   GetBookedConsultationResponse,
+  GetAllMedicationsProps,
+  GetAllMedicationsResponse,
 } from './consult.types';
 
 const getAllAdvisers = ({ client, params }: GetAllAdvisersProps) =>
@@ -293,11 +295,13 @@ const getConsultations = ({ client, params }: GetConsultationsProps) =>
 export const useGetConsultations = ({
   client,
   params,
+  options,  
 }: GetConsultationsProps) =>
   useQuery({
     queryKey: [ConsultKeyTypes.GetConsultations, params],
     queryFn: () => getConsultations({ client, params }),
     placeholderData: keepPreviousData,
+    ...options,
   });
 
 const getAllHealthVaultByUserId = ({
@@ -621,6 +625,23 @@ export const useGetAllLabTests = ({
   useQuery({
     queryKey: [ConsultKeyTypes.GetAllLabTests, params],
     queryFn: () => getAllLabTests({ client, params }),
+    placeholderData: keepPreviousData,
+    ...options,
+  });
+
+const getAllMedications = ({ client, params }: GetAllLabTestsProps) =>
+  client
+    .get<GetAllMedicationsResponse>('/commons/medications', { params })
+    .then(({ data }) => data);
+
+export const useGetAllMedications = ({
+  client,
+  params,
+  options,
+}: GetAllMedicationsProps) =>
+  useQuery({
+    queryKey: [ConsultKeyTypes.GetAllMedications, params],
+    queryFn: () => getAllMedications({ client, params }),
     placeholderData: keepPreviousData,
     ...options,
   });

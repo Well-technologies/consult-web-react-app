@@ -1,35 +1,12 @@
-import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
+import { MedicationCardProps } from './MedicationCard.types';
+import { Schedule } from '@/api/consult/consult.types';
 
-export interface MedicationSchedule {
-    label: string;
-    count: number;
-}
-
-export interface MedicationCardProps {
-    name: string;
-    dosage: string;
-    frequency: string;
-    timing: string;
-    notes?: string;
-    schedules: MedicationSchedule[];
-    duration?: string;
-    onEdit?: () => void;
-    onDelete?: () => void;
-    variant?: 'simple' | 'detailed';
-}
-
-export const MedicationCard: FC<MedicationCardProps> = ({
-    name,
-    dosage,
-    frequency,
-    timing,
-    notes,
-    schedules,
-    duration,
+export const MedicationCard = ({
+    medicine,
     onEdit,
     onDelete,
-}) => {
+}: MedicationCardProps) => {
     const { t } = useTranslation();
 
     return (
@@ -37,7 +14,7 @@ export const MedicationCard: FC<MedicationCardProps> = ({
             {onDelete && (
                 <button
                     onClick={onDelete}
-                    className="absolute top-2 right-2 text-red-400 hover:text-red-600 transition-colors p-1.5 hover:bg-red-50 rounded-full"
+                    className="absolute top-2 right-2 text-red-400 hover:text-red-600 transition-colors p-1 hover:bg-red-50 rounded-full"
                     title="Delete Medication"
                 >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -48,7 +25,7 @@ export const MedicationCard: FC<MedicationCardProps> = ({
             {onEdit && (
                 <button
                     onClick={onEdit}
-                    className="absolute top-2 right-10 text-gray-400 hover:text-blue-500 transition-colors p-1.5 hover:bg-blue-50 rounded-full"
+                    className="absolute top-2 right-8 text-gray-400 hover:text-blue-500 transition-colors p-1 hover:bg-blue-50 rounded-full"
                     title="Edit Medication"
                 >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -58,28 +35,28 @@ export const MedicationCard: FC<MedicationCardProps> = ({
             )}
             <h4
                 className="font-semibold text-sm text-primary mb-2 line-clamp-2"
-                title={name}
+                title={medicine.medicineName}
             >
-                {name}
+                {medicine.medicineName}
             </h4>
             <ul className="text-xs text-gray-600 space-y-1 uppercase">
-                <li>{dosage}</li>
-                {schedules.map((schedule, index) => (
+                <li>{medicine.dosage}</li>
+                {medicine.schedules.map((schedule: Schedule, index: number) => (
                     schedule.count > 0 && (
                         <li key={index}>
-                            {`${schedule.label}(${schedule.count})`}
+                            {`${schedule.title}(${schedule.count})`}
                         </li>
                     )
                 ))}
-                <li>{frequency}</li>
-                <li>{timing}</li>
-                {duration && <li>{duration}</li>}
-                {notes && (
+                <li>{medicine.frequency}</li>
+                <li>{medicine.timing}</li>
+                {medicine.duration && <li>{medicine.duration}</li>}
+                {medicine.notes && (
                     <>
                         <h2 className="font-semibold text-[12px] text-primary mb-2 line-clamp-2 mt-4">
                             {t("consultation.details.notes")}
                         </h2>
-                        <li>{notes}</li>
+                        <li>{medicine.notes}</li>
                     </>
                 )}
             </ul>

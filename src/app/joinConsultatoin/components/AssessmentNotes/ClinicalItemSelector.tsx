@@ -14,7 +14,7 @@ interface ClinicalItemSelectorProps {
   onNotesChange: (notes: string) => void;
 }
 
-export const ClinicalItemSelector: React.FC<ClinicalItemSelectorProps> = ({
+export const ClinicalItemSelector = ({
   label,
   selectedItems,
   onItemsChange,
@@ -24,7 +24,7 @@ export const ClinicalItemSelector: React.FC<ClinicalItemSelectorProps> = ({
   isLoading = false,
   notes,
   onNotesChange,
-}) => {
+}: ClinicalItemSelectorProps) => {
   const { t } = useTranslation();
   const [inputValue, setInputValue] = useState('');
   const [isOpen, setIsOpen] = useState(false);

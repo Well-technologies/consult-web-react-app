@@ -1,12 +1,11 @@
-import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { JoinConsultationProps } from './JoinConsultation.types';
-import { PatientHeader } from './components/PatientHeader';
-import { PastConsultationsList } from './components/PastConsultations';
-import { AssessmentNotes } from './components/AssessmentNotes';
+import { PatientHeader } from './components/PatientHeader/PatientHeader';
+import { PatientHistory } from './components/PatientHistory/PatientHistory';
+import { AssessmentNotes } from './components/AssessmentNotes/AssessmentNotes';
 import { Button } from '@/ui/atoms/button/Button';
 
-export const JoinConsultation: FC<JoinConsultationProps> = ({
+export const JoinConsultation = ({
   patientInfo,
   pastConsultations,
   onSave,
@@ -34,7 +33,10 @@ export const JoinConsultation: FC<JoinConsultationProps> = ({
   onLabTestNotesChange,
   medications,
   onMedicationsChange,
-}) => {
+  medicationSuggestions,
+  onMedicationSearch,
+  isLoadingMedications,
+}: JoinConsultationProps) => {
   const { t } = useTranslation();
 
   return (
@@ -44,9 +46,8 @@ export const JoinConsultation: FC<JoinConsultationProps> = ({
 
       <div className="mt-6 md:mt-8 grid grid-cols-3 lg:grid-cols-12 gap-4 md:gap-6 lg:gap-8">
         {/* Left Column - Past Consultations */}
-        <div className="lg:col-span-4 space-y-4 md:space-y-6">
-          <h3 className="text-lg font-bold text-[#333]">{t('joinConsultation.history.title')}</h3>
-          <PastConsultationsList consultations={pastConsultations} />
+        <div className="lg:col-span-4">
+          <PatientHistory consultations={pastConsultations} />
         </div>
 
         {/* Right Column - Assessment & Notes */}
@@ -82,6 +83,9 @@ export const JoinConsultation: FC<JoinConsultationProps> = ({
                 onLabTestNotesChange={onLabTestNotesChange}
                 medications={medications}
                 onMedicationsChange={onMedicationsChange}
+                medicationSuggestions={medicationSuggestions}
+                onMedicationSearch={onMedicationSearch}
+                isLoadingMedications={isLoadingMedications}
               />
 
 

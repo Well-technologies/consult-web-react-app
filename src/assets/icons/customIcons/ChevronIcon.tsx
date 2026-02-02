@@ -1,6 +1,6 @@
 import { CommonProps } from "./customIcons.types";
 
-export const ChevronIcon: React.FC<CommonProps> = ({ className = "" }) => {
+export const ChevronIcon = ({ className = "" }: CommonProps) => {
   return (
     <svg
       className={className}

@@ -1,6 +1,6 @@
 import { CommonProps } from "./customIcons.types";
 
-export const CloseIcon: React.FC<CommonProps> = ({ className = "" }) => {
+export const CloseIcon = ({ className = "" }: CommonProps) => {
   return (
     <svg
       className={className}

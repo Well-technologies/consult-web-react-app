@@ -1,22 +1,22 @@
-import { FC, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from "react-router-dom";
 import { JoinConsultation } from "./JoinConsultation";
-import { PatientInfo, PastConsultation, Prescription } from "./JoinConsultation.types";
-import { useConfirmConsultation, useGetAllDiagnoses, useGetAllLabTests, useGetAllSymptoms, useGetBookedConsultation } from '@/api/consult/consult';
+import { PatientInfo } from "./JoinConsultation.types";
+import { useConfirmConsultation, useGetAllDiagnoses, useGetAllLabTests, useGetAllMedications, useGetAllSymptoms, useGetBookedConsultation, useGetConsultations } from '@/api/consult/consult';
 import { useClient } from '@/hooks/useClient/useClient';
 import { ServiceConfigType } from '@/api/index.types';
-import { ClinicalCommonDataDetails, ConfirmConsultationBody } from '@/api/consult/consult.types';
+import { AddMedicationProps, ClinicalCommonDataDetails, ConfirmConsultationBody, Medication } from '@/api/consult/consult.types';
 import { StoreReducerStateTypes } from '@/store/store.types';
 import { allReducerStates } from '@/store/store.utils';
 import { useSelector } from 'react-redux';
 import { useUpdateConsultationEndType } from '@/api/consult/consult';
 import { CallEndedTypeId } from '@/api/consult/consult.types';
-import { ConsultationEndTypeModal } from './components/ConsultationEndTypeModal';
+import { ConsultationEndTypeModal } from './components/ConsultationEndTypeModal/ConsultationEndTypeModal';
 import { calculateAge } from '@/utils/ageCalculator.utils';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/routing/AppRoute.enum';
 
-export const JoinConsultationContainer: FC = () => {
+export const JoinConsultationContainer = () => {
     const navigate = useNavigate();
     const { appointmentId } = useParams<{ appointmentId: string }>();
     const { patientId } = useParams<{ patientId: string }>();
@@ -41,19 +41,20 @@ export const JoinConsultationContainer: FC = () => {
         age: "",
         appointmentId: "",
         patientId: "",
-        date: ""
+        avatar: ""
     });
 
     // Search terms for suggestions
     const [diagnosisSearch, setDiagnosisSearch] = useState('');
     const [symptomSearch, setSymptomSearch] = useState('');
     const [labTestSearch, setLabTestSearch] = useState('');
+    const [medicationSearch, setMedicationSearch] = useState('');
 
     // State for notes
     const [symptomNotes, setSymptomNotes] = useState('');
     const [diagnosesNotes, setDiagnosesNotes] = useState('');
     const [labTestNotes, setLabTestNotes] = useState('');
-    const [medications, setMedications] = useState<Prescription[]>([]);
+    const [medications, setMedications] = useState<AddMedicationProps[]>([]);
     const [showEndTypeModal, setShowEndTypeModal] = useState(false);
 
     // API hooks
@@ -79,6 +80,18 @@ export const JoinConsultationContainer: FC = () => {
         options: { enabled: labTestSearch.length > 0 }
     });
 
+    const { data: medicationsData, isLoading: isLoadingMedications } = useGetAllMedications({
+        client: consultClient,
+        params: { doctorId, title: medicationSearch },
+        options: { enabled: medicationSearch.length > 0 }
+    });
+
+    const { data: pastConsultationsData } = useGetConsultations({
+        client: consultClient,
+        params: { patient: consultationData?.payload?.patient?.id, page: 1, take: 1000 },
+        options: { enabled: !!consultationData?.payload?.patient?.id }
+    });
+
     // console.log("selectedSymptoms", selectedSymptoms);
 
 
@@ -86,43 +99,15 @@ export const JoinConsultationContainer: FC = () => {
         console.log('consultationData', consultationData?.payload);
         if (!consultationData?.payload) return;
         const { patient, consultationId, } = consultationData?.payload;
-        // Mock data based on the provided image
         const patientInfo: PatientInfo = {
             name: patient?.name,
             age: patient?.dob ? calculateAge(patient?.dob) : "",
             appointmentId: consultationId.toString() || "",
             patientId: patient.lead_id?.toString() || "",
-            date: "Tuesday, January 27, 2026"
+            avatar: patient?.profilePicture || "",
         };
         setPatientInfo(patientInfo);
     }, [isLoadingConsultationData]);
-
-    // console.log("user", user);
-    // console.log("userId", labTestsData, isLoadingLabTests);
-
-    const pastConsultations: PastConsultation[] = [
-        {
-            id: "1",
-            type: "History & Notes",
-            date: "Jan 20, 2026",
-            content: "Flu-like symptoms, Amoxicillin prescribed",
-            hasCurrentRx: true
-        },
-        {
-            id: "2",
-            type: "Previous Medications",
-            date: "Jan 20, 2026",
-            content: "Amlodipine 5mg - 1 tab daily",
-            hasCurrentRx: true
-        },
-        {
-            id: "3",
-            type: "Previous Medications",
-            date: "Jan 20, 2026",
-            content: "Amlodipine 5mg - 1 tab daily",
-            hasCurrentRx: true
-        }
-    ];
 
     const handleSave = () => {
         setShowEndTypeModal(true);
@@ -144,21 +129,16 @@ export const JoinConsultationContainer: FC = () => {
                 data: test,
                 note: labTestNotes
             })),
-            medications: medications.map(med => ({
-                medicineId: med.id,
-                medicineName: med.medicationName,
+            medications: (medications as Medication[]).map(med => ({
+                medicineId: med.medicineId,
+                medicineName: med.medicineName,
                 dosage: med.dosage,
-                duration: med.noOfDays,
+                duration: med.duration,
                 frequency: med.frequency,
                 notes: med.notes,
                 route: '',
                 timing: med.timing,
-                schedules: Object.entries(med.schedule).map(([key, count]) => ({
-                    id: key,
-                    title: key.charAt(0).toUpperCase() + key.slice(1),
-                    count,
-                    status: count > 0
-                }))
+                schedules: med.schedules
             })),
             diagnoses: {
                 items: selectedDiagnoses,
@@ -194,28 +174,23 @@ export const JoinConsultationContainer: FC = () => {
     };
 
     const handleAddMedication = () => {
-        const newPrescription: Prescription = {
-            id: Date.now().toString(),
-            medicationName: '',
+        const newMedication: AddMedicationProps = {
+            medicineId: Date.now().toString(),
+            medicineName: '',
             dosage: '',
-            dosageUnit: 'mg',
             frequency: '',
-            noOfDays: '',
-            schedule: {
-                morning: 0,
-                afternoon: 0,
-                evening: 0,
-                night: 0,
-                ifNecessary: 0,
-                everyOtherDay: 0
-            },
+            duration: '',
+            schedules: [],
             timing: '',
             notes: '',
+            route: '',
             isEditing: true,
             isNew: true
         };
-        setMedications([...medications, newPrescription]);
+        setMedications([...medications, newMedication]);
     };
+
+    console.log('medications', medicationsData?.payload)
 
 
 
@@ -223,7 +198,7 @@ export const JoinConsultationContainer: FC = () => {
         <>
             <JoinConsultation
                 patientInfo={patientInfo}
-                pastConsultations={pastConsultations}
+                pastConsultations={pastConsultationsData?.payload || []}
                 onSave={handleSave}
                 onAddMedication={handleAddMedication}
                 diagnoses={selectedDiagnoses}
@@ -254,6 +229,14 @@ export const JoinConsultationContainer: FC = () => {
                 onLabTestNotesChange={setLabTestNotes}
                 medications={medications}
                 onMedicationsChange={setMedications}
+                medicationSuggestions={medicationsData?.payload.map((item) => ({
+                    id: item.id.toString(),
+                    name: item.medication_name,
+                    createdAt: item.created_at,
+                    updatedAt: item.updated_at,
+                } as ClinicalCommonDataDetails)) || []}
+                onMedicationSearch={setMedicationSearch}
+                isLoadingMedications={isLoadingMedications}
             />
             <ConsultationEndTypeModal
                 isOpen={showEndTypeModal}

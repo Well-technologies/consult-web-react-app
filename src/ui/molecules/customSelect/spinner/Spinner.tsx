@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { SpinnerProps } from "../CustomSelect.types";
 import { COLORS, DEFAULT_COLOR, styles } from "../CustomSelect.utils";
 
-export const Spinner: React.FC<SpinnerProps> = ({ primaryColor }) => {
+export const Spinner = ({ primaryColor }: SpinnerProps) => {
   const spinnerColor = useMemo(() => {
     if (COLORS.includes(primaryColor)) {
       return styles.text[primaryColor as keyof typeof styles.text];

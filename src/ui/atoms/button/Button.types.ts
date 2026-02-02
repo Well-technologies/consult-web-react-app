@@ -2,7 +2,7 @@ export type ButtonProps = {
   title?: string;
   variant: "primary" | "secondary" | "outline";
   disabled?: boolean;
-  onClick?: () => void;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
   className?: string;
   type?: "button" | "submit" | "reset";
   imageUrl?: string;

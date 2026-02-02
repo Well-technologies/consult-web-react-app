@@ -1,4 +1,4 @@
-import { ClinicalCommonDataDetails } from '@/api/consult/consult.types';
+import { AddMedicationProps, ClinicalCommonDataDetails, ConsultationDetails } from '@/api/consult/consult.types';
 
 export enum ConsultationType {
   InPerson = 'in-person',
@@ -15,15 +15,19 @@ export interface PatientInfo {
   age: string;
   appointmentId: string;
   patientId: string;
-  date: string;
+  avatar: string | null;
 }
 
 export interface PastConsultation {
   id: string;
-  type: 'History & Notes' | 'Previous Medications';
+  type: string;
   date: string;
-  content: string;
+  content?: string;
   hasCurrentRx?: boolean;
+  symptoms?: ClinicalCommonDataDetails[];
+  diagnosis?: ClinicalCommonDataDetails[];
+  labTests?: ClinicalCommonDataDetails[];
+  medications?: Prescription[];
 }
 
 export interface Prescription {
@@ -49,7 +53,7 @@ export interface Prescription {
 
 export interface JoinConsultationProps {
   patientInfo: PatientInfo;
-  pastConsultations: PastConsultation[];
+  pastConsultations: ConsultationDetails[];
   onSave: () => void;
   onAddMedication: () => void;
   diagnoses: ClinicalCommonDataDetails[];
@@ -73,7 +77,10 @@ export interface JoinConsultationProps {
   isLoadingLabTests: boolean;
   labTestNotes: string;
   onLabTestNotesChange: (notes: string) => void;
-  medications: Prescription[];
-  onMedicationsChange: (prescriptions: Prescription[]) => void;
+  medications: AddMedicationProps[];
+  onMedicationsChange: (prescriptions: AddMedicationProps[]) => void;
+  medicationSuggestions: ClinicalCommonDataDetails[];
+  onMedicationSearch: (query: string) => void;
+  isLoadingMedications: boolean;
 }
 
