@@ -1,8 +1,13 @@
-import { AddMedicationProps, ClinicalCommonDataDetails, ConsultationDetails } from '@/api/consult/consult.types';
+import {
+  AddMedicationProps,
+  ClinicalCommonDataDetails,
+  ConsultationDetails,
+  ConsultUserDetails,
+} from "@/api/consult/consult.types";
 
 export enum ConsultationType {
-  InPerson = 'in-person',
-  Online = 'online',
+  InPerson = "in-person",
+  Online = "online",
 }
 
 export type ConsultationCardProps = {
@@ -53,7 +58,6 @@ export interface Prescription {
 
 export interface JoinConsultationProps {
   patientInfo: PatientInfo;
-  pastConsultations: ConsultationDetails[];
   onSave: () => void;
   onAddMedication: () => void;
   diagnoses: ClinicalCommonDataDetails[];
@@ -82,5 +86,5 @@ export interface JoinConsultationProps {
   medicationSuggestions: ClinicalCommonDataDetails[];
   onMedicationSearch: (query: string) => void;
   isLoadingMedications: boolean;
+  doctorId: number;
 }
-

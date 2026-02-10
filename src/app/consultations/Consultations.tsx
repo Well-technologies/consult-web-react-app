@@ -128,7 +128,7 @@ export const Consultations = ({
               e.stopPropagation();
               // navigate(AppRoute.Prescription.replace(':consultationId', String(row.id)));
             }}>{"View"}</Button> : "-",
-            // header: `${t("consultation.table.prescription.header")}`,
+            header: `${t("consultation.table.prescription.header")}`, 
           });
         }
 

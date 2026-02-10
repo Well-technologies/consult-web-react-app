@@ -1,12 +1,12 @@
-import { AxiosInstance } from 'axios';
+import { AxiosInstance } from "axios";
 
-import { ConsultationDetails } from '../consult/consult.types';
+import { ConsultationDetails } from "../consult/consult.types";
 import {
   CommonQueryOptions,
   CommonSuccessPaginatedResponse,
   CommonSuccessResponse,
   ConsultSuccessResponse,
-} from '../index.types';
+} from "../index.types";
 
 export type CreateMedicineOrderProps = {
   client: AxiosInstance;
@@ -25,13 +25,13 @@ export type CreateMedicineOrderBody = {
   delivery_type: number;
   delivery_charge: number;
   order_status: MedicineOrderStatus;
-//   paymentoption: PaymentMethod;
+  //   paymentoption: PaymentMethod;
   address_id: number;
   order_note: string;
   prescription_text: string;
-  request_quote_notification: '1' | '0';
-  use_flash_point: '1' | '0';
-  is_substitute_medicine: '1' | '0';
+  request_quote_notification: "1" | "0";
+  use_flash_point: "1" | "0";
+  is_substitute_medicine: "1" | "0";
   card_detail_id: number | string;
   coupon_code: number | string;
   medications: Medication[] | [];
@@ -81,7 +81,7 @@ export type CreateMedicineOrderResponseData = {
   order_type_for_review: number;
   origin_package_id: number;
   package_delivery_discount: boolean;
-//   paymentoption: PaymentMethod;
+  //   paymentoption: PaymentMethod;
   prescription_note: string;
   prescription_text: string;
   request_quote_notification: string;
@@ -94,13 +94,13 @@ export type CreateMedicineOrderResponseData = {
 };
 
 export enum LabTestKeyType {
-  GetLabTests = 'GetLabTests',
-  GetLabPartners = 'GetLabPartners',
+  GetLabTests = "GetLabTests",
+  GetLabPartners = "GetLabPartners",
 }
 
 export enum ClinicalServiceType {
-  HomeCare = 'homecare',
-  Lab = 'lab',
+  HomeCare = "homecare",
+  Lab = "lab",
 }
 
 export type getLabTestsProps = {
@@ -244,10 +244,10 @@ export type CreateClinicalOrderBody = {
   delivery_type: number;
   delivery_charge: number;
   order_status: LabOrderStatus;
-//   paymentoption: PaymentMethod;
+  //   paymentoption: PaymentMethod;
   address_id: number;
-  request_quote_notification: '1' | '0';
-  use_flash_point: '1' | '0';
+  request_quote_notification: "1" | "0";
+  use_flash_point: "1" | "0";
   delivery_date: string;
   delivery_time: string;
   card_detail_id: number | string;
@@ -261,8 +261,8 @@ export type CreateClinicalOrderBody = {
 };
 
 export enum ClinicalServiceCaregiverType {
-  Doctor = 'Doctor',
-  Nurse = 'Nurse',
+  Doctor = "Doctor",
+  Nurse = "Nurse",
 }
 
 export type CreateLabOrderResponse =
@@ -316,7 +316,7 @@ export type CreateLabOrderResponseData = {
   source: number;
   organization_discount: string;
   organization_discount_cost: string;
-//   paymentoption: PaymentMethod;
+  //   paymentoption: PaymentMethod;
   paid_amount: number | null;
   short_url: string | null;
   order_note: string | null;
@@ -332,7 +332,7 @@ export type CreateLabOrderResponseData = {
   rider_id: number | null;
   prescription_text: string | null;
   prescription_note: string | null;
-  credit_being_use: '0' | '1';
+  credit_being_use: "0" | "1";
   is_flash_point: 0 | 1;
   is_viewed_by_admin: 0 | 1;
   used_credit_points: number | null;
@@ -355,7 +355,7 @@ export type CreateLabOrderResponseData = {
   order_sub_type: number;
   lab_partner_id: string;
   lab_partner_name: string;
-  is_claimable: '0' | '1';
+  is_claimable: "0" | "1";
   claim_id: number | null;
   priority: number | null;
   priority_reference: string | null;
@@ -369,20 +369,22 @@ export type CreateLabOrderResponseData = {
 };
 
 export enum OrderKeyTypes {
-  GetAllMedicineOrders = 'GetAllMedicineOrders',
-  GetAllLabOrders = 'GetAllLabOrders',
-  GetFirstAdviceOrders = 'GetFirstAdviceOrders',
-  GetMedicineOrderDetails = 'GetMedicineOrderDetails',
-  GetLabOrderDetails = 'GetLabOrderDetails',
-  GetLabTests = 'GetLabTests',
-  GetLabPartners = 'GetLabPartners',
-  GetOrderReceipt = 'GetOrderReceipt',
-  GetSubscriptionReceipt = 'GetSubscriptionReceipt',
-  GetLabReports = 'GetLabReports',
-  GetPreviousLabOrders = 'GetPreviousLabOrders',
-  GetPreviousMedOrders = 'GetPreviousMedOrders',
-  GetCancelMedicineOrder = 'GetCancelMedicineOrder',
-  GetPickedUpTrackLocation = 'GetPickedUpTrackLocation',
+  GetAllMedicineOrders = "GetAllMedicineOrders",
+  GetAllLabOrders = "GetAllLabOrders",
+  GetFirstAdviceOrders = "GetFirstAdviceOrders",
+  GetMedicineOrderDetails = "GetMedicineOrderDetails",
+  GetLabOrderDetails = "GetLabOrderDetails",
+  GetLabTests = "GetLabTests",
+  GetLabPartners = "GetLabPartners",
+  GetOrderReceipt = "GetOrderReceipt",
+  GetSubscriptionReceipt = "GetSubscriptionReceipt",
+  GetLabReports = "GetLabReports",
+  GetPreviousLabOrders = "GetPreviousLabOrders",
+  GetPreviousMedOrders = "GetPreviousMedOrders",
+  GetCancelMedicineOrder = "GetCancelMedicineOrder",
+  GetPickedUpTrackLocation = "GetPickedUpTrackLocation",
+  GetLabOrderHistory = "GetLabOrderHistory",
+  GetMedOrderHistory = "GetMedOrderHistory",
 }
 
 export type GetMedicineOrderListProps = {
@@ -405,7 +407,7 @@ export type GetMedicineOrderListResponse = CommonSuccessResponse<
 // >;
 
 export type MedicineOrderDetails = {
-//   address: OrderAddressDetails;
+  //   address: OrderAddressDetails;
   basket_value: string;
   card_detail_id: string | null;
   catalogPackage: CatalogPackage;
@@ -420,7 +422,7 @@ export type MedicineOrderDetails = {
   created_by: number | null;
   credit_being_use: string;
   delivery_charge: string;
-//   delivery_detail: DeliveryDetail;
+  //   delivery_detail: DeliveryDetail;
   delivery_from_date: string | null;
   delivery_to_date: string | null;
   delivery_type: number;
@@ -431,7 +433,7 @@ export type MedicineOrderDetails = {
   insuremeDetails: any[];
   is_abusable: boolean;
   is_abusable_url: string | null;
-  is_claimable: '0' | '1';
+  is_claimable: "0" | "1";
   is_courier_partner: number;
   is_substitute_medicine: number;
   lead: Lead;
@@ -455,7 +457,7 @@ export type MedicineOrderDetails = {
   package_id: number | null;
   packed_by: string | null;
   payment_status: string | null;
-//   paymentoption: PaymentMethod;
+  //   paymentoption: PaymentMethod;
   po_documents: undefined; //TODO: Assuming no further structure given
   po_number: string | null;
   prescription_details: PrescriptionItem[]; //TODO:  Double check if this is correct
@@ -586,7 +588,7 @@ export type OrderReview = {
   order_id: number;
   review: null | number;
   otherfeedback: string | null;
-//   type: PendingReviewType;
+  //   type: PendingReviewType;
   sentiments: string[] | null;
 };
 
@@ -721,7 +723,7 @@ export type MedOrderItem = {
 };
 
 export type ClinicalOrderDetails = {
-//   address: OrderAddressDetails;
+  //   address: OrderAddressDetails;
   basket_value: string;
   cancel_reason: string | null;
   card_detail_id: number | null;
@@ -731,7 +733,7 @@ export type ClinicalOrderDetails = {
   claimable_value: string;
   delivery_charge: string;
   delivery_date: string;
-//   delivery_detail: DeliveryDetail;
+  //   delivery_detail: DeliveryDetail;
   delivery_time: string;
   delivery_type: number;
   discount_data: DiscountData;
@@ -739,7 +741,7 @@ export type ClinicalOrderDetails = {
   id: number;
   lab_partner_id: number;
   last_subscription_order: unknown;
-//   leadCardDetail?: CardDetails | null;
+  //   leadCardDetail?: CardDetails | null;
   lead_id: number;
   margin: string;
   margin_type: number;
@@ -757,7 +759,7 @@ export type ClinicalOrderDetails = {
   package_discount_amount: string | null;
   package_id: number | null;
   payment_due_date: string;
-//   paymentoption: PaymentMethod;
+  //   paymentoption: PaymentMethod;
   prescription_file: string | null;
   prescription_file_url: string | null;
   prescription_note: string;
@@ -784,7 +786,7 @@ export type ClinicalOrderDetails = {
   selected_reports: LabTest[];
   //-------------------
   order_type: number;
-  is_claimable: '0' | '1';
+  is_claimable: "0" | "1";
   type: ClinicalServiceType;
   preferred_caregiver_type?: ClinicalServiceCaregiverType;
   orderreview: OrderReview[];
@@ -846,8 +848,8 @@ export type GetFirstAdviceOrderListResponse = ConsultSuccessResponse<
 >;
 
 export enum AppointmentType {
-  Booking = 'BOOKING',
-  Physical = 'PHYSICAL',
+  Booking = "BOOKING",
+  Physical = "PHYSICAL",
 }
 
 export type GetOrderMedicineDetailsProps = {
@@ -898,8 +900,8 @@ export type GetOrderReceiptProps = {
 };
 
 export enum OrderReceptType {
-  Orders = 'orders',
-  LabOrders = 'laborders',
+  Orders = "orders",
+  LabOrders = "laborders",
 }
 
 export type GetOrderReceiptResponse = CommonSuccessResponse<ReceiptUrl>;
@@ -929,18 +931,18 @@ export type GetLabReportsPropsResponse = CommonSuccessResponse<{
 
 export type PreviousLabOrderDetails = Omit<
   ClinicalOrderDetails,
-  | 'orderItems'
-  | 'prescriptions'
-  | 'sample_details'
-  | 'rider_name'
-  | 'use_flash_point'
-  | 'delivery_detail'
-  | 'generic_report_urls'
-  | 'claimable_value'
-  | 'order_type'
-  | 'orderreview'
-  | 'secondary_name'
-  | 'secondary_number'
+  | "orderItems"
+  | "prescriptions"
+  | "sample_details"
+  | "rider_name"
+  | "use_flash_point"
+  | "delivery_detail"
+  | "generic_report_urls"
+  | "claimable_value"
+  | "order_type"
+  | "orderreview"
+  | "secondary_name"
+  | "secondary_number"
 > & {
   order_items: PreviousLabOrderItem[];
   prescription_lab_test: any[]; // TODO: Change the type if this variable is used in PreviousLabOrder
@@ -957,7 +959,7 @@ export type PreviousLabOrderDetails = Omit<
   is_complete: boolean;
   preferred_caregiver_type: any; // TODO: Change the type if this variable is used in PreviousLabOrder
   origin_package_id: number | null;
-  prescription: Omit<MedOrderPrescription, 'prescription_text'>[];
+  prescription: Omit<MedOrderPrescription, "prescription_text">[];
 };
 
 export type GetPreviousLabOrdersResponse =
@@ -1046,9 +1048,9 @@ export type ApprovedOrderData = {
   delivery_type: number;
   delivery_charge: number;
   address_id: number;
-//   channel: ChannelSources;
+  //   channel: ChannelSources;
   order_status: MedicineOrderStatus;
-//   paymentoption: PaymentMethod;
+  //   paymentoption: PaymentMethod;
   medications: ApproveQuoteMedication[];
   use_flash_point: string;
   deleted_item_id?: number[];
@@ -1068,7 +1070,7 @@ export type SkipOrderReviewProps = {
 export type SkipOrderReviewBody = {
   order_id: number;
   skip_review: string;
-//   type: PendingReviewType;
+  //   type: PendingReviewType;
 };
 
 export type SkipOrderReviewResponse = CommonSuccessResponse<{
@@ -1086,7 +1088,7 @@ export type SubmitOrderReviewBody = {
   order_id: number;
   review: string;
   otherfeedback: string | null;
-//   type: PendingReviewType;
+  //   type: PendingReviewType;
   sentiments: string[] | null;
 };
 
@@ -1117,7 +1119,7 @@ export type SkipMedicineOrderReviewProps = {
 export type SkipMedicineOrderReviewBody = {
   order_id: number;
   skip_review: string;
-//   type: PendingReviewType;
+  //   type: PendingReviewType;
 };
 
 export type SkipMedicineOrderReviewResponse = CommonSuccessResponse<{}>;
@@ -1130,7 +1132,7 @@ export type UpdateMedicineOrderPaymentProps = {
 
 export type UpdateMedicineOrderPaymentBody = {
   card_detail_id: string | null;
-//   paymentoption: PaymentMethod;
+  //   paymentoption: PaymentMethod;
 };
 
 export type UpdateMedicineOrderPaymentResponse =
@@ -1149,3 +1151,35 @@ export type SaveSecondaryContactBody = {
 
 export type SaveSecondaryContactResponse =
   CommonSuccessResponse<MedicineOrderDetails>;
+
+export type GetLabOrderHistoryParams = {
+  doctorId: number;
+  patientId: string;
+};
+
+export type GetLabOrderHistoryProps = {
+  client: AxiosInstance;
+  params: GetLabOrderHistoryParams;
+  options?: CommonQueryOptions;
+};
+
+export type GetLabOrderHistoryResponse = ConsultSuccessResponse<
+  ClinicalOrderDetails[],
+  null
+>;
+
+export type GetMedOrderHistoryParams = {
+  doctorId: number;
+  patientId: string;
+};
+
+export type GetMedOrderHistoryProps = {
+  client: AxiosInstance;
+  params: GetMedOrderHistoryParams;
+  options?: CommonQueryOptions;
+};
+
+export type GetMedOrderHistoryResponse = ConsultSuccessResponse<
+  MedicineOrderDetails[],
+  null
+>;

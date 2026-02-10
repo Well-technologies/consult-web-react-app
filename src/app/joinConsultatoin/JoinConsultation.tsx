@@ -1,13 +1,14 @@
-import { useTranslation } from 'react-i18next';
-import { JoinConsultationProps } from './JoinConsultation.types';
-import { PatientHeader } from './components/PatientHeader/PatientHeader';
-import { PatientHistory } from './components/PatientHistory/PatientHistory';
-import { AssessmentNotes } from './components/AssessmentNotes/AssessmentNotes';
-import { Button } from '@/ui/atoms/button/Button';
+import { useTranslation } from "react-i18next";
+
+import { Button } from "@/ui/atoms/button/Button";
+
+import { JoinConsultationProps } from "./JoinConsultation.types";
+import { AssessmentNotes } from "./components/AssessmentNotes/AssessmentNotes";
+import { PatientHeader } from "./components/PatientHeader/PatientHeader";
+import { PatientHistory } from "./components/PatientHistory/PatientHistory";
 
 export const JoinConsultation = ({
   patientInfo,
-  pastConsultations,
   onSave,
   onAddMedication,
   diagnoses,
@@ -36,6 +37,7 @@ export const JoinConsultation = ({
   medicationSuggestions,
   onMedicationSearch,
   isLoadingMedications,
+  doctorId,
 }: JoinConsultationProps) => {
   const { t } = useTranslation();
 
@@ -47,47 +49,50 @@ export const JoinConsultation = ({
       <div className="mt-6 md:mt-8 grid grid-cols-3 lg:grid-cols-12 gap-4 md:gap-6 lg:gap-8">
         {/* Left Column - Past Consultations */}
         <div className="lg:col-span-4">
-          <PatientHistory consultations={pastConsultations} />
+          <PatientHistory
+            patientId={patientInfo?.patientId}
+            doctorId={doctorId}
+          />
         </div>
 
         {/* Right Column - Assessment & Notes */}
         <div className="lg:col-span-8 col-span-2 bg-white rounded-xl p-5 md:p-6 lg:p-8 shadow-sm">
           <div className="flex flex-col h-full">
             <div className="flex items-center justify-between mb-4 md:mb-6">
-              <h2 className="text-xl font-bold text-[#333]">{t('joinConsultation.assessment.title')}</h2>
-              
+              <h2 className="text-xl font-bold text-[#333]">
+                {t("joinConsultation.assessment.title")}
+              </h2>
             </div>
 
-              <AssessmentNotes 
-                onAddMedication={onAddMedication} 
-                diagnoses={diagnoses}
-                onDiagnosesChange={onDiagnosesChange}
-                diagnosisSuggestions={diagnosisSuggestions}
-                onDiagnosisSearch={onDiagnosisSearch}
-                isLoadingDiagnoses={isLoadingDiagnoses}
-                symptoms={symptoms}
-                onSymptomsChange={onSymptomsChange}
-                symptomSuggestions={symptomSuggestions}
-                onSymptomSearch={onSymptomSearch}
-                isLoadingSymptoms={isLoadingSymptoms}
-                symptomNotes={symptomNotes}
-                onSymptomNotesChange={onSymptomNotesChange}
-                diagnosesNotes={diagnosesNotes}
-                onDiagnosesNotesChange={onDiagnosesNotesChange}
-                labTests={labTests}
-                onLabTestsChange={onLabTestsChange}
-                labTestSuggestions={labTestSuggestions}
-                onLabTestSearch={onLabTestSearch}
-                isLoadingLabTests={isLoadingLabTests}
-                labTestNotes={labTestNotes}
-                onLabTestNotesChange={onLabTestNotesChange}
-                medications={medications}
-                onMedicationsChange={onMedicationsChange}
-                medicationSuggestions={medicationSuggestions}
-                onMedicationSearch={onMedicationSearch}
-                isLoadingMedications={isLoadingMedications}
-              />
-
+            <AssessmentNotes
+              onAddMedication={onAddMedication}
+              diagnoses={diagnoses}
+              onDiagnosesChange={onDiagnosesChange}
+              diagnosisSuggestions={diagnosisSuggestions}
+              onDiagnosisSearch={onDiagnosisSearch}
+              isLoadingDiagnoses={isLoadingDiagnoses}
+              symptoms={symptoms}
+              onSymptomsChange={onSymptomsChange}
+              symptomSuggestions={symptomSuggestions}
+              onSymptomSearch={onSymptomSearch}
+              isLoadingSymptoms={isLoadingSymptoms}
+              symptomNotes={symptomNotes}
+              onSymptomNotesChange={onSymptomNotesChange}
+              diagnosesNotes={diagnosesNotes}
+              onDiagnosesNotesChange={onDiagnosesNotesChange}
+              labTests={labTests}
+              onLabTestsChange={onLabTestsChange}
+              labTestSuggestions={labTestSuggestions}
+              onLabTestSearch={onLabTestSearch}
+              isLoadingLabTests={isLoadingLabTests}
+              labTestNotes={labTestNotes}
+              onLabTestNotesChange={onLabTestNotesChange}
+              medications={medications}
+              onMedicationsChange={onMedicationsChange}
+              medicationSuggestions={medicationSuggestions}
+              onMedicationSearch={onMedicationSearch}
+              isLoadingMedications={isLoadingMedications}
+            />
 
             <div className="mt-auto pt-6 md:pt-8 flex justify-end">
               <Button
@@ -95,7 +100,7 @@ export const JoinConsultation = ({
                 variant="primary"
                 className="bg-[#e32933] hover:bg-[#c2242b] text-white px-6 md:px-8 py-2.5 md:py-3 rounded-lg font-semibold shadow-md transition-all active:scale-95"
               >
-                {t('joinConsultation.button.save')}
+                {t("joinConsultation.button.save")}
               </Button>
             </div>
           </div>
@@ -104,4 +109,3 @@ export const JoinConsultation = ({
     </div>
   );
 };
-

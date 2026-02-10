@@ -1,7 +1,7 @@
-import { ConsultationDetails } from '@/api/consult/consult.types';
+import { ConsultationDetails } from "@/api/consult/consult.types";
 
 export interface PastConsultationsListProps {
-  consultations: ConsultationDetails[];
+  patientId: string;
 }
 
 export interface PastConsultationCardProps {

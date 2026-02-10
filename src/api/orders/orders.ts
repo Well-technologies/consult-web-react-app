@@ -1,9 +1,20 @@
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
-import { GetPreviousLabOrdersProps, GetPreviousLabOrdersResponse, OrderKeyTypes, GetPreviousMedOrdersProps, GetPreviousMedOrdersResponse } from "./orders.types";
+
+import {
+  GetPreviousLabOrdersProps,
+  GetPreviousLabOrdersResponse,
+  OrderKeyTypes,
+  GetPreviousMedOrdersProps,
+  GetPreviousMedOrdersResponse,
+  GetLabOrderHistoryProps,
+  GetLabOrderHistoryResponse,
+  GetMedOrderHistoryProps,
+  GetMedOrderHistoryResponse,
+} from "./orders.types";
 
 const getPreviousLabOrders = ({ client, params }: GetPreviousLabOrdersProps) =>
   client
-    .get<GetPreviousLabOrdersResponse>('customer/get-lab-orders', { params })
+    .get<GetPreviousLabOrdersResponse>("customer/get-lab-orders", { params })
     .then(({ data }) => data);
 
 export const useGetPreviousLabOrders = ({
@@ -18,7 +29,7 @@ export const useGetPreviousLabOrders = ({
 
 const getPreviousMedOrders = ({ client, params }: GetPreviousMedOrdersProps) =>
   client
-    .get<GetPreviousMedOrdersResponse>('customer/get-app-orders', { params })
+    .get<GetPreviousMedOrdersResponse>("customer/get-app-orders", { params })
     .then(({ data }) => data);
 
 export const useGetPreviousMedOrders = ({
@@ -28,5 +39,35 @@ export const useGetPreviousMedOrders = ({
   useQuery({
     queryKey: [OrderKeyTypes.GetPreviousMedOrders, params.page],
     queryFn: () => getPreviousMedOrders({ client, params }),
+    placeholderData: keepPreviousData,
+  });
+
+const getLabOrderHistory = ({ client, params }: GetLabOrderHistoryProps) =>
+  client
+    .get<GetLabOrderHistoryResponse>("/orders/lab-orders", { params })
+    .then(({ data }) => data);
+
+export const useGetLabOrderHistory = ({
+  client,
+  params,
+}: GetLabOrderHistoryProps) =>
+  useQuery({
+    queryKey: [OrderKeyTypes.GetLabOrderHistory],
+    queryFn: () => getLabOrderHistory({ client, params }),
+    placeholderData: keepPreviousData,
+  });
+
+const getMedOrderHistory = ({ client, params }: GetMedOrderHistoryProps) =>
+  client
+    .get<GetMedOrderHistoryResponse>("/orders/med-orders", { params })
+    .then(({ data }) => data);
+
+export const useGetMedOrderHistory = ({
+  client,
+  params,
+}: GetMedOrderHistoryProps) =>
+  useQuery({
+    queryKey: [OrderKeyTypes.GetMedOrderHistory],
+    queryFn: () => getMedOrderHistory({ client, params }),
     placeholderData: keepPreviousData,
   });
