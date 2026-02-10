@@ -130,7 +130,7 @@ export const useGetPatientHealthVault = ({
   params,
 }: GetPatientHealthVaultProps) =>
   useQuery({
-    queryKey: [PatientKeyTypes.PatientHealthLogs, { params }],
+    queryKey: [PatientKeyTypes.PatientHealthVault, { params }],
     queryFn: () => getPatientHealthVault({ client, params }),
     placeholderData: keepPreviousData,
   });

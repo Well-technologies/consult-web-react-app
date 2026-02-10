@@ -6,6 +6,7 @@ import { Tabs } from "@/ui/atoms/tabs/Tabs";
 
 import { HealthLogs } from "./HealthLogs/HealthLogs";
 import { HealthVault } from "./HealthVault/HealthVault";
+import { MedicalHistory } from "./MedicalHistory/MedicalHistory";
 import { PastConsultationsList } from "./PastConsultations/PastConsultationsList";
 import { PastLabOrdersList } from "./PastLabOrders/PastLabOrdersList";
 import { PastMedOrdersList } from "./PastMedOrders/PastMedOrderList";
@@ -13,11 +14,6 @@ import { PastMedOrdersList } from "./PastMedOrders/PastMedOrderList";
 const HealthData = () => (
   <div className="p-4">
     {useTranslation().t("joinConsultation.history.tabs.healthData")} Content
-  </div>
-);
-const MedicalHistoryTab = () => (
-  <div className="p-4">
-    {useTranslation().t("joinConsultation.history.tabs.medicalHistory")} Content
   </div>
 );
 const SurgicalHistoryTab = () => (
@@ -96,7 +92,7 @@ export const PatientHistory = ({
     {
       label: t("joinConsultation.history.tabs.medicalHistory"),
       value: PatientHistoryTab.MedicalHistory,
-      component: <MedicalHistoryTab />,
+      component: <MedicalHistory patientId={patientId} />,
     },
     {
       label: t("joinConsultation.history.tabs.surgicalHistory"),

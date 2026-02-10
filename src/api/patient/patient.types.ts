@@ -16,6 +16,7 @@ export enum PatientKeyTypes {
   PatientDetails = "PatientDetails",
   PatientSearch = "PatientSearch",
   PatientHealthLogs = "PatientHealthLogs",
+  PatientHealthVault = "PatientHealthVault",
 }
 
 export type GetPatientsProps = {
