@@ -17,6 +17,8 @@ import {
   GetPatientDetailsResponse,
   GetPatientListResponse,
   SearchPatientsProps,
+  GetPatientHealthLogsProps,
+  GetPatientHealthLogsResponse,
 } from "./patient.types";
 
 const getMyPatients = ({ client, params }: GetPatientsProps) =>
@@ -47,21 +49,25 @@ export const useCreatePatient = (
         unknown
       >
     | undefined
-) => useMutation({ ...options, mutationFn: createPatient });4
+) => useMutation({ ...options, mutationFn: createPatient });
+4;
 
 const searchPatients = ({ client, params }: SearchPatientsProps) =>
   client
     .get<GetPatientListResponse>(`/third-party-patientSearch`, { params })
     .then(({ data }) => data);
 
-export const useSearchPatients = ({ client, params, enabled }: SearchPatientsProps) =>
+export const useSearchPatients = ({
+  client,
+  params,
+  enabled,
+}: SearchPatientsProps) =>
   useQuery({
     queryKey: [PatientKeyTypes.PatientSearch, { params }],
     queryFn: () => searchPatients({ client, params, enabled }),
     placeholderData: keepPreviousData,
-    enabled
+    enabled,
   });
-
 
 const updatePatient = ({ client, body, userId }: UpdatePatientProps) =>
   client
@@ -94,3 +100,17 @@ export const useGetPatientDetails = ({
     placeholderData: keepPreviousData,
   });
 
+const getPatientHealthLogs = ({ client, params }: GetPatientHealthLogsProps) =>
+  client
+    .get<GetPatientHealthLogsResponse>("/logs/health-logs", { params })
+    .then(({ data }) => data);
+
+export const useGetPatientHealthLogs = ({
+  client,
+  params,
+}: GetPatientHealthLogsProps) =>
+  useQuery({
+    queryKey: [PatientKeyTypes.PatientHealthLogs, { params }],
+    queryFn: () => getPatientHealthLogs({ client, params }),
+    placeholderData: keepPreviousData,
+  });

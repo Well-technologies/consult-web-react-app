@@ -5,6 +5,7 @@ import { AxiosInstance } from "axios";
 import {
   CommonPaginationParams,
   CommonSuccessResponse,
+  ConsultSuccessResponse,
   PaginatedResponseData,
 } from "../index.types";
 // import { LeadTransactionsDetails } from "../transaction/transaction.types";
@@ -14,6 +15,7 @@ export enum PatientKeyTypes {
   PatientsList = "PatientsList",
   PatientDetails = "PatientDetails",
   PatientSearch = "PatientSearch",
+  PatientHealthLogs = "PatientHealthLogs",
 }
 
 export type GetPatientsProps = {
@@ -41,7 +43,6 @@ export type GetPatientsResponse = CommonSuccessResponse<
 
 export type OrganizationUserDetails = Lead;
 
-
 export type GetPatientListResponse = CommonSuccessResponse<PatientDetails[]>;
 
 export type CreatePatientProps = {
@@ -55,23 +56,19 @@ export type CreatePatientBody = {
   email?: string | null;
   gender: string;
   dob: string;
-  consultation_mode_id? : number;
-  doctor_id?: number
-  patient_id?: string
+  consultation_mode_id?: number;
+  doctor_id?: number;
+  patient_id?: string;
 };
 
 export type CreatePatientResponse = CommonSuccessResponse<UserDetails>;
 
 export type UserDetails = Pick<
   Lead,
-  | "id"
-  | "name"
-  | "mobile_no"
-  | "email"
-  | "date_of_birth"
+  "id" | "name" | "mobile_no" | "email" | "date_of_birth"
 > & {
   appointment_id?: number;
-}
+};
 
 export type UpdatePatientProps = {
   client: AxiosInstance;
@@ -110,4 +107,50 @@ export type AddFamilyMemberBody = {
   // relation: FamilyMemberType;
 };
 
+export type GetPatientHealthLogsParams = {
+  patientId: string;
+  doctorId: number;
+};
 
+export type GetPatientHealthLogsProps = {
+  client: AxiosInstance;
+  params: GetPatientHealthLogsParams;
+};
+
+export type GetPatientHealthLogsResponse = ConsultSuccessResponse<
+  HealthLogData[],
+  null
+>;
+
+export type HealthMeasurement = {
+  unit: string | null;
+  value: string | null;
+};
+
+export type BMIMeasurement = {
+  value: string | null;
+};
+
+export type HealthLogBody = {
+  hb: HealthMeasurement;
+  bmi: BMIMeasurement;
+  spo2: HealthMeasurement;
+  pulse: HealthMeasurement;
+  height: HealthMeasurement;
+  weight: HealthMeasurement;
+  systolic: HealthMeasurement;
+  diastolic: HealthMeasurement;
+  blood_sugar: HealthMeasurement;
+  cholesterol: HealthMeasurement;
+};
+
+export type HealthLogData = {
+  id: number;
+  success: boolean;
+  lead_id: number;
+  data: {
+    body: HealthLogBody;
+  };
+  created_at: string;
+  updated_at: string;
+};
