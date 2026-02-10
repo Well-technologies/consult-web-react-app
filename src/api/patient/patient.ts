@@ -19,6 +19,8 @@ import {
   SearchPatientsProps,
   GetPatientHealthLogsProps,
   GetPatientHealthLogsResponse,
+  GetPatientHealthVaultProps,
+  GetPatientHealthVaultResponse,
 } from "./patient.types";
 
 const getMyPatients = ({ client, params }: GetPatientsProps) =>
@@ -112,5 +114,23 @@ export const useGetPatientHealthLogs = ({
   useQuery({
     queryKey: [PatientKeyTypes.PatientHealthLogs, { params }],
     queryFn: () => getPatientHealthLogs({ client, params }),
+    placeholderData: keepPreviousData,
+  });
+
+export const getPatientHealthVault = ({
+  client,
+  params,
+}: GetPatientHealthVaultProps) =>
+  client
+    .get<GetPatientHealthVaultResponse>("/health-vaults/", { params })
+    .then(({ data }) => data);
+
+export const useGetPatientHealthVault = ({
+  client,
+  params,
+}: GetPatientHealthVaultProps) =>
+  useQuery({
+    queryKey: [PatientKeyTypes.PatientHealthLogs, { params }],
+    queryFn: () => getPatientHealthVault({ client, params }),
     placeholderData: keepPreviousData,
   });

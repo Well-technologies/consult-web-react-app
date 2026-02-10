@@ -154,3 +154,31 @@ export type HealthLogData = {
   created_at: string;
   updated_at: string;
 };
+
+export type GetPatientHealthVaultProps = {
+  client: AxiosInstance;
+  params: GetHealthLogsParams;
+};
+
+export type GetHealthLogsParams = {
+  userId: string;
+};
+
+export type GetPatientHealthVaultResponse = ConsultSuccessResponse<
+  HealthVaultData[],
+  null
+>;
+
+export type HealthVaultData = {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  title: string;
+  fileUrl: string;
+  fileType: string;
+  mimeType: string;
+  userId: number;
+  familyMemberId: number | null;
+  customTags: string[];
+  familyMemberDetails: any | null;
+};

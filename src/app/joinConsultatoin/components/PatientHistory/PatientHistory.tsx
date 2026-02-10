@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Tabs } from "@/ui/atoms/tabs/Tabs";
 
 import { HealthLogs } from "./HealthLogs/HealthLogs";
+import { HealthVault } from "./HealthVault/HealthVault";
 import { PastConsultationsList } from "./PastConsultations/PastConsultationsList";
 import { PastLabOrdersList } from "./PastLabOrders/PastLabOrdersList";
 import { PastMedOrdersList } from "./PastMedOrders/PastMedOrderList";
@@ -12,11 +13,6 @@ import { PastMedOrdersList } from "./PastMedOrders/PastMedOrderList";
 const HealthData = () => (
   <div className="p-4">
     {useTranslation().t("joinConsultation.history.tabs.healthData")} Content
-  </div>
-);
-const HealthVault = () => (
-  <div className="p-4">
-    {useTranslation().t("joinConsultation.history.tabs.healthVault")} Content
   </div>
 );
 const MedicalHistoryTab = () => (
@@ -95,7 +91,7 @@ export const PatientHistory = ({
     {
       label: t("joinConsultation.history.tabs.healthVault"),
       value: PatientHistoryTab.HealthVault,
-      component: <HealthVault />,
+      component: <HealthVault patientId={patientId} />,
     },
     {
       label: t("joinConsultation.history.tabs.medicalHistory"),
