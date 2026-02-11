@@ -21,6 +21,10 @@ import {
   GetPatientHealthLogsResponse,
   GetPatientHealthVaultProps,
   GetPatientHealthVaultResponse,
+  GetPatientHealthConditionsProps,
+  GetPatientHealthConditionsResponse,
+  GetPatientHealthTopicsProps,
+  GetPatientHealthTopicsResponse,
 } from "./patient.types";
 
 const getMyPatients = ({ client, params }: GetPatientsProps) =>
@@ -132,5 +136,46 @@ export const useGetPatientHealthVault = ({
   useQuery({
     queryKey: [PatientKeyTypes.PatientHealthVault, { params }],
     queryFn: () => getPatientHealthVault({ client, params }),
+    placeholderData: keepPreviousData,
+  });
+
+export const getPatientHealthConditions = ({
+  client,
+  params,
+}: GetPatientHealthConditionsProps) =>
+  client
+    .get<GetPatientHealthConditionsResponse>(
+      "/health-condition/health-condition",
+      { params }
+    )
+    .then(({ data }) => data);
+
+export const useGetPatientHealthConditions = ({
+  client,
+  params,
+}: GetPatientHealthConditionsProps) =>
+  useQuery({
+    queryKey: [PatientKeyTypes.PatientHealthConditions, { params }],
+    queryFn: () => getPatientHealthConditions({ client, params }),
+    placeholderData: keepPreviousData,
+  });
+
+export const getPatientHealthTopics = ({
+  client,
+  params,
+}: GetPatientHealthTopicsProps) =>
+  client
+    .get<GetPatientHealthTopicsResponse>("/health-topic/health-topic", {
+      params,
+    })
+    .then(({ data }) => data);
+
+export const useGetPatientHealthTopics = ({
+  client,
+  params,
+}: GetPatientHealthTopicsProps) =>
+  useQuery({
+    queryKey: [PatientKeyTypes.PatientHealthTopics, { params }],
+    queryFn: () => getPatientHealthTopics({ client, params }),
     placeholderData: keepPreviousData,
   });

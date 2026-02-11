@@ -52,6 +52,7 @@ export const JoinConsultation = ({
           <PatientHistory
             patientId={patientInfo?.patientId}
             doctorId={doctorId}
+            patientConsultId={patientInfo?.patientConsultId}
           />
         </div>
 

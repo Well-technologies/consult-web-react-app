@@ -74,94 +74,94 @@ export const HealthLogs = ({ patientId, doctorId }: HealthLogsProps) => {
           </div>
 
           {/* Vital Signs Pills */}
-          <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
+          <div className="grid grid-cols-3 gap-2">
             {/* Blood Pressure */}
-            <div className="bg-red-100 px-2 py-1 rounded-full">
-              <p className="text-xs font-medium text-red-800 text-center truncate">
+            <div className="bg-gray-100 px-2 py-1 rounded-full">
+              <p className="text-xs font-medium text-gray-700 text-center truncate">
                 BP
               </p>
-              <p className="text-xs font-semibold text-red-600 text-center">
+              <p className="text-xs font-semibold text-gray-900 text-center">
                 {log.data.body.systolic.value || "N/A"}/
                 {log.data.body.diastolic.value || "N/A"}
               </p>
             </div>
 
             {/* Pulse */}
-            <div className="bg-pink-100 px-2 py-1 rounded-full">
-              <p className="text-xs font-medium text-pink-800 text-center truncate">
+            <div className="bg-gray-100 px-2 py-1 rounded-full">
+              <p className="text-xs font-medium text-gray-700 text-center truncate">
                 Pulse
               </p>
-              <p className="text-xs font-semibold text-pink-600 text-center">
+              <p className="text-xs font-semibold text-gray-900 text-center">
                 {formatMeasurement(log.data.body.pulse)}
               </p>
             </div>
 
             {/* SpO2 */}
-            <div className="bg-blue-100 px-2 py-1 rounded-full">
-              <p className="text-xs font-medium text-blue-800 text-center truncate">
+            <div className="bg-gray-100 px-2 py-1 rounded-full">
+              <p className="text-xs font-medium text-gray-700 text-center truncate">
                 SpO2
               </p>
-              <p className="text-xs font-semibold text-blue-600 text-center">
+              <p className="text-xs font-semibold text-gray-900 text-center">
                 {formatMeasurement(log.data.body.spo2)}
               </p>
             </div>
 
             {/* BMI */}
-            <div className="bg-purple-100 px-2 py-1 rounded-full">
-              <p className="text-xs font-medium text-purple-800 text-center truncate">
+            <div className="bg-gray-100 px-2 py-1 rounded-full">
+              <p className="text-xs font-medium text-gray-700 text-center truncate">
                 BMI
               </p>
-              <p className="text-xs font-semibold text-purple-600 text-center">
+              <p className="text-xs font-semibold text-gray-900 text-center">
                 {log.data.body.bmi.value || "N/A"}
               </p>
             </div>
 
             {/* Height */}
-            <div className="bg-green-100 px-2 py-1 rounded-full">
-              <p className="text-xs font-medium text-green-800 text-center truncate">
+            <div className="bg-gray-100 px-2 py-1 rounded-full">
+              <p className="text-xs font-medium text-gray-700 text-center truncate">
                 Height
               </p>
-              <p className="text-xs font-semibold text-green-600 text-center">
+              <p className="text-xs font-semibold text-gray-900 text-center">
                 {formatMeasurement(log.data.body.height)}
               </p>
             </div>
 
             {/* Weight */}
-            <div className="bg-yellow-100 px-2 py-1 rounded-full">
-              <p className="text-xs font-medium text-yellow-800 text-center truncate">
+            <div className="bg-gray-100 px-2 py-1 rounded-full">
+              <p className="text-xs font-medium text-gray-700 text-center truncate">
                 Weight
               </p>
-              <p className="text-xs font-semibold text-yellow-600 text-center">
+              <p className="text-xs font-semibold text-gray-900 text-center">
                 {formatMeasurement(log.data.body.weight)}
               </p>
             </div>
 
             {/* Blood Sugar */}
-            <div className="bg-orange-100 px-2 py-1 rounded-full">
-              <p className="text-xs font-medium text-orange-800 text-center truncate">
+            <div className="bg-gray-100 px-2 py-1 rounded-full">
+              <p className="text-xs font-medium text-gray-700 text-center truncate">
                 Sugar
               </p>
-              <p className="text-xs font-semibold text-orange-600 text-center">
+              <p className="text-xs font-semibold text-gray-900 text-center">
                 {formatMeasurement(log.data.body.blood_sugar)}
               </p>
             </div>
 
             {/* Hemoglobin */}
-            <div className="bg-red-100 px-2 py-1 rounded-full">
-              <p className="text-xs font-medium text-red-800 text-center truncate">
+            <div className="bg-gray-100 px-2 py-1 rounded-full">
+              <p className="text-xs font-medium text-gray-700 text-center truncate">
                 Hb
               </p>
-              <p className="text-xs font-semibold text-red-600 text-center">
+              <p className="text-xs font-semibold text-gray-900 text-center">
                 {formatMeasurement(log.data.body.hb)}
               </p>
             </div>
 
             {/* Cholesterol */}
-            <div className="bg-indigo-100 px-2 py-1 rounded-full">
-              <p className="text-xs font-medium text-indigo-800 text-center truncate">
+            <div className="bg-gray-100 px-2 py-1 rounded-full">
+              <p className="text-xs font-medium text-gray-700 text-center truncate">
                 Cholest
               </p>
-              <p className="text-xs font-semibold text-indigo-600 text-center">
+              <p className="text-xs font-semibold text-gray-900 text-center">
                 {formatMeasurement(log.data.body.cholesterol)}
               </p>
             </div>

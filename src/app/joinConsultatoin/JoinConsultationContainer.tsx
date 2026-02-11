@@ -77,6 +77,7 @@ export const JoinConsultationContainer = () => {
     appointmentId: "",
     patientId: "",
     avatar: "",
+    patientConsultId: "",
   });
 
   // Search terms for suggestions
@@ -149,6 +150,7 @@ export const JoinConsultationContainer = () => {
       appointmentId: consultationId.toString() || "",
       patientId: patient.lead_id?.toString() || "",
       avatar: patient?.profilePicture || "",
+      patientConsultId: patient?.id.toString() || "",
     };
     setPatientInfo(patientInfo);
   }, [isLoadingConsultationData]);

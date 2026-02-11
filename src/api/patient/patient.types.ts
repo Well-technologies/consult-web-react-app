@@ -17,6 +17,8 @@ export enum PatientKeyTypes {
   PatientSearch = "PatientSearch",
   PatientHealthLogs = "PatientHealthLogs",
   PatientHealthVault = "PatientHealthVault",
+  PatientHealthConditions = "PatientHealthConditions",
+  PatientHealthTopics = "PatientHealthTopics",
 }
 
 export type GetPatientsProps = {
@@ -183,3 +185,65 @@ export type HealthVaultData = {
   customTags: string[];
   familyMemberDetails: any | null;
 };
+
+export type GetPatientHealthConditionsProps = {
+  client: AxiosInstance;
+  params: {
+    patientId: string;
+    doctorId: number;
+  };
+};
+
+export type GetPatientHealthConditionsResponse = ConsultSuccessResponse<
+  PatientHealthCondition[],
+  null
+>;
+
+export type HealthConditionDetails = {
+  id: number;
+  healthconditionname: string;
+  is_active: number;
+  created_at: string;
+  updated_at: string;
+  show_in_app: number;
+};
+
+export type PatientHealthCondition = {
+  id: number;
+  healthcondition_id: number;
+  lead_id: number;
+  created_at: string;
+  updated_at: string;
+  get_lead_by_health_coditions: HealthConditionDetails;
+};
+
+export type HealthTopicDetails = {
+  id: number;
+  healthtopicname: string;
+  is_active: number;
+  created_at: string;
+  updated_at: string;
+  show_in_app: number;
+};
+
+export type PatientHealthTopic = {
+  id: number;
+  healthtopic_id: number;
+  lead_id: number;
+  created_at: string;
+  updated_at: string;
+  get_lead_by_health_topics: HealthTopicDetails;
+};
+
+export type GetPatientHealthTopicsProps = {
+  client: AxiosInstance;
+  params: {
+    patientId: string;
+    doctorId: number;
+  };
+};
+
+export type GetPatientHealthTopicsResponse = ConsultSuccessResponse<
+  PatientHealthTopic[],
+  null
+>;

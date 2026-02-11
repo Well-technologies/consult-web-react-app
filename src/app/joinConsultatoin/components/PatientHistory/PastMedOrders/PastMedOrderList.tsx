@@ -63,11 +63,7 @@ export const PastMedOrdersList = ({
   });
 
   if (isLoading) {
-    return (
-      <div className="flex justify-center items-center">
-        <div className="text-gray-600">Loading medication orders...</div>
-      </div>
-    );
+    return <div className="p-4">Loading medicine orders...</div>;
   }
 
   if (error) {

@@ -4,50 +4,26 @@ import { useTranslation } from "react-i18next";
 // import { PastConsultation } from '../../JoinConsultation.types';
 import { Tabs } from "@/ui/atoms/tabs/Tabs";
 
+import { HealthConditionsAndTopics } from "./HealthConditionsAndTopics/HealthConditionsAndTopics";
 import { HealthLogs } from "./HealthLogs/HealthLogs";
 import { HealthVault } from "./HealthVault/HealthVault";
 import { MedicalHistory } from "./MedicalHistory/MedicalHistory";
 import { PastConsultationsList } from "./PastConsultations/PastConsultationsList";
 import { PastLabOrdersList } from "./PastLabOrders/PastLabOrdersList";
 import { PastMedOrdersList } from "./PastMedOrders/PastMedOrderList";
+import { PatientHistoryProps, PatientHistoryTab } from "./PatientHistory.types";
+import { SurgicalHistory } from "./SurgicalHistory/SurgicalHistory";
 
-const HealthData = () => (
-  <div className="p-4">
-    {useTranslation().t("joinConsultation.history.tabs.healthData")} Content
-  </div>
-);
-const SurgicalHistoryTab = () => (
-  <div className="p-4">
-    {useTranslation().t("joinConsultation.history.tabs.surgicalHistory")}{" "}
-    Content
-  </div>
-);
-const HealthConditions = () => (
-  <div className="p-4">
-    {useTranslation().t("joinConsultation.history.tabs.conditions")} Content
-  </div>
-);
-
-interface PatientHistoryProps {
-  patientId: string;
-  doctorId: number;
-}
-
-enum PatientHistoryTab {
-  PastConsultations = "pastConsultations",
-  LabOrders = "labOrders",
-  MedOrders = "medOrders",
-  HealthLogs = "healthLogs",
-  HealthData = "healthData",
-  HealthVault = "healthVault",
-  MedicalHistory = "medicalHistory",
-  SurgicalHistory = "surgicalHistory",
-  Conditions = "conditions",
-}
+// const HealthData = () => (
+//   <div className="p-4">
+//     {useTranslation().t("joinConsultation.history.tabs.healthData")} Content
+//   </div>
+// );
 
 export const PatientHistory = ({
   patientId,
   doctorId,
+  patientConsultId,
 }: PatientHistoryProps) => {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<PatientHistoryTab>(
@@ -58,7 +34,7 @@ export const PatientHistory = ({
     {
       label: t("joinConsultation.history.tabs.pastConsultations"),
       value: PatientHistoryTab.PastConsultations,
-      component: <PastConsultationsList patientId={patientId} />,
+      component: <PastConsultationsList patientId={patientConsultId} />,
     },
     {
       label: t("joinConsultation.history.tabs.labOrders"),
@@ -79,11 +55,11 @@ export const PatientHistory = ({
       value: PatientHistoryTab.HealthLogs,
       component: <HealthLogs patientId={patientId} doctorId={doctorId} />,
     },
-    {
-      label: t("joinConsultation.history.tabs.healthData"),
-      value: PatientHistoryTab.HealthData,
-      component: <HealthData />,
-    },
+    // {
+    //   label: t("joinConsultation.history.tabs.healthData"),
+    //   value: PatientHistoryTab.HealthData,
+    //   component: <HealthData />,
+    // },
     {
       label: t("joinConsultation.history.tabs.healthVault"),
       value: PatientHistoryTab.HealthVault,
@@ -97,12 +73,14 @@ export const PatientHistory = ({
     {
       label: t("joinConsultation.history.tabs.surgicalHistory"),
       value: PatientHistoryTab.SurgicalHistory,
-      component: <SurgicalHistoryTab />,
+      component: <SurgicalHistory patientLeadId={patientId} />,
     },
     {
       label: t("joinConsultation.history.tabs.conditions"),
       value: PatientHistoryTab.Conditions,
-      component: <HealthConditions />,
+      component: (
+        <HealthConditionsAndTopics patientId={patientId} doctorId={doctorId} />
+      ),
     },
   ];
 

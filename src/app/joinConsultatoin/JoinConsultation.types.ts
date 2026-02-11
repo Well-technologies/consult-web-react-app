@@ -21,6 +21,7 @@ export interface PatientInfo {
   appointmentId: string;
   patientId: string;
   avatar: string | null;
+  patientConsultId: string;
 }
 
 export interface PastConsultation {
