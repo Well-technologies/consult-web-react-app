@@ -10,14 +10,12 @@ import {
   useGetAllMedications,
   useGetAllSymptoms,
   useGetBookedConsultation,
-  useGetConsultations,
 } from "@/api/consult/consult";
 import { useUpdateConsultationEndType } from "@/api/consult/consult";
 import {
   AddMedicationProps,
   ClinicalCommonDataDetails,
   ConfirmConsultationBody,
-  ConsultUserDetails,
   Medication,
 } from "@/api/consult/consult.types";
 import { CallEndedTypeId } from "@/api/consult/consult.types";
@@ -143,7 +141,7 @@ export const JoinConsultationContainer = () => {
   useEffect(() => {
     console.log("consultationData", consultationData?.payload);
     if (!consultationData?.payload) return;
-    const { patient, consultationId, doctor } = consultationData?.payload;
+    const { patient, consultationId } = consultationData?.payload;
     const patientInfo: PatientInfo = {
       name: patient?.name,
       age: patient?.dob ? calculateAge(patient?.dob) : "",

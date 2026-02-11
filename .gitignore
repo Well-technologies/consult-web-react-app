@@ -11,6 +11,9 @@ node_modules
 build
 *.local
 
+# Generated TypeScript declaration files
+vite.config.d.ts
+
 .env
 
 # Editor directories and files

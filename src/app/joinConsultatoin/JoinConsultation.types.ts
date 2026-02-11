@@ -1,8 +1,6 @@
 import {
   AddMedicationProps,
   ClinicalCommonDataDetails,
-  ConsultationDetails,
-  ConsultUserDetails,
 } from "@/api/consult/consult.types";
 
 export enum ConsultationType {
