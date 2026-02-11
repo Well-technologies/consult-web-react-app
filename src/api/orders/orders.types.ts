@@ -441,7 +441,7 @@ export type MedicineOrderDetails = {
   margin: number | null;
   margin_type: string | null;
   not_get_medicine: boolean | null;
-  orderItems?: MedOrderItem[];
+  orderitem?: MedOrderItem[];
   order_date: string;
   order_note: string | null;
   order_status: MedicineOrderStatus;

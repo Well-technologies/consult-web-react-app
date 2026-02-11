@@ -39,15 +39,18 @@ export const HealthConditions = ({
   }
 
   return (
-    <div className="p-3">
+    <div className="py-3">
       <h6 className="mb-3 text-sm font-medium text-gray-700">
-        • Health conditions of the patient
+        Health conditions of the patient
       </h6>
       <div className="flex flex-wrap gap-2 mb-4">
         {data.payload.map(
           (condition: PatientHealthCondition, index: number) => (
-            <div key={index} className="bg-gray-200 px-3 py-1 rounded-[10px]">
-              <p className="text-sm font-medium text-gray-900">
+            <div
+              key={index}
+              className="bg-red-50 px-3 py-1.5 rounded-full border border-red-100"
+            >
+              <p className="text-sm font-bold font-medium text-[#e32933]">
                 {condition.get_lead_by_health_coditions.healthconditionname}
               </p>
             </div>

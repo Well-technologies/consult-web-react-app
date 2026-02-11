@@ -35,11 +35,19 @@ export const MedicalHistory = ({ patientId }: MedicalHistoryProps) => {
 
   return (
     <div className="p-3">
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="text-lg font-semibold text-gray-900">Medical History</h3>
+      </div>
       <div className="flex flex-wrap gap-2">
         {medicalHistoryData.map(
           (item: MedicalAndSurgicalHistoryItem, index: number) => (
-            <div key={index} className="bg-gray-200 px-3 py-1 rounded-[10px]">
-              <p className="text-base font-medium text-gray-900">{item.name}</p>
+            <div
+              key={index}
+              className="bg-red-50 text-[#e32933] px-3 py-1.5 rounded-full border border-red-100"
+            >
+              <p className="text-sm font-bold font-medium text-[#e32933]">
+                {item.name}
+              </p>
             </div>
           )
         )}

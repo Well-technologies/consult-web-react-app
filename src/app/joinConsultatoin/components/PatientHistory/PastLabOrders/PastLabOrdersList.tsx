@@ -61,7 +61,8 @@ export const PastLabOrdersList = ({ patientId, doctorId }: LabOrdersProps) => {
               </span> */}
             </div>
             <div className="text-xs text-gray-500 mb-2">
-              {new Date(order.order_date).toLocaleDateString()} • {order.type}
+              <text>{new Date(order.order_date).toLocaleDateString()}</text> •{" "}
+              <text className="capitalize">{order.type}</text>
             </div>
             <div className="flex flex-wrap gap-2">
               {order.orderItems?.map((item, index) => (

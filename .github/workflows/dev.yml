@@ -3,47 +3,45 @@ name: consult-web dev
 on:
   push:
     branches:
-      - main
+      - Show-Patient-History-In-Consultation
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
-    - name: Use Node.js 12.x
-      uses: actions/setup-node@v1
-      with:
-        node-version: 22.x
+      - uses: actions/checkout@v1
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 22.x
 
-    - name: npm install, build, and test
-      run: |
-        npm install
-        envsubst "`printf '${%s} ' $(sh -c "env|cut -d'=' -f1")`" < ./.env.example > ./.env
-        echo "$(cat ./src/environments/environment.prod.ts)"
-        npm run build
-      env:
-        REACT_APP_ENV: staging
-        REACT_APP_ADMIN_URL: $REACT_APP_ADMIN_URL
-        REACT_FLASH_ADMIN_API_ENDPOINT: 'https://admin-api-staging.flash.health/api/v1'
-        REACT_API_ENDPOINT: 'https://api-staging.flash.health/consult/api/v1'
-        REACT_SOCKET_ENDPOINT: $REACT_SOCKET_ENDPOINT
-        REACT_CYBER_SOURCE_ENDPOINT: $REACT_CYBER_SOURCE_ENDPOINT
-        REACT_SOCKET_ROOM_ENDPOINT: $REACT_SOCKET_ROOM_ENDPOINT
-        REACT_WHATSAPP_FIRST_ADVICE_NO: $REACT_WHATSAPP_FIRST_ADVICE_NO
-        REACT_CONTACT_SUPPORT_EMAIL: $REACT_CONTACT_SUPPORT_EMAIL
-        # REACT_GOOGLE_MAPS_API_KEY: $REACT_GOOGLE_MAPS_API_KEY
-        # REACT_GOOGLE_MAPS_API_URL: $REACT_GOOGLE_MAPS_API_URL
-        REACT_SPECIALTIES_FOR_UA_USERS: $REACT_SPECIALTIES_FOR_UA_USERS
-        REACT_PHYSICAL_APPOINTMENT_DEFAULT_ADDRESS: 22
+      - name: npm install, build, and test
+        run: |
+          npm install
+          envsubst "`printf '${%s} ' $(sh -c "env|cut -d'=' -f1")`" < ./.env.example > ./.env
+          echo "$(cat ./src/environments/environment.prod.ts)"
+          npm run build
+        env:
+          REACT_APP_ENV: staging
+          REACT_APP_ADMIN_URL: $REACT_APP_ADMIN_URL
+          REACT_FLASH_ADMIN_API_ENDPOINT: "https://admin-api-staging.flash.health/api/v1"
+          REACT_API_ENDPOINT: "https://api-staging.flash.health/consult/api/v1"
+          REACT_SOCKET_ENDPOINT: $REACT_SOCKET_ENDPOINT
+          REACT_CYBER_SOURCE_ENDPOINT: $REACT_CYBER_SOURCE_ENDPOINT
+          REACT_SOCKET_ROOM_ENDPOINT: $REACT_SOCKET_ROOM_ENDPOINT
+          REACT_WHATSAPP_FIRST_ADVICE_NO: $REACT_WHATSAPP_FIRST_ADVICE_NO
+          REACT_CONTACT_SUPPORT_EMAIL: $REACT_CONTACT_SUPPORT_EMAIL
+          # REACT_GOOGLE_MAPS_API_KEY: $REACT_GOOGLE_MAPS_API_KEY
+          # REACT_GOOGLE_MAPS_API_URL: $REACT_GOOGLE_MAPS_API_URL
+          REACT_SPECIALTIES_FOR_UA_USERS: $REACT_SPECIALTIES_FOR_UA_USERS
+          REACT_PHYSICAL_APPOINTMENT_DEFAULT_ADDRESS: 22
 
-
-    - name: Upload statics & Cloudfront CDN cache clear
-      run: |
-        aws s3 sync ./build s3://consult-dev.flash.health
-        aws cloudfront create-invalidation --distribution-id E1WHWUHB7C12MJ --paths '/*'
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_DEFAULT_REGION: 'ap-south-1'
+      - name: Upload statics & Cloudfront CDN cache clear
+        run: |
+          aws s3 sync ./build s3://consult-dev.flash.health
+          aws cloudfront create-invalidation --distribution-id E1WHWUHB7C12MJ --paths '/*'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: "ap-south-1"

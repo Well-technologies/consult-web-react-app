@@ -21,27 +21,26 @@ const MedOrderCard = ({ order }: { order: MedicineOrderDetails }) => {
       </div>
 
       {/* Medication Items */}
-      {order.orderItems && order.orderItems.length > 0 && (
-        <div className="flex flex-wrap gap-2 mb-3">
-          {order.orderItems.map((item, index) => (
-            <span
-              key={item.id || index}
-              className="bg-blue-50 text-blue-700 px-3 py-1.5 rounded-full text-xs font-bold border border-blue-100"
-            >
-              {item.medication_title} (Qty: {item.quantity})
+      {(order.orderitem && order.orderitem.length > 0) ||
+      order.prescription_text ? (
+        <div className="flex flex-wrap gap-2 my-3">
+          {order.orderitem &&
+            order.orderitem.length > 0 &&
+            order.orderitem.map((item, index) => (
+              <span
+                key={item.id || index}
+                className="bg-red-50 text-[#e32933] px-3 py-1.5 rounded-full text-xs font-bold border border-red-100"
+              >
+                {item.medication?.title} (Qty: {item.quantity})
+              </span>
+            ))}
+          {order.prescription_text && (
+            <span className="bg-red-50 text-[#e32933] px-3 py-1.5 rounded-full text-xs font-bold border border-red-100 w-fit">
+              {order.prescription_text}
             </span>
-          ))}
+          )}
         </div>
-      )}
-
-      {/* Prescription Note */}
-      {order.prescription_text && (
-        <div className="border-t pt-2 mt-2">
-          <p className="text-xs text-gray-600 italic">
-            <strong>Prescription:</strong> {order.prescription_text}
-          </p>
-        </div>
-      )}
+      ) : null}
     </div>
   );
 };

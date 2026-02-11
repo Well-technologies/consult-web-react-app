@@ -35,6 +35,9 @@ export const HealthVault = ({ patientId }: HealthVaultProps) => {
 
   return (
     <div className="p-4">
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="text-lg font-semibold text-gray-900">Health Vault</h3>
+      </div>
       {healthVaultData.length !== 0 && (
         <div className="grid grid-cols-2 gap-2">
           {healthVaultData.map((document) => (

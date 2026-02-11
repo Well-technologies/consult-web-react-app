@@ -29,12 +29,14 @@ export const PatientHistory = ({
   const [activeTab, setActiveTab] = useState<PatientHistoryTab>(
     PatientHistoryTab.PastConsultations
   );
+  const [hoveredTab, setHoveredTab] = useState<boolean>(false);
 
   const tabs = [
     {
       label: t("joinConsultation.history.tabs.pastConsultations"),
       value: PatientHistoryTab.PastConsultations,
       component: <PastConsultationsList patientId={patientConsultId} />,
+      tabValue: "C",
     },
     {
       label: t("joinConsultation.history.tabs.labOrders"),
@@ -42,6 +44,7 @@ export const PatientHistory = ({
       component: (
         <PastLabOrdersList patientId={patientId} doctorId={doctorId} />
       ),
+      tabValue: "L",
     },
     {
       label: t("joinConsultation.history.tabs.medOrders"),
@@ -49,11 +52,13 @@ export const PatientHistory = ({
       component: (
         <PastMedOrdersList patientId={patientId} doctorId={doctorId} />
       ),
+      tabValue: "M",
     },
     {
       label: t("joinConsultation.history.tabs.healthLogs"),
       value: PatientHistoryTab.HealthLogs,
       component: <HealthLogs patientId={patientId} doctorId={doctorId} />,
+      tabValue: "H",
     },
     // {
     //   label: t("joinConsultation.history.tabs.healthData"),
@@ -64,16 +69,19 @@ export const PatientHistory = ({
       label: t("joinConsultation.history.tabs.healthVault"),
       value: PatientHistoryTab.HealthVault,
       component: <HealthVault patientId={patientId} />,
+      tabValue: "V",
     },
     {
       label: t("joinConsultation.history.tabs.medicalHistory"),
       value: PatientHistoryTab.MedicalHistory,
       component: <MedicalHistory patientId={patientId} />,
+      tabValue: "D",
     },
     {
       label: t("joinConsultation.history.tabs.surgicalHistory"),
       value: PatientHistoryTab.SurgicalHistory,
       component: <SurgicalHistory patientLeadId={patientId} />,
+      tabValue: "S",
     },
     {
       label: t("joinConsultation.history.tabs.conditions"),
@@ -81,22 +89,53 @@ export const PatientHistory = ({
       component: (
         <HealthConditionsAndTopics patientId={patientId} doctorId={doctorId} />
       ),
+      tabValue: "T",
     },
   ];
+
+  const activeTabComponent = tabs.find(
+    (tab) => tab.value === activeTab
+  )?.component;
 
   return (
     <div className="flex flex-col h-screen space-y-4 md:space-y-6">
       <h3 className="text-lg font-bold text-[#333] flex-shrink-0">
         {t("joinConsultation.history.title")}
       </h3>
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Tabs
-          tabs={tabs}
-          activeTab={activeTab}
-          setTab={(value) => setActiveTab(value as PatientHistoryTab)}
-          containerClassName="border-none flex-1 flex flex-col overflow-hidden"
-          variant="chips"
-        />
+      <div className={`flex-1 flex flex-row overflow-hidden gap-6`}>
+        {/* Left Column - Tab Headers */}
+        <div
+          className={`flex-shrink-0 bg-gray-50 rounded-lg transition-all duration-200 ${hoveredTab ? "w-64" : "w-10"}`}
+          onMouseEnter={() => setHoveredTab(true)}
+          onMouseLeave={() => setHoveredTab(false)}
+        >
+          <div className="space-y-2">
+            {tabs.map((tab) => (
+              <button
+                key={tab.value}
+                onClick={() => {
+                  setActiveTab(tab.value);
+                  setHoveredTab(false);
+                }}
+                onMouseEnter={() => setHoveredTab(true)}
+                className={`w-full text-left px-4 py-3 rounded-lg transition-colors duration-200 ${
+                  activeTab === tab.value
+                    ? "bg-primary text-white shadow-sm"
+                    : "text-gray-700 hover:bg-gray-200"
+                }`}
+              >
+                <span className="text-sm font-medium whitespace-nowrap">
+                  {hoveredTab === true ? tab.label : tab.tabValue}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Right Column - Tab Content */}
+        <div className={`flex-1 ${hoveredTab ? "hidden" : ""}`}>
+          <div className="h-full overflow-y-auto">{activeTabComponent}</div>
+        </div>
       </div>
     </div>
   );

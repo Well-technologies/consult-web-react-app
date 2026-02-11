@@ -54,6 +54,9 @@ export const HealthLogs = ({ patientId, doctorId }: HealthLogsProps) => {
 
   return (
     <div className="p-3 space-y-3">
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="text-lg font-semibold text-gray-900">Health Logs</h3>
+      </div>
       {data?.payload?.map((log) => (
         <div
           key={log.id}
@@ -63,7 +66,7 @@ export const HealthLogs = ({ patientId, doctorId }: HealthLogsProps) => {
           <div className="flex justify-between items-center mb-3">
             <div>
               <h3 className="text-sm font-semibold text-gray-900">
-                Health Log #{log.id}
+                ID #{log.id}
               </h3>
             </div>
             <div className="text-right">

@@ -29,6 +29,15 @@ export const PastConsultationsList = ({
 
   return (
     <div className="space-y-4">
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="text-lg font-semibold text-gray-900">
+          Past Consultations
+        </h3>
+        <span className="text-sm text-gray-600">
+          {pastConsultationsData.payload.length} consultation
+          {pastConsultationsData.payload.length !== 1 ? "s" : ""} found
+        </span>
+      </div>
       {pastConsultationsData?.payload?.map((consultation) => (
         <PastConsultationCard
           key={consultation.id}

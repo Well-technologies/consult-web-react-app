@@ -11,6 +11,11 @@ export const HealthConditionsAndTopics = (
 ) => {
   return (
     <div>
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="text-lg font-semibold text-gray-900">
+          Health Conditions & Topics
+        </h3>
+      </div>
       <HealthConditions {...props} />
       <HealthTopics {...props} />
     </div>
