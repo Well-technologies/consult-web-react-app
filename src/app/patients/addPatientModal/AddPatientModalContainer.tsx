@@ -2,20 +2,27 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
-import { useCreatePatient, useGetMyPatients, useSearchPatients } from "../../../api/patient/patient";
 import { GenderType } from "@/api/user/user.types";
 import { useClient } from "@/hooks/useClient/useClient";
-
-
-import { AddPatientModal } from "./AddPatientModal";
-import { FormType } from "@/types";
-import { AddPatientModalContainerProps, AddUserFormInputs, AppointmentType } from "./AddPatientModal.types";
-import { AddUserSchema } from "./AddPatientModal.utils";
-import { useSelector } from "react-redux";
 import { StoreReducerStateTypes } from "@/store/store.types";
 import { allReducerStates } from "@/store/store.utils";
+import { FormType } from "@/types";
+
+import {
+  useCreatePatient,
+  useGetMyPatients,
+  useSearchPatients,
+} from "../../../api/patient/patient";
+import { AddPatientModal } from "./AddPatientModal";
+import {
+  AddPatientModalContainerProps,
+  AddUserFormInputs,
+  AppointmentType,
+} from "./AddPatientModal.types";
+import { AddUserSchema } from "./AddPatientModal.utils";
 
 export const AddPatientModalContainer = ({
   onClose,
@@ -30,12 +37,18 @@ export const AddPatientModalContainer = ({
 }: AddPatientModalContainerProps) => {
   const { t } = useTranslation();
   const client = useClient({});
-  const { userDetail: {id: doctor_id} } = useSelector(
+  const {
+    userDetail: { id: doctor_id },
+  } = useSelector(
     (rootState) =>
       allReducerStates(rootState as StoreReducerStateTypes).user.profile
   );
-  const [isMyPatient, setIsMyPatient] = useState<boolean>((!!data ? data.isDisabled : false) || false )
-  const [isRegisteredPatient, setIsRegisteredPatient] = useState<boolean | undefined>(undefined)
+  const [isMyPatient, setIsMyPatient] = useState<boolean>(
+    (!!data ? data.isDisabled : false) || false
+  );
+  const [isRegisteredPatient, setIsRegisteredPatient] = useState<
+    boolean | undefined
+  >(undefined);
 
   const {
     register,
@@ -56,24 +69,26 @@ export const AddPatientModalContainer = ({
     },
   });
 
-  const {mobile_no: search_text_mobile} = watch();
+  const { mobile_no: search_text_mobile } = watch();
 
   useEffect(() => {
     if (formType === FormType.Add && !!data) {
-      
-    setValue('name', data.name)
-    setValue('dob', data.date_of_birth)
-    setValue('email', data.email)
-    setValue('gender', data.lead_detail?.gender ? GenderType[data.lead_detail?.gender] : '')
-    setValue('mobile_no', data.mobile_no.replace("+94", ""))
+      setValue("name", data.name);
+      setValue("dob", data.date_of_birth);
+      setValue("email", data.email);
+      setValue(
+        "gender",
+        data.lead_detail?.gender ? GenderType[data.lead_detail?.gender] : ""
+      );
+      setValue("mobile_no", data.mobile_no.replace("+94", ""));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formType, data, isMyPatient]);
 
   const { isPending } = useCreatePatient({
     onSuccess: (res) => {
-      console.log('res', res);
-      console.log('onConfirm', res?.data?.appointment_id, res.data.id);
+      console.log("res", res);
+      console.log("onConfirm", res?.data?.appointment_id, res.data.id);
       // refetch();
       reset({
         name: "",
@@ -89,60 +104,65 @@ export const AddPatientModalContainer = ({
       onConfirm?.(res?.data?.appointment_id, parseInt(res.data.id));
     },
     onError: ({ data }) => {
-      toast.error(
-        data.message ||
-          t("global.alert.common.error")
-      );
+      toast.error(data.message || t("global.alert.common.error"));
     },
   });
 
   const {
-      data: searchedPatients,
-      isLoading: isSearchingPatient,
-      // error: searchedPatientsError
-    } = useSearchPatients({
+    data: searchedPatients,
+    isLoading: isSearchingPatient,
+    // error: searchedPatientsError
+  } = useSearchPatients({
+    client,
+    params: {
+      patient: search_text_mobile,
+    },
+    enabled: !!search_text_mobile && search_text_mobile?.length === 9,
+    // && !!data
+  });
+
+  const { data: myPatientsData, refetch: refetchMyPatientsData } =
+    useGetMyPatients({
       client,
       params: {
-        patient: search_text_mobile,
+        doctor_id,
+        page: 1,
+        page_size: 10,
       },
-      enabled: !!search_text_mobile && search_text_mobile?.length === 9 
-    // && !!data
     });
 
-      const {
-        data: myPatientsData,
-        refetch: refetchMyPatientsData,
-      } = useGetMyPatients({
-        client,
-        params: {
-          doctor_id,
-          page: 1,
-          page_size: 10,
-        }
-      });
-
-      useEffect(() => {
-        console.log('myPatientsData...')
-        search_text_mobile?.length === 9 && refetchMyPatientsData();
-      }, [search_text_mobile]);
-  
+  useEffect(() => {
+    console.log("myPatientsData...");
+    search_text_mobile?.length === 9 && refetchMyPatientsData();
+  }, [search_text_mobile]);
 
   useEffect(() => {
-    console.log('searchedPatients...')
+    console.log("searchedPatients...");
 
-    setIsMyPatient(false)
-    const patient = searchedPatients?.data?.filter((patient) => !patient.name.includes('+94'))[0];
-    setIsRegisteredPatient(!!patient)
-    if(!!patient){
-    setIsMyPatient(myPatientsData?.data?.map((patient) => patient?.id).includes(patient?.id) || false)
+    setIsMyPatient(false);
+    const patient = searchedPatients?.data?.filter(
+      (patient) => !patient.name.includes("+94")
+    )[0];
+    setIsRegisteredPatient(!!patient);
+    if (!!patient) {
+      setIsMyPatient(
+        myPatientsData?.data
+          ?.map((patient) => patient?.id)
+          .includes(patient?.id) || false
+      );
 
-    setValue('name', patient.name)
-    setValue('dob', patient.date_of_birth)
-    setValue('email', patient.email)
-    setValue('gender', patient.lead_detail?.gender ? GenderType[patient.lead_detail?.gender] : '')
-    setValue('patient_id', patient.id)
+      setValue("name", patient.name);
+      setValue("dob", patient.date_of_birth);
+      setValue("email", patient.email);
+      setValue(
+        "gender",
+        patient.lead_detail?.gender
+          ? GenderType[patient.lead_detail?.gender]
+          : ""
+      );
+      setValue("patient_id", patient.id);
     } else {
-      console.log('not found')
+      console.log("not found");
       reset({
         name: "",
         gender: "",
@@ -151,20 +171,18 @@ export const AddPatientModalContainer = ({
         patient_id: "",
       });
       // setVerifyOtpDivEnabled(true)
-      setIsRegisteredPatient(false)
-      setIsMyPatient(false)
+      setIsRegisteredPatient(false);
+      setIsMyPatient(false);
     }
 
-    console.log('isRegisteredPatient', isRegisteredPatient)
-  }, [searchedPatients?.data, searchedPatients?.success])
-  
+    console.log("isRegisteredPatient", isRegisteredPatient);
+  }, [searchedPatients?.data, searchedPatients?.success]);
+
   // Separate mutation for OTP flow - no side effects in onSuccess
-  const {
-    mutateAsync: mutateOnCreatePatientForOtp,
-  } = useCreatePatient({
+  const { mutateAsync: mutateOnCreatePatientForOtp } = useCreatePatient({
     onSuccess: (res) => {
-      setValue('patient_id', res?.data?.id)
-      console.log('useCreatePatient for OTP', res)
+      setValue("patient_id", res?.data?.id);
+      console.log("useCreatePatient for OTP", res);
       // Don't close modal or navigate here - let OTP flow complete first
       if (res.success) {
         // toast.success(t("user.alert.create.success"));
@@ -182,7 +200,7 @@ export const AddPatientModalContainer = ({
     isPending: isPendingCreatePatient,
   } = useCreatePatient({
     onSuccess: (res) => {
-      console.log('useCreatePatient', res)
+      console.log("useCreatePatient", res);
       setSearchText?.("");
       // refetch();
       reset({
@@ -202,41 +220,48 @@ export const AddPatientModalContainer = ({
   });
 
   const handleOnSubmit = async (values: AddUserFormInputs) => {
-    console.log(values)
+    console.log(values);
     if (formType === FormType.Add) {
-      console.log(values)
-      const {patient_id, ...restValues} = values
-      
+      console.log(values);
+      const { patient_id, ...restValues } = values;
+
       // For registered patients or appointments with existing patients
       // if(isRegisteredPatient) {
-        const data = {
-            ...restValues,
-            doctor_id,
-            consultation_mode_id: 4,
-            mobile_no: `+94${values.mobile_no}`,
-          }
-          const  registeredPatientData = {
-            ...values,
-            doctor_id,
-            consultation_mode_id: 4,
-            mobile_no: `+94${values.mobile_no}`,
-          }
-          console.log('handleOnSubmit', data)
-        
-        // Create appointment/consultation for registered patient
-        if(appointmentType === AppointmentType.Consultation || (appointmentType === AppointmentType.Appointment && !isMyPatient)){
-          console.log('handleOnSubmit consultation', appointmentType, isMyPatient)
-          await mutateOnCreatePatient({
-            client,
-            body: isRegisteredPatient ? registeredPatientData : data,
-          });
-        } 
-        if(appointmentType === AppointmentType.Appointment && isMyPatient) {
-          console.log('handleOnSubmit appointment', appointmentType, isMyPatient)
-          if(patient_id){
-            onConfirm?.(parseInt(patient_id));
-          }
+      const data = {
+        ...restValues,
+        doctor_id,
+        consultation_mode_id: 4,
+        mobile_no: `+94${values.mobile_no}`,
+      };
+      const registeredPatientData = {
+        ...values,
+        doctor_id,
+        consultation_mode_id: 4,
+        mobile_no: `+94${values.mobile_no}`,
+      };
+      console.log("handleOnSubmit", data);
+
+      // Create appointment/consultation for registered patient
+      if (
+        appointmentType === AppointmentType.Consultation ||
+        (appointmentType === AppointmentType.Appointment && !isMyPatient)
+      ) {
+        console.log(
+          "handleOnSubmit consultation",
+          appointmentType,
+          isMyPatient
+        );
+        await mutateOnCreatePatient({
+          client,
+          body: isRegisteredPatient ? registeredPatientData : data,
+        });
+      }
+      if (appointmentType === AppointmentType.Appointment && isMyPatient) {
+        console.log("handleOnSubmit appointment", appointmentType, isMyPatient);
+        if (patient_id) {
+          onConfirm?.(parseInt(patient_id));
         }
+      }
       // }
       // For non-registered patients, the flow is handled via OTP verification
       // Patient creation happens when "Send OTP" is clicked
@@ -249,7 +274,13 @@ export const AddPatientModalContainer = ({
     <AddPatientModal
       onClose={onClose}
       formType={formType}
-      data={!!searchedPatients?.data && searchedPatients?.data?.filter((patient) => !patient.name.includes('+94'))[0] || data}
+      data={
+        (!!searchedPatients?.data &&
+          searchedPatients?.data?.filter(
+            (patient) => !patient.name.includes("+94")
+          )[0]) ||
+        data
+      }
       control={control}
       isLoading={isPending || isPendingCreatePatient || isSearchingPatient}
       errors={errors}
