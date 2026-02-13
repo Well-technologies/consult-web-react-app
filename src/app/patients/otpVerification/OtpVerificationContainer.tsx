@@ -12,7 +12,6 @@ import { PhoneLoginFormInputs } from "@/app/authentication/login/Login.types";
 import { useClient } from "@/hooks/useClient/useClient";
 
 import { OtpVerificationProps } from "./OtpVerification.types";
-import { RequestOtp } from "./requestOtp/RequestOtp";
 import { VerifyOtp } from "./verifyOtp/VerifyOtp";
 
 export const OtpVerificationContainer = ({
@@ -28,7 +27,6 @@ export const OtpVerificationContainer = ({
   trigger,
   setIsMyPatient,
 }: OtpVerificationProps) => {
-  const [isOtpRequested, setIsOtpRequested] = useState(false);
   const [showOtpError, setShowOtpError] = useState(false);
   const client = useClient({});
 
@@ -52,7 +50,6 @@ export const OtpVerificationContainer = ({
   const handleRequestOtp = (data: PhoneLoginFormInputs) => {
     console.log("handleRequestOtp", data, controlWithPhone._formValues);
     mutateOnPhoneLogin({ client, body: data as VerifyOTPBody });
-    setIsOtpRequested(true);
   };
   const handleVerifyOtp = (data: PhoneLoginFormInputs) => {
     console.log(
@@ -73,7 +70,6 @@ export const OtpVerificationContainer = ({
       });
       setValue("otp", "");
       //   setMobileNumber(variables?.body?.mobile || "");
-      setIsOtpRequested(true);
       setShowOtpError(false);
     },
     onError: (error) => {
@@ -88,7 +84,6 @@ export const OtpVerificationContainer = ({
         setIsOtpVerified(true);
         setIsRegisteredPatient(true);
         setIsMyPatient(true);
-        setIsOtpRequested(false);
         reset({
           otp: "",
         });
@@ -117,26 +112,21 @@ export const OtpVerificationContainer = ({
   console.log("====mobileNo", mobileNo);
   return isOtpVerified ? (
     <div>{t("user.form.verify_otp.success")}</div>
-  ) : isOtpRequested ? (
+  ) : (
     <VerifyOtp
       control={controlWithPhone}
       watchOtp={watchOtp}
-      handleSubmit={handleVerifyOtp}
+      mobileNo={mobileNo}
       showOtpError={showOtpError}
       onClearError={() => setShowOtpError(false)}
-    />
-  ) : (
-    <RequestOtp
-      setIsOtpRequested={setIsOtpRequested}
-      mobileNo={mobileNo}
-      handleSubmit={handleRequestOtp}
-      showOtpError={showOtpError}
       disabled={disabled}
       mutateOnCreatePatient={mutateOnCreatePatient}
       isRegisteredPatient={isRegisteredPatient}
       formData={formData}
       onAppointmentIdSet={onAppointmentIdSet}
       trigger={trigger}
+      onRequestOtp={handleRequestOtp}
+      onVerifyOtp={handleVerifyOtp}
     />
   );
 };
