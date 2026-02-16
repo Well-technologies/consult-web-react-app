@@ -37,7 +37,7 @@ export const VerifyOtp = ({
       allReducerStates(rootState as StoreReducerStateTypes).user.profile
   );
 
-  const { otp, mobile } = watchOtp();
+  const { otp } = watchOtp();
 
   const handleSendOtp = async () => {
     // For non-registered patients, validate form and create patient first
