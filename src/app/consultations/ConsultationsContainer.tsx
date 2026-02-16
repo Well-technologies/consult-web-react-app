@@ -1,7 +1,5 @@
-import clsx from "clsx";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 
@@ -21,7 +19,6 @@ import { ConsultationsFilters } from "./consultationsFilters/ConsultationsFilter
 import { CreateConsultation } from "./createConsultation/CreateConsultation";
 
 export const ConsultationsContainer = () => {
-  const { t } = useTranslation();
   const consultClient = useClient({
     serviceConfigType: ServiceConfigType.Consult,
   });

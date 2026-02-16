@@ -14,7 +14,6 @@ export const CreateConsultation = ({
   isCreatingConsultation,
   setIsCreatingConsultation,
   refetch,
-  myPatients,
 }: CreateConsultationProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
