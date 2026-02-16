@@ -1170,7 +1170,7 @@ export type GetLabOrderHistoryResponse = ConsultSuccessResponse<
 
 export type GetMedOrderHistoryParams = {
   doctorId: number;
-  patientId: string;
+  patientId?: string;
 };
 
 export type GetMedOrderHistoryProps = {

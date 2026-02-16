@@ -1,9 +1,14 @@
-
-
 // import { ConsultUserDetails } from "@/api/user/user.types";
 import { ConsultUserDetails } from "@/api/consult/consult.types";
-import { PatientDetails } from "../../api/patient/patient.types";
-import { GetPreviousLabOrdersResponse, GetPreviousMedOrdersResponse } from "@/api/orders/orders.types";
+import {
+  GetPreviousLabOrdersResponse,
+  GetPreviousMedOrdersResponse,
+} from "@/api/orders/orders.types";
+
+import {
+  GetPatientHealthVaultResponse,
+  PatientDetails,
+} from "../../api/patient/patient.types";
 
 export enum UserStatus {
   Active = "Active",
@@ -17,13 +22,14 @@ export enum PatientDetailsTab {
   MedOrders = "Med Orders",
 }
 
-export type PatientDetailsProps ={
+export type PatientDetailsProps = {
   isLoading: boolean;
   data: ConsultUserDetails | null | undefined;
   consultations: any | undefined;
-  labOrders: GetPreviousLabOrdersResponse['data'] | undefined;
-  medOrders: GetPreviousMedOrdersResponse['data'] | undefined;
-}
+  labOrders: GetPreviousLabOrdersResponse["data"] | undefined;
+  medOrders: GetPreviousMedOrdersResponse["data"] | undefined;
+  healthVaultData: GetPatientHealthVaultResponse["payload"] | undefined;
+};
 
 export type PatientsListProps = {
   // data?: GetClaimsResponse["data"];
@@ -65,4 +71,3 @@ export type PatientsListProps = {
 //   isLoading?: boolean;
 //   onOpenEmployeeDeleteModal: (data: OrganizationUserDetails | null) => void;
 // };
-

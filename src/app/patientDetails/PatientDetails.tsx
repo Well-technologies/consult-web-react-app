@@ -1,14 +1,16 @@
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-
-import { PatientDetailsProps, PatientDetailsTab } from "./PatientDetails.types";
-import { TabType } from "@/ui/atoms/tabs/Tabs.types";
 import { Tabs } from "@/ui/atoms/tabs/Tabs";
-import { useState } from "react";
-import { PatientDetailsCard } from "./patientDetailsCard/PatientDetailsCard";
+import { TabType } from "@/ui/atoms/tabs/Tabs.types";
+
 import { Consultations } from "../consultations/Consultations";
+import { PatientDetailsProps, PatientDetailsTab } from "./PatientDetails.types";
+import { HealthVault } from "./healthVault/HealthVault";
+import { PatientDetailsCard } from "./patientDetailsCard/PatientDetailsCard";
 import { PreviousLabOrders } from "./previousLabOrders/PreviousLabOrders";
 import { PreviousMedOrders } from "./previousMedOrders/PreviousMedOrders";
+
 // import { UsersData } from "./usersData/UsersData";
 
 export const PatientDetails = ({
@@ -20,23 +22,22 @@ export const PatientDetails = ({
   // openFilter,
   isLoading,
   // openAndCloseFilter,
+  healthVaultData,
   ...props
 }: PatientDetailsProps) => {
+  console.log("labOrders", labOrders);
+  console.log("medOrders", medOrders);
 
-  console.log('labOrders', labOrders)
-  console.log('medOrders', medOrders)
-  
   const [activeTab, setActiveTab] = useState(PatientDetailsTab.Consultations);
   const { t } = useTranslation();
-
 
   const tabs: TabType<PatientDetailsTab>[] = [
     {
       value: PatientDetailsTab.Consultations,
       label: t("patient.details.tab.consultations"),
       component: (
-        <Consultations 
-          data={consultations} 
+        <Consultations
+          data={consultations}
           meta={null}
           isLoading={isLoading}
           isConsultationsRoute={false}
@@ -51,23 +52,19 @@ export const PatientDetails = ({
     {
       value: PatientDetailsTab.HealthVault,
       label: t("patient.details.tab.health_vault"),
-      component: <>Health Vault</>
+      component: <HealthVault healthData={healthVaultData || []} />,
       // <TransactionData {...transactionForm} {...props}
       //  />,
     },
     {
       value: PatientDetailsTab.LabOrders,
       label: t("patient.details.tab.lab_orders"),
-      component: (
-        <PreviousLabOrders data={labOrders?.data} />
-      )
+      component: <PreviousLabOrders data={labOrders?.data} />,
     },
     {
       value: PatientDetailsTab.MedOrders,
       label: t("patient.details.tab.med_orders"),
-      component: (
-        <PreviousMedOrders data={medOrders?.data} />
-      ),
+      component: <PreviousMedOrders data={medOrders?.data} />,
     },
   ];
 
@@ -79,10 +76,12 @@ export const PatientDetails = ({
           // claimFeatures={claimFeatures}
           // onOpenUserModal={onOpenUserModal}
           isLoading={isLoading}
-          {...props}        />
+          {...props}
+        />
         {/* <ClaimBalanceDetailsCard isLoading={isLoadingEmployeeData} {...props} /> */}
       </div>
 
       <Tabs activeTab={activeTab} setTab={setActiveTab} tabs={tabs} />
-    </div>  );
+    </div>
+  );
 };

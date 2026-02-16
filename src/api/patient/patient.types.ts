@@ -4,6 +4,7 @@ import { AxiosInstance } from "axios";
 
 import {
   CommonPaginationParams,
+  CommonQueryOptions,
   CommonSuccessResponse,
   ConsultSuccessResponse,
   PaginatedResponseData,
@@ -161,10 +162,11 @@ export type HealthLogData = {
 export type GetPatientHealthVaultProps = {
   client: AxiosInstance;
   params: GetHealthLogsParams;
+  options?: CommonQueryOptions;
 };
 
 export type GetHealthLogsParams = {
-  userId: string;
+  userId?: string;
 };
 
 export type GetPatientHealthVaultResponse = ConsultSuccessResponse<
