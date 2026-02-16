@@ -9,4 +9,5 @@ export type ButtonProps = {
   defaultIcon?: string;
   children?: React.ReactNode;
   isFullWidth?: boolean;
-}
+  hidden?: boolean;
+};

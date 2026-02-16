@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
@@ -28,6 +28,8 @@ export const VerifyOtp = ({
   onVerifyOtp,
 }: OtpFlowProps) => {
   const [isOtpRequested, setIsOtpRequested] = useState(false);
+  const [timer, setTimer] = useState(0);
+  const [canResend, setCanResend] = useState(false);
   const { t } = useTranslation();
   const client = useClient({});
   const {
@@ -38,6 +40,29 @@ export const VerifyOtp = ({
   );
 
   const { otp } = watchOtp();
+
+  // Timer effect for OTP resend
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (timer > 0) {
+      setCanResend(false);
+      interval = setInterval(() => {
+        setTimer((prev) => {
+          if (prev <= 1) {
+            setCanResend(true);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [timer]);
+
+  const startTimer = () => {
+    setTimer(30);
+    setCanResend(false);
+  };
 
   const handleSendOtp = async () => {
     // For non-registered patients, validate form and create patient first
@@ -73,6 +98,7 @@ export const VerifyOtp = ({
         // After successful patient creation, send OTP
         onRequestOtp({ mobile: "+94" + mobileNo });
         setIsOtpRequested(true);
+        startTimer();
       } catch (error) {
         console.error("Error creating patient:", error);
         toast.error(t("global.alert.common.error"));
@@ -81,7 +107,13 @@ export const VerifyOtp = ({
       // For registered patients, just send OTP
       onRequestOtp({ mobile: "+94" + mobileNo });
       setIsOtpRequested(true);
+      startTimer();
     }
+  };
+
+  const handleResendOtp = () => {
+    onRequestOtp({ mobile: "+94" + mobileNo });
+    startTimer();
   };
 
   const handleVerifyOtp = (otpValue: string) => {
@@ -118,14 +150,37 @@ export const VerifyOtp = ({
             />
           )}
         />
-        <Button
-          variant="primary"
-          type="button"
-          disabled={otp?.length !== 4}
-          onClick={() => otp && handleVerifyOtp(otp)}
-        >
-          {t("user.form.verify_otp.button")}
-        </Button>
+
+        {/* Timer and Resend Section */}
+        <div className="flex flex-col items-center gap-2">
+          {timer > 0 && (
+            <p className="text-sm text-gray-600">
+              {`Resend ${
+                Math.floor(timer / 60)
+                  .toString()
+                  .padStart(2, "0") +
+                ":" +
+                (timer % 60).toString().padStart(2, "0")
+              }`}
+            </p>
+          )}
+        </div>
+
+        <div className="flex gap-3">
+          {canResend && (
+            <Button variant="secondary" type="button" onClick={handleResendOtp}>
+              Resend
+            </Button>
+          )}
+          <Button
+            variant="primary"
+            type="button"
+            disabled={otp?.length !== 4}
+            onClick={() => otp && handleVerifyOtp(otp)}
+          >
+            {t("user.form.verify_otp.button")}
+          </Button>
+        </div>
       </div>
     );
   }
