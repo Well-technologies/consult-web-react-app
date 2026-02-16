@@ -6,7 +6,7 @@ import { TabType } from "@/ui/atoms/tabs/Tabs.types";
 
 import { Consultations } from "../consultations/Consultations";
 import { PatientDetailsProps, PatientDetailsTab } from "./PatientDetails.types";
-import { HealthVault } from "./healthVault/HealthVault";
+import { HealthVaultContainer } from "./healthVault/HealthVaultContainer";
 import { PatientDetailsCard } from "./patientDetailsCard/PatientDetailsCard";
 import { PreviousLabOrders } from "./previousLabOrders/PreviousLabOrders";
 import { PreviousMedOrders } from "./previousMedOrders/PreviousMedOrders";
@@ -22,7 +22,6 @@ export const PatientDetails = ({
   // openFilter,
   isLoading,
   // openAndCloseFilter,
-  healthVaultData,
   ...props
 }: PatientDetailsProps) => {
   console.log("labOrders", labOrders);
@@ -52,7 +51,7 @@ export const PatientDetails = ({
     {
       value: PatientDetailsTab.HealthVault,
       label: t("patient.details.tab.health_vault"),
-      component: <HealthVault healthData={healthVaultData || []} />,
+      component: <HealthVaultContainer patientId={data?.lead_id} />,
       // <TransactionData {...transactionForm} {...props}
       //  />,
     },

@@ -5,10 +5,7 @@ import {
   GetPreviousMedOrdersResponse,
 } from "@/api/orders/orders.types";
 
-import {
-  GetPatientHealthVaultResponse,
-  PatientDetails,
-} from "../../api/patient/patient.types";
+import { PatientDetails } from "../../api/patient/patient.types";
 
 export enum UserStatus {
   Active = "Active",
@@ -28,7 +25,6 @@ export type PatientDetailsProps = {
   consultations: any | undefined;
   labOrders: GetPreviousLabOrdersResponse["data"] | undefined;
   medOrders: GetPreviousMedOrdersResponse["data"] | undefined;
-  healthVaultData: GetPatientHealthVaultResponse["payload"] | undefined;
 };
 
 export type PatientsListProps = {

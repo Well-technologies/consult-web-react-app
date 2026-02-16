@@ -8,10 +8,8 @@ import {
   useGetPreviousLabOrders,
   useGetPreviousMedOrders,
 } from "@/api/orders/orders";
-import { useGetPatientHealthVault } from "@/api/patient/patient";
 import { useGetConsultUserDetails } from "@/api/user/user";
 import { useClient } from "@/hooks/useClient/useClient";
-import { useCustomSelector } from "@/hooks/useCustomSelector/useCustomSelector";
 import { AppRoute } from "@/routing/AppRoute.enum";
 import { LeadIdParamType } from "@/routing/AppRoutes.types";
 import { Breadcrumbs } from "@/ui/molecules/breadcrumbs/Breadcrumbs";
@@ -25,8 +23,6 @@ export const PatientDetailsContainer = () => {
     serviceConfigType: ServiceConfigType.Consult,
   });
   // const { t } = useTranslation();
-
-  const doctorId = useCustomSelector((rootState) => rootState.user.profile.id);
 
   const { leadId } = useParams<LeadIdParamType>();
 
@@ -116,20 +112,6 @@ export const PatientDetailsContainer = () => {
     refatchConsultations();
   }, [consultPatient?.payload?.id]);
 
-  const {
-    data: healthVaultData,
-    isLoading: isLoadingHealthVault,
-    error: healthVaultError,
-  } = useGetPatientHealthVault({
-    client: consultClient,
-    params: {
-      userId: consultPatient?.payload?.lead_id?.toString(),
-    },
-    options: {
-      enabled: !!consultPatient?.payload?.lead_id,
-    },
-  });
-
   const navigationOptions = getPatientDetailsBreadCrumbOptions();
 
   return (
@@ -141,7 +123,6 @@ export const PatientDetailsContainer = () => {
         consultations={consultations?.payload}
         labOrders={labOrders?.data}
         medOrders={medOrders?.data}
-        healthVaultData={healthVaultData?.payload}
         // openAddNewModal={onOpenUserModal}
         // openFilter={openFilter}
         // openAndCloseFilter={openAndCloseFilter}
