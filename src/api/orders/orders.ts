@@ -22,7 +22,7 @@ export const useGetPreviousLabOrders = ({
   params,
 }: GetPreviousLabOrdersProps) =>
   useQuery({
-    queryKey: [OrderKeyTypes.GetPreviousLabOrders, params.page],
+    queryKey: [OrderKeyTypes.GetPreviousLabOrders, params],
     queryFn: () => getPreviousLabOrders({ client, params }),
     placeholderData: keepPreviousData,
   });
@@ -37,7 +37,7 @@ export const useGetPreviousMedOrders = ({
   params,
 }: GetPreviousMedOrdersProps) =>
   useQuery({
-    queryKey: [OrderKeyTypes.GetPreviousMedOrders, params.page],
+    queryKey: [OrderKeyTypes.GetPreviousMedOrders, params],
     queryFn: () => getPreviousMedOrders({ client, params }),
     placeholderData: keepPreviousData,
   });

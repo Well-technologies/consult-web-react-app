@@ -8,8 +8,9 @@ import { Consultations } from "../consultations/Consultations";
 import { PatientDetailsProps, PatientDetailsTab } from "./PatientDetails.types";
 import { HealthVaultContainer } from "./healthVault/HealthVaultContainer";
 import { PatientDetailsCard } from "./patientDetailsCard/PatientDetailsCard";
-import { PreviousLabOrders } from "./previousLabOrders/PreviousLabOrders";
+import { PreviousLabOrdersContainer } from "./previousLabOrders/PreviousLabOrdersContainer";
 import { PreviousMedOrders } from "./previousMedOrders/PreviousMedOrders";
+import { PreviousMedOrdersContainer } from "./previousMedOrders/PreviousMedOrdersContainer";
 
 // import { UsersData } from "./usersData/UsersData";
 
@@ -17,16 +18,12 @@ export const PatientDetails = ({
   // openAddNewModal,
   data,
   consultations,
-  labOrders,
   medOrders,
   // openFilter,
   isLoading,
   // openAndCloseFilter,
   ...props
 }: PatientDetailsProps) => {
-  console.log("labOrders", labOrders);
-  console.log("medOrders", medOrders);
-
   const [activeTab, setActiveTab] = useState(PatientDetailsTab.Consultations);
   const { t } = useTranslation();
 
@@ -58,12 +55,12 @@ export const PatientDetails = ({
     {
       value: PatientDetailsTab.LabOrders,
       label: t("patient.details.tab.lab_orders"),
-      component: <PreviousLabOrders data={labOrders?.data} />,
+      component: <PreviousLabOrdersContainer patientId={data?.lead_id} />,
     },
     {
       value: PatientDetailsTab.MedOrders,
       label: t("patient.details.tab.med_orders"),
-      component: <PreviousMedOrders data={medOrders?.data} />,
+      component: <PreviousMedOrdersContainer patientId={data?.lead_id} />,
     },
   ];
 

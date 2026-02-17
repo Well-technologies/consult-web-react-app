@@ -23,7 +23,6 @@ export type PatientDetailsProps = {
   isLoading: boolean;
   data: ConsultUserDetails | null | undefined;
   consultations: any | undefined;
-  labOrders: GetPreviousLabOrdersResponse["data"] | undefined;
   medOrders: GetPreviousMedOrdersResponse["data"] | undefined;
 };
 

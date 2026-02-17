@@ -83,18 +83,6 @@ export const PatientDetailsContainer = () => {
     },
   });
 
-  const { data: labOrders } = useGetPreviousLabOrders({
-    client: client,
-    params: {
-      lead_id: consultPatient?.payload?.lead_id,
-      page: 1,
-      take: 20,
-    },
-    options: {
-      enabled: !!consultPatient?.payload?.lead_id,
-    },
-  });
-
   const { data: medOrders } = useGetPreviousMedOrders({
     client: client,
     params: {
@@ -121,7 +109,6 @@ export const PatientDetailsContainer = () => {
         data={consultPatient?.payload}
         isLoading={isLoadingConsultPatient || isLoadingConsultations}
         consultations={consultations?.payload}
-        labOrders={labOrders?.data}
         medOrders={medOrders?.data}
         // openAddNewModal={onOpenUserModal}
         // openFilter={openFilter}

@@ -748,6 +748,7 @@ export type ClinicalOrderDetails = {
   mypharma_reference: string;
   opharma_reference: string;
   orderItems: LabOrderItem[];
+  order_items: LabOrderItem[]; //TODO: Check if both orderItems and order_items are required
   order_date: string;
   order_note: string;
   order_status: LabOrderStatus | HomeCareOrderStatus;
@@ -764,7 +765,7 @@ export type ClinicalOrderDetails = {
   prescription_file_url: string | null;
   prescription_note: string;
   prescription_text: string;
-  prescriptions: LabOrderPrescription[];
+  prescription: MedOrderPrescription[];
   request_quote_notification: number;
   rider_id: number;
   rider_name: string;
