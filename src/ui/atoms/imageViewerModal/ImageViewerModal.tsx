@@ -1,6 +1,10 @@
+import clsx from "clsx";
 import { useEffect, useState, useCallback, useMemo } from "react";
+import { Document, Page } from "react-pdf";
+import "react-pdf/dist/Page/AnnotationLayer.css";
+import "react-pdf/dist/Page/TextLayer.css";
 
-import { cn } from "@/lib/utils";
+import { isPdfDocument } from "@/utils/isPdfDocument";
 
 import { ImageData, ImageViewerModalProps } from "./ImageViewerModal.types";
 
@@ -16,6 +20,8 @@ export const ImageViewerModal = (props: ImageViewerModalProps) => {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [imageLoading, setImageLoading] = useState<boolean[]>([]);
   const [imageErrors, setImageErrors] = useState<boolean[]>([]);
+  const [pdfNumPages, setPdfNumPages] = useState<number>(1);
+  const [pdfCurrentPage, setPdfCurrentPage] = useState<number>(1);
 
   // Initialize loading and error states
   useEffect(() => {
@@ -75,10 +81,37 @@ export const ImageViewerModal = (props: ImageViewerModalProps) => {
     });
   }, []);
 
+  const handlePdfLoadSuccess = useCallback(
+    ({ numPages }: { numPages: number }) => {
+      setPdfNumPages(numPages);
+      setPdfCurrentPage(1);
+      handleImageLoad(currentIndex);
+    },
+    [currentIndex, handleImageLoad]
+  );
+
+  const handlePdfLoadError = useCallback(() => {
+    handleImageError(currentIndex);
+  }, [currentIndex, handleImageError]);
+
+  const handlePdfPageChange = useCallback(
+    (direction: "next" | "prev") => {
+      if (direction === "next" && pdfCurrentPage < pdfNumPages) {
+        setPdfCurrentPage((prev) => prev + 1);
+      } else if (direction === "prev" && pdfCurrentPage > 1) {
+        setPdfCurrentPage((prev) => prev - 1);
+      }
+    },
+    [pdfCurrentPage, pdfNumPages]
+  );
+
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (!isOpen) return;
+
+      const currentImage = images[currentIndex];
+      const isCurrentPdf = isPdfDocument({ url: currentImage.url });
 
       switch (event.key) {
         case "Escape":
@@ -86,28 +119,59 @@ export const ImageViewerModal = (props: ImageViewerModalProps) => {
           break;
         case "ArrowLeft":
           event.preventDefault();
-          handlePrevious();
+          if (isCurrentPdf && pdfCurrentPage > 1) {
+            handlePdfPageChange("prev");
+          } else {
+            handlePrevious();
+          }
           break;
         case "ArrowRight":
           event.preventDefault();
-          handleNext();
+          if (isCurrentPdf && pdfCurrentPage < pdfNumPages) {
+            handlePdfPageChange("next");
+          } else {
+            handleNext();
+          }
+          break;
+        case "ArrowUp":
+          event.preventDefault();
+          if (isCurrentPdf) {
+            handlePdfPageChange("prev");
+          }
+          break;
+        case "ArrowDown":
+          event.preventDefault();
+          if (isCurrentPdf) {
+            handlePdfPageChange("next");
+          }
           break;
       }
     };
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, onClose, handleNext, handlePrevious]);
+  }, [
+    isOpen,
+    onClose,
+    handleNext,
+    handlePrevious,
+    handlePdfPageChange,
+    currentIndex,
+    images,
+    pdfCurrentPage,
+    pdfNumPages,
+  ]);
 
   if (!isOpen || images.length === 0) {
     return null;
   }
 
   const currentImage = images[currentIndex];
+  const isCurrentPdf = isPdfDocument({ url: currentImage.url });
 
   return (
     <div
-      className={cn(
+      className={clsx(
         "fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm transition-opacity duration-300",
         isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
       )}
@@ -121,7 +185,9 @@ export const ImageViewerModal = (props: ImageViewerModalProps) => {
         {/* Header with close button and counter */}
         <div className="flex items-center justify-between mb-4 text-white">
           <div className="text-lg font-medium">
-            {currentIndex + 1} / {images.length}
+            <>
+              {currentIndex + 1} / {images.length}
+            </>
           </div>
           <button
             onClick={onClose}
@@ -148,11 +214,21 @@ export const ImageViewerModal = (props: ImageViewerModalProps) => {
         <div className="flex-1 flex items-center justify-center min-h-0 mb-4">
           <div className="relative max-w-full max-h-full flex items-center justify-center">
             {/* Previous button */}
-            {images.length > 1 && (
+            {(images.length > 1 || (isCurrentPdf && pdfCurrentPage > 1)) && (
               <button
-                onClick={handlePrevious}
+                onClick={() => {
+                  if (isCurrentPdf && pdfCurrentPage > 1) {
+                    handlePdfPageChange("prev");
+                  } else {
+                    handlePrevious();
+                  }
+                }}
                 className="absolute left-4 top-1/2 -translate-y-1/2 z-10 p-3 bg-black/50 hover:bg-black/70 text-white rounded-full transition-colors"
-                aria-label="Previous image"
+                aria-label={
+                  isCurrentPdf && pdfCurrentPage > 1
+                    ? "Previous page"
+                    : "Previous image"
+                }
               >
                 <svg
                   className="w-6 h-6"
@@ -194,8 +270,29 @@ export const ImageViewerModal = (props: ImageViewerModalProps) => {
                         d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2 2v12a2 2 0 002 2z"
                       />
                     </svg>
-                    <p>Failed to load image</p>
+                    <p>Failed to load {isCurrentPdf ? "document" : "image"}</p>
                   </div>
+                </div>
+              ) : isCurrentPdf ? (
+                <div className="max-w-full max-h-[70vh] overflow-auto">
+                  <Document
+                    file={currentImage.url}
+                    onLoadSuccess={handlePdfLoadSuccess}
+                    onLoadError={handlePdfLoadError}
+                    loading={
+                      <div className="flex items-center justify-center w-96 h-96 bg-gray-100">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                      </div>
+                    }
+                  >
+                    <Page
+                      pageNumber={pdfCurrentPage}
+                      renderTextLayer={false}
+                      renderAnnotationLayer={false}
+                      className="max-w-full"
+                      width={Math.min(window.innerWidth * 0.8, 800)}
+                    />
+                  </Document>
                 </div>
               ) : (
                 <img
@@ -209,11 +306,22 @@ export const ImageViewerModal = (props: ImageViewerModalProps) => {
             </div>
 
             {/* Next button */}
-            {images.length > 1 && (
+            {(images.length > 1 ||
+              (isCurrentPdf && pdfCurrentPage < pdfNumPages)) && (
               <button
-                onClick={handleNext}
+                onClick={() => {
+                  if (isCurrentPdf && pdfCurrentPage < pdfNumPages) {
+                    handlePdfPageChange("next");
+                  } else {
+                    handleNext();
+                  }
+                }}
                 className="absolute right-4 top-1/2 -translate-y-1/2 z-10 p-3 bg-black/50 hover:bg-black/70 text-white rounded-full transition-colors"
-                aria-label="Next image"
+                aria-label={
+                  isCurrentPdf && pdfCurrentPage < pdfNumPages
+                    ? "Next page"
+                    : "Next image"
+                }
               >
                 <svg
                   className="w-6 h-6"
@@ -241,19 +349,42 @@ export const ImageViewerModal = (props: ImageViewerModalProps) => {
                 <button
                   key={index}
                   onClick={() => handleThumbnailClick(index)}
-                  className={cn(
+                  className={clsx(
                     "relative flex-shrink-0 w-16 h-16 rounded-md overflow-hidden border-2 transition-all",
                     index === currentIndex
                       ? "border-blue-500 scale-105"
                       : "border-transparent hover:border-white/50"
                   )}
                 >
-                  <img
-                    src={image.url}
-                    alt={image.alt || `Thumbnail ${index + 1}`}
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                  />
+                  {isPdfDocument({ url: image.url }) ? (
+                    <div className="max-w-full max-h-[70vh] overflow-auto">
+                      <Document
+                        file={image.url}
+                        onLoadSuccess={handlePdfLoadSuccess}
+                        onLoadError={handlePdfLoadError}
+                        loading={
+                          <div className="flex items-center justify-center w-96 h-96 bg-gray-100">
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                          </div>
+                        }
+                      >
+                        <Page
+                          pageNumber={pdfCurrentPage}
+                          renderTextLayer={false}
+                          renderAnnotationLayer={false}
+                          className="max-w-full"
+                          width={Math.min(window.innerWidth * 0.8, 800)}
+                        />
+                      </Document>
+                    </div>
+                  ) : (
+                    <img
+                      src={image.url}
+                      alt={image.alt || `Thumbnail ${index + 1}`}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                  )}
                   {index === currentIndex && (
                     <div className="absolute inset-0 bg-blue-500/20" />
                   )}

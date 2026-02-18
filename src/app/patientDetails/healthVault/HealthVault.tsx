@@ -1,6 +1,9 @@
 import { useState, useMemo } from "react";
+import { Document, Page, pdfjs } from "react-pdf";
 
+import { HealthVaultData } from "@/api/patient/patient.types";
 import { ImageViewerModal } from "@/ui/atoms/imageViewerModal/ImageViewerModal";
+import { isPdfDocument } from "@/utils/isPdfDocument";
 
 import { HealthVaultProps } from "./HealthVault.types";
 
@@ -14,10 +17,12 @@ export const HealthVault = ({ healthData }: HealthVaultProps) => {
     );
   }, [healthData]);
 
-  const handleImageClick = (index: number) => {
-    setSelectedImageIndex(index);
+  const handleImageClick = (document: HealthVaultData) => {
+    const imageIndex = allImageUrls.indexOf(document.fileUrl);
+    setSelectedImageIndex(imageIndex);
     setIsImageModalOpen(true);
   };
+
   if (!healthData || healthData.length === 0) {
     return (
       <div className="p-4 text-gray-500 text-center">
@@ -46,21 +51,38 @@ export const HealthVault = ({ healthData }: HealthVaultProps) => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {healthData.map((document, index) => (
+          {healthData.map((document) => (
             <div key={document.id} className="flex justify-center p-4">
               <button
-                onClick={() => handleImageClick(index)}
+                onClick={() => handleImageClick(document)}
                 className="card bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden w-full aspect-square flex flex-col cursor-pointer"
               >
-                <div className="flex-1 bg-gray-100 overflow-hidden">
-                  <img
-                    className="h-full w-full object-cover"
-                    src={document.fileUrl}
-                    alt={document.title}
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                    }}
-                  />
+                <div className="flex-1 bg-gray-100 overflow-hidden relative">
+                  {isPdfDocument({ document }) ? (
+                    <div className="h-full w-full flex items-center justify-center">
+                      <Document
+                        file={document.fileUrl}
+                        className="h-full w-full object-cover"
+                        loading={
+                          <div className="flex items-center justify-center h-full">
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-600"></div>
+                          </div>
+                        }
+                      >
+                        <Page
+                          pageNumber={1}
+                          renderAnnotationLayer={false}
+                          renderTextLayer={false}
+                        />
+                      </Document>
+                    </div>
+                  ) : (
+                    <img
+                      className="h-full w-full object-cover"
+                      src={document.fileUrl}
+                      alt={document.title}
+                    />
+                  )}
                 </div>
                 <div className="p-3 flex-shrink-0">
                   <h4 className="text-sm font-medium text-gray-900 truncate mb-1">

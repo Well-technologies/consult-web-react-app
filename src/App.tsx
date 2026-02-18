@@ -1,12 +1,15 @@
-import { AppRoutes } from './routing/AppRoutes'
+import { pdfjs } from "react-pdf";
+
+import { AppRoutes } from "./routing/AppRoutes";
+
+pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 function App() {
-
   return (
     <>
-    <AppRoutes />
+      <AppRoutes />
     </>
-  )
+  );
 }
 
-export default App
+export default App;
