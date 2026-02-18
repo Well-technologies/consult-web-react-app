@@ -1,4 +1,5 @@
 import { Pagination } from "@/ui/atoms/pagination/Pagination";
+import { NotFound } from "@/ui/molecules/notFound/NotFound";
 
 import { PatientDetailsTab } from "../PatientDetails.types";
 import { OrderCard } from "../orderCard/OrderCard";
@@ -26,9 +27,7 @@ export const PreviousLabOrders = ({
   }
 
   if (!labOrders || labOrders.length === 0) {
-    return (
-      <div className="p-4 text-gray-500">No previous lab orders found</div>
-    );
+    return <NotFound text="No lab orders found" />;
   }
 
   return (

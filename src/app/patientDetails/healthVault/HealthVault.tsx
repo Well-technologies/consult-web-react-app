@@ -1,13 +1,26 @@
 import { useState, useMemo } from "react";
 import { Document, Page } from "react-pdf";
+import "react-pdf/dist/Page/AnnotationLayer.css";
+import "react-pdf/dist/Page/TextLayer.css";
 
 import { HealthVaultData } from "@/api/patient/patient.types";
 import { ImageViewerModal } from "@/ui/atoms/imageViewerModal/ImageViewerModal";
+import { Pagination } from "@/ui/atoms/pagination/Pagination";
+import { NotFound } from "@/ui/molecules/notFound/NotFound";
 import { isPdfDocument } from "@/utils/isPdfDocument";
 
 import { HealthVaultProps } from "./HealthVault.types";
 
-export const HealthVault = ({ healthData }: HealthVaultProps) => {
+export const HealthVault = ({
+  healthData,
+  isLoading,
+  error,
+  pagination,
+  page,
+  pageSize,
+  onPageChange,
+  onPageSizeChange,
+}: HealthVaultProps) => {
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
@@ -23,12 +36,20 @@ export const HealthVault = ({ healthData }: HealthVaultProps) => {
     setIsImageModalOpen(true);
   };
 
-  if (!healthData || healthData.length === 0) {
+  if (isLoading) {
+    return <div className="p-4">Loading health vault documents...</div>;
+  }
+
+  if (error) {
     return (
-      <div className="p-4 text-gray-500 text-center">
-        No health vault documents found
+      <div className="p-4 text-red-500">
+        Error loading health vault documents
       </div>
     );
+  }
+
+  if (!healthData || healthData.length === 0) {
+    return <NotFound text={"No documents found"} />;
   }
 
   return (
@@ -44,9 +65,10 @@ export const HealthVault = ({ healthData }: HealthVaultProps) => {
       <div className="p-4">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-semibold text-gray-900">Health Vault</h3>
-          <span className="text-sm text-gray-500">
-            {healthData.length}{" "}
-            {healthData.length === 1 ? "document" : "documents"}
+          <span className="text-sm text-gray-600">
+            {pagination?.total
+              ? `Showing ${healthData.length} of ${pagination.total} document${pagination.total !== 1 ? "s" : ""}`
+              : `${healthData.length} document${healthData.length !== 1 ? "s" : ""} found`}
           </span>
         </div>
 
@@ -100,6 +122,21 @@ export const HealthVault = ({ healthData }: HealthVaultProps) => {
             </div>
           ))}
         </div>
+
+        {pagination && (
+          <>
+            <div className="h-1 bg-gray-100 mt-4" />
+            <div className="p-2">
+              <Pagination
+                count={pagination.lastPage}
+                onChange={onPageChange}
+                onPageSizeChange={onPageSizeChange}
+                page={page}
+                pageSize={pageSize}
+              />
+            </div>
+          </>
+        )}
       </div>
     </>
   );

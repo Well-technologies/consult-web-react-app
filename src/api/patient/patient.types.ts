@@ -167,6 +167,8 @@ export type GetPatientHealthVaultProps = {
 
 export type GetHealthLogsParams = {
   userId?: string;
+  page?: number;
+  take?: number;
 };
 
 export type GetPatientHealthVaultResponse = ConsultSuccessResponse<
