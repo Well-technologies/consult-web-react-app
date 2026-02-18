@@ -4,10 +4,7 @@ import { Navigate, useParams } from "react-router-dom";
 
 import { useGetConsultations } from "@/api/consult/consult";
 import { ServiceConfigType } from "@/api/index.types";
-import {
-  useGetPreviousLabOrders,
-  useGetPreviousMedOrders,
-} from "@/api/orders/orders";
+import { useGetPreviousMedOrders } from "@/api/orders/orders";
 import { useGetConsultUserDetails } from "@/api/user/user";
 import { useClient } from "@/hooks/useClient/useClient";
 import { AppRoute } from "@/routing/AppRoute.enum";

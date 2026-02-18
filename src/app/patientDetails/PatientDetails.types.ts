@@ -1,9 +1,6 @@
 // import { ConsultUserDetails } from "@/api/user/user.types";
 import { ConsultUserDetails } from "@/api/consult/consult.types";
-import {
-  GetPreviousLabOrdersResponse,
-  GetPreviousMedOrdersResponse,
-} from "@/api/orders/orders.types";
+import { GetPreviousMedOrdersResponse } from "@/api/orders/orders.types";
 
 import { PatientDetails } from "../../api/patient/patient.types";
 

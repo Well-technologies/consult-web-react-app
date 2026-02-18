@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Document, Page, pdfjs } from "react-pdf";
+import { Document, Page } from "react-pdf";
 
 import { HealthVaultData } from "@/api/patient/patient.types";
 import { ImageViewerModal } from "@/ui/atoms/imageViewerModal/ImageViewerModal";

@@ -9,7 +9,6 @@ import { PatientDetailsProps, PatientDetailsTab } from "./PatientDetails.types";
 import { HealthVaultContainer } from "./healthVault/HealthVaultContainer";
 import { PatientDetailsCard } from "./patientDetailsCard/PatientDetailsCard";
 import { PreviousLabOrdersContainer } from "./previousLabOrders/PreviousLabOrdersContainer";
-import { PreviousMedOrders } from "./previousMedOrders/PreviousMedOrders";
 import { PreviousMedOrdersContainer } from "./previousMedOrders/PreviousMedOrdersContainer";
 
 // import { UsersData } from "./usersData/UsersData";
