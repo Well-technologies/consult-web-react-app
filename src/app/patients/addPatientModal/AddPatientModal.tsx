@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/ui/atoms/button/Button";
 import { DatePickerType } from "@/ui/atoms/datePicker/DatePicker.types";
 import { FormLabel } from "@/ui/atoms/formLabel/FormLabel";
-import { Input } from "@/ui/atoms/input/input";
+import { Input } from "@/ui/atoms/input/Input";
 import { FormDatePicker } from "@/ui/molecules/formDatePicker/FormDatePicker";
 import { FormInput } from "@/ui/molecules/formInput/FormInput";
 import { FormSelect } from "@/ui/molecules/formSelect/FormSelect";

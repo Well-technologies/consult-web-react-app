@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useDebounce } from "use-debounce";
 
 import { ServiceConfigType } from "@/api/index.types";
 import { useGetPreviousMedOrders } from "@/api/orders/orders";
@@ -12,6 +13,8 @@ export const PreviousMedOrdersContainer = ({
 }: PreviousMedOrdersContainerProps) => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
+  const [searchText, setSearchText] = useState("");
+  const [debouncedSearchText] = useDebounce(searchText, 500);
 
   const client = useClient({ serviceConfigType: ServiceConfigType.Core });
 
@@ -25,6 +28,7 @@ export const PreviousMedOrdersContainer = ({
       lead_id: patientId,
       page: page,
       take: pageSize,
+      medication_name: debouncedSearchText,
     },
     options: {
       enabled: !!patientId,
@@ -57,8 +61,10 @@ export const PreviousMedOrdersContainer = ({
       pagination={pagination}
       page={page}
       pageSize={pageSize}
+      searchText={searchText}
       onPageChange={handlePageChange}
       onPageSizeChange={handlePageSizeChange}
+      setSearch={setSearchText}
     />
   );
 };

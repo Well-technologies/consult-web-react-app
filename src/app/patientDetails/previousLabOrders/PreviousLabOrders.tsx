@@ -1,3 +1,4 @@
+import { Input } from "@/ui/atoms/input/Input";
 import { Pagination } from "@/ui/atoms/pagination/Pagination";
 import { NotFound } from "@/ui/molecules/notFound/NotFound";
 
@@ -36,6 +37,11 @@ export const PreviousLabOrders = ({
         <h3 className="text-lg font-semibold text-gray-900">
           Previous Lab Orders
         </h3>
+        <Input
+          className="w-80"
+          placeholder="Search previous lab orders using tests"
+          search
+        />
         <span className="text-sm text-gray-600">
           {pagination?.total
             ? `Showing ${labOrders.length} of ${pagination.total} order${pagination.total !== 1 ? "s" : ""}`

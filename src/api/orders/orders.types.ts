@@ -976,6 +976,7 @@ export type GetPreviousLabOrdersParams = {
   lead_id: number | null | undefined;
   take: number;
   page: number;
+  medication_name?: string;
 };
 
 export type GetPreviousMedOrdersResponse =
@@ -991,6 +992,7 @@ export type GetPreviousMedOrdersParams = {
   lead_id: number | null | undefined;
   take: number;
   page: number;
+  medication_name?: string;
 };
 
 export type GetOrderItemQuantityProps = {

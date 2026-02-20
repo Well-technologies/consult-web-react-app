@@ -1,11 +1,11 @@
 import clsx from "clsx";
+import { useState } from "react";
 import { Controller } from "react-hook-form";
 
 import { FormLabel } from "@/ui/atoms/formLabel/FormLabel";
-import { Input } from "@/ui/atoms/input/input";
+import { Input } from "@/ui/atoms/input/Input";
 
 import { FormInputProps } from "./FormInput.types";
-import { useState } from "react";
 
 // import { ReactComponent as CheckMarkCircle } from "@/assets/icons/checkmark-circle.svg?react";
 
@@ -30,27 +30,31 @@ export const FormInput = ({
         <Controller
           name={name || ""}
           control={control}
-          render={({ field }) => (<>
-            <Input {...props} {...field}
-              value={value}
-              onChange={(e) =>{ setValue(e.target.value)}} />
-            {value && (
-              <ul style={{ border: "1px solid #ccc" }}>
-                {options?.map((item: any) => (
-                  <li
-                    key={item}
-                    onClick={() => setValue(item)}
-                    style={{ cursor: "pointer" }}
-                  >
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </>
-
+          render={({ field }) => (
+            <>
+              <Input
+                {...props}
+                {...field}
+                value={value}
+                onChange={(e) => {
+                  setValue(e.target.value);
+                }}
+              />
+              {value && (
+                <ul style={{ border: "1px solid #ccc" }}>
+                  {options?.map((item: any) => (
+                    <li
+                      key={item}
+                      onClick={() => setValue(item)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </>
           )}
-
         />
         {error && helperText && (
           <p className="mt-2 text-xs text-red-600 dark:text-red-400">

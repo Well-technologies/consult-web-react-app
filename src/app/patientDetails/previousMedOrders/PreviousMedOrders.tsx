@@ -1,3 +1,4 @@
+import { Input } from "@/ui/atoms/input/Input";
 import { Pagination } from "@/ui/atoms/pagination/Pagination";
 import { NotFound } from "@/ui/molecules/notFound/NotFound";
 
@@ -12,8 +13,10 @@ export const PreviousMedOrders = ({
   pagination,
   page,
   pageSize,
+  searchText,
   onPageChange,
   onPageSizeChange,
+  setSearch,
 }: PreviousMedOrdersProps) => {
   if (isLoading) {
     return <div className="p-4">Loading previous medication orders...</div>;
@@ -37,21 +40,32 @@ export const PreviousMedOrders = ({
         <h3 className="text-lg font-semibold text-gray-900">
           Previous Medication Orders
         </h3>
-        <span className="text-sm text-gray-600">
+        <Input
+          className="w-65"
+          placeholder="Search orders using medicines"
+          search
+          onChange={(e) => setSearch(e.target.value)}
+          value={searchText}
+        />
+        <span className="text-sm text-gray-600 ">
           {pagination?.total
             ? `Showing ${medOrders.length} of ${pagination.total} order${pagination.total !== 1 ? "s" : ""}`
             : `${medOrders.length} order${medOrders.length !== 1 ? "s" : ""} found`}
         </span>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {medOrders.map((order) => (
-          <OrderCard
-            key={order.id}
-            order={{ orderDetails: order, type: PatientDetailsTab.MedOrders }}
-          />
-        ))}
-      </div>
+      {!medOrders || medOrders.length === 0 ? (
+        <NotFound text="No med orders found" />
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {medOrders.map((order) => (
+            <OrderCard
+              key={order.id}
+              order={{ orderDetails: order, type: PatientDetailsTab.MedOrders }}
+            />
+          ))}
+        </div>
+      )}
 
       {pagination && (
         <>

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import Trash from "@/assets/icons/icons8-trash-red.svg";
-import { Input } from "@/ui/atoms/input/input";
+import { Input } from "@/ui/atoms/input/Input";
 
 import { Modal } from "../modal/Modal";
 import { DeleteConfirmModalProps } from "./DeleteConfirmModal.types";

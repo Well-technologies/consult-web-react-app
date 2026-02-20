@@ -1,3 +1,5 @@
+import { Dispatch, SetStateAction } from "react";
+
 import { MedicineOrderDetails } from "@/api/orders/orders.types";
 
 export type PreviousMedOrdersContainerProps = {
@@ -18,4 +20,6 @@ export type PreviousMedOrdersProps = {
   pageSize: number;
   onPageChange: (page: number) => void;
   onPageSizeChange: (pageSize: number) => void;
+  searchText?: string;
+  setSearch: Dispatch<SetStateAction<string>>;
 };

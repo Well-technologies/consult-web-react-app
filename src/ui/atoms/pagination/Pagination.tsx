@@ -16,8 +16,7 @@ import {
 } from "@/ui/molecules/formSelect/FormSelect.utils";
 import { scroll } from "@/utils/scroll.utils";
 
-
-import { Input } from "../input/input";
+import { Input } from "../input/Input";
 import { PaginationProps } from "./Pagination.types";
 
 export const Pagination = ({
