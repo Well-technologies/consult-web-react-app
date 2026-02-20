@@ -16,7 +16,7 @@ export const HealthVaultContainer = ({
 
   const handlePageSizeChange = (newPageSize: number) => {
     setPageSize(newPageSize);
-    setPage(1); // Reset to first page when page size changes
+    setPage(1);
   };
 
   const consultClient = useClient({
