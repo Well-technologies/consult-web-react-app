@@ -27,7 +27,7 @@ export const SurgicalHistory = ({ patientLeadId }: SurgicalHistoryProps) => {
     );
   }
 
-  if (!data?.payload.surgicalHistories?.length) {
+  if (!data?.payload?.surgicalHistories?.length) {
     return <div className="p-4 text-gray-500">No surgical history found</div>;
   }
 
@@ -39,7 +39,7 @@ export const SurgicalHistory = ({ patientLeadId }: SurgicalHistoryProps) => {
         </h3>
       </div>
       <div className="flex flex-wrap gap-2">
-        {data.payload.surgicalHistories.map(
+        {data?.payload?.surgicalHistories?.map(
           (item: MedicalAndSurgicalHistoryItem, index: number) => (
             <div
               key={index}

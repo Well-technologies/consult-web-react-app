@@ -9,6 +9,6 @@ export type BreadcrumbsProps = {
 export type Breadcrumb = {
   name: string;
   icon?: ReactNode;
-  navigateTo?: AppRoute;
+  navigateTo?: AppRoute | string;
   isSeparator?: boolean;
 };

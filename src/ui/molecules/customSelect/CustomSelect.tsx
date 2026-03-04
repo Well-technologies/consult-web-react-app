@@ -203,7 +203,7 @@ export const CustomSelect = ({
           onClick={toggle}
           className={getSelectClass()}
         >
-          <div className="grow pl-2.5 py-2 pr-2 flex flex-wrap gap-1">
+          <div className="grow pl-2.5 pr-2 flex flex-wrap gap-1">
             {!isMultiple ? (
               isSearchable ? (
                 <Input

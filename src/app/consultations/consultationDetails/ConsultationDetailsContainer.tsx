@@ -31,7 +31,7 @@ export const ConsultationDetailsContainer = () => {
 
   return (
     <>
-      <Breadcrumbs breadcrumbs={getConsultationDetailsBreadCrumbOptions(consultationData?.payload?.consultationId!)} />
+      <Breadcrumbs breadcrumbs={getConsultationDetailsBreadCrumbOptions(consultationData?.payload?.consultationId!, consultationData?.payload?.patient?.lead_id!)} />
       <ConsultationDetails
         data={consultationData?.payload}
         isLoading={isLoading}

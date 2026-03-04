@@ -184,10 +184,10 @@ export const AddPatientModal = ({
           <FormSelect
             id="gender"
             name="gender"
-            isDisabled={
-              getIsDisabledFormItem(formType, "gender") ||
-              (isRegisteredPatient && isOtpVerified)
-            }
+            // isDisabled={
+            //   getIsDisabledFormItem(formType, "gender") ||
+            //   (isRegisteredPatient && isOtpVerified)
+            // }
             label={t("user.form.gender.label")}
             control={control}
             placeholder={t("user.form.gender.placeholder")}

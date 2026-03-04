@@ -14,13 +14,10 @@ import { PreviousMedOrdersContainer } from "./previousMedOrders/PreviousMedOrder
 // import { UsersData } from "./usersData/UsersData";
 
 export const PatientDetails = ({
-  // openAddNewModal,
   data,
   consultations,
   medOrders,
-  // openFilter,
   isLoading,
-  // openAndCloseFilter,
   ...props
 }: PatientDetailsProps) => {
   const [activeTab, setActiveTab] = useState(PatientDetailsTab.Consultations);
@@ -48,8 +45,6 @@ export const PatientDetails = ({
       value: PatientDetailsTab.HealthVault,
       label: t("patient.details.tab.health_vault"),
       component: <HealthVaultContainer patientId={data?.lead_id} />,
-      // <TransactionData {...transactionForm} {...props}
-      //  />,
     },
     {
       value: PatientDetailsTab.LabOrders,
@@ -68,12 +63,9 @@ export const PatientDetails = ({
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
         <PatientDetailsCard
           data={data}
-          // claimFeatures={claimFeatures}
-          // onOpenUserModal={onOpenUserModal}
           isLoading={isLoading}
           {...props}
         />
-        {/* <ClaimBalanceDetailsCard isLoading={isLoadingEmployeeData} {...props} /> */}
       </div>
 
       <Tabs activeTab={activeTab} setTab={setActiveTab} tabs={tabs} />

@@ -12,9 +12,6 @@ import { calculateAge } from "@/utils/ageCalculator.utils";
 export const PatientDetailsCard = ({
   data,
   isLoading,
-  // onOpenUserModal,
-  // onOpenFamilyModal,
-  // claimFeatures,
 }: PatientDetailsCardProps) => {
 
   console.log('PatientDetailsCard', data)
@@ -109,34 +106,6 @@ export const PatientDetailsCard = ({
           </div>}
         </div>
       </div>
-      {/* <div className="h-0.5 bg-gray-100 mt-2 w-full" /> */}
-      {/* <div className="mt-2 flex gap-2 justify-end">
-        {claimFeatures?.talkFamily ? (
-          <button
-            disabled={isLoading}
-            className={clsx(
-              "py-2 px-4 text-xs sm:text-sm cursor-pointer text-white rounded-lg",
-              isLoading ? "bg-gray-200!" : "bg-primary "
-            )}
-            onClick={() => onOpenFamilyModal(null, FormType.Add)}
-          >
-            {t("employee.details.addFamily")}
-          </button>
-        ) : null}
-        <button
-          disabled={isLoading}
-          className={clsx(
-            "py-2 px-4 text-xs sm:text-sm cursor-pointer text-white rounded-lg",
-            isLoading ? "bg-gray-200!" : "bg-primary "
-          )}
-          onClick={() =>
-            employeeData?.lead &&
-            onOpenUserModal(employeeData?.lead, FormType.Edit)
-          }
-        >
-          {t("employee.details.edit")}
-        </button>
-      </div> */}
     </div>
   );
 };

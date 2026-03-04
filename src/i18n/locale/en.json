@@ -121,6 +121,7 @@
   "consultation.table.prescription.header": "Prescription",
   "consultation.table.actions.header": "Actions",
   "consultation.details.title": "Consult #{{consultationId}}",
+  "consultation.details.patient": "Patient #{{patientId}}",
   "consultation.details.notes": "Notes",
   "consultation.filter.field.patient": "Search Patient",
   "consultation.filter.field.from_date": "From Date",

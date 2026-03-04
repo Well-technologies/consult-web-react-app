@@ -12,6 +12,8 @@ import {
   GetMedOrderHistoryResponse,
 } from "./orders.types";
 
+const staleTime = 60 * 1000;
+
 const getPreviousLabOrders = ({ client, params }: GetPreviousLabOrdersProps) =>
   client
     .get<GetPreviousLabOrdersResponse>("customer/get-lab-orders", { params })
@@ -25,6 +27,7 @@ export const useGetPreviousLabOrders = ({
     queryKey: [OrderKeyTypes.GetPreviousLabOrders, params],
     queryFn: () => getPreviousLabOrders({ client, params }),
     placeholderData: keepPreviousData,
+    staleTime,
   });
 
 const getPreviousMedOrders = ({ client, params }: GetPreviousMedOrdersProps) =>
@@ -40,6 +43,7 @@ export const useGetPreviousMedOrders = ({
     queryKey: [OrderKeyTypes.GetPreviousMedOrders, params],
     queryFn: () => getPreviousMedOrders({ client, params }),
     placeholderData: keepPreviousData,
+    staleTime,
   });
 
 const getLabOrderHistory = ({ client, params }: GetLabOrderHistoryProps) =>
@@ -55,6 +59,7 @@ export const useGetLabOrderHistory = ({
     queryKey: [OrderKeyTypes.GetLabOrderHistory],
     queryFn: () => getLabOrderHistory({ client, params }),
     placeholderData: keepPreviousData,
+    staleTime,
   });
 
 const getMedOrderHistory = ({ client, params }: GetMedOrderHistoryProps) =>
@@ -70,4 +75,5 @@ export const useGetMedOrderHistory = ({
     queryKey: [OrderKeyTypes.GetMedOrderHistory],
     queryFn: () => getMedOrderHistory({ client, params }),
     placeholderData: keepPreviousData,
+    staleTime,
   });

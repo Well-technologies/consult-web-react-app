@@ -109,7 +109,7 @@ export const ConsultationDetails = ({
                   key={index}
                   className="p-4 border text-sm rounded-md shadow-sm bg-white"
                 >
-                  {test.data.name}
+                  {test.data.name || test.data.title}
                 </div>
               ))}
             </div>

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 // import { useTranslation } from "react-i18next";
 import { Navigate, useParams } from "react-router-dom";
 
@@ -24,39 +24,6 @@ export const PatientDetailsContainer = () => {
   const { leadId } = useParams<LeadIdParamType>();
 
   if (!leadId) return <Navigate to={AppRoute.Patients} replace />;
-
-  // const [openFilter, setOpenFilter] = useState(true);
-
-  // const [openUserModal, setOpenUserModal] = useState<{
-  //   data: OrganizationUserDetails | null;
-  //   formType: FormType;
-  // } | null>(null);
-
-  // const [openFamilyDeleteModal, setOpenFamilyDeleteModal] =
-  //   useState<LeadFamily | null>(null);
-
-  // const { lead_id } = useSelector(
-  //   (rootState) =>
-  //     allReducerStates(rootState as StoreReducerStateTypes).user.userDetails
-  // );
-
-  // const patientFrom = useForm<CommonPaginationParams>({
-  //   shouldUnregister: false,
-  //   defaultValues: {
-  //     page: 1,
-  //     page_size: 10,
-  //   },
-  // });
-
-  // const openAndCloseFilter = () => {
-  //   setOpenFilter(!openFilter);
-  //   if (openFilter) {
-  //     patientFrom.reset({
-  //       page: 1,
-  //       page_size: 10,
-  //     });
-  //   }
-  // };
 
   const {
     data: consultPatient,
@@ -107,32 +74,7 @@ export const PatientDetailsContainer = () => {
         isLoading={isLoadingConsultPatient || isLoadingConsultations}
         consultations={consultations?.payload}
         medOrders={medOrders?.data}
-        // openAddNewModal={onOpenUserModal}
-        // openFilter={openFilter}
-        // openAndCloseFilter={openAndCloseFilter}
       />
-      {/* {openUserModal && (
-        <AddUserModalContainer
-          refetch={refetch}
-          open={!!openUserModal}
-          onClose={() => setOpenUserModal(null)}
-          {...openUserModal}
-        />
-      )} */}
-
-      {/* {!!openFamilyDeleteModal && (
-        <DeleteConfirmModal
-          open={!!openFamilyDeleteModal}
-          confirmKey={FamilyDeleteConfirmKey}
-          onClose={() => setOpenFamilyDeleteModal(null)}
-          onConfirm={() => onHandleDeleteMember(openFamilyDeleteModal)}
-          isLoading={isLoadingDeleteMember}
-          title={t("familyMember.deleteConfirm.modal.title")}
-          description={t("familyMember.deleteConfirm.modal.description", {
-            member: openFamilyDeleteModal?.name,
-          })}
-        />
-      )} */}
     </>
   );
 };
