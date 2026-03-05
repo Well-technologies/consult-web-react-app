@@ -1,4 +1,4 @@
-import { Input } from "@/ui/atoms/input/Input";
+import Input from "@/ui/atoms/input/input";
 import { Pagination } from "@/ui/atoms/pagination/Pagination";
 import { NotFound } from "@/ui/molecules/notFound/NotFound";
 
@@ -44,7 +44,7 @@ export const PreviousMedOrders = ({
           className="w-65"
           placeholder="Search orders using medicines"
           search
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e: any) => setSearch(e.target.value)}
           value={searchText}
         />
         <span className="text-sm text-gray-600 ">

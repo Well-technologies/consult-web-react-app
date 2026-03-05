@@ -44,7 +44,7 @@ export const AddPatientModalContainer = ({
       allReducerStates(rootState as StoreReducerStateTypes).user.profile
   );
   const [isMyPatient, setIsMyPatient] = useState<boolean>(
-    (!!data ? data.isDisabled : false) || false
+    (data ? data.isDisabled : false) || false
   );
   const [isRegisteredPatient, setIsRegisteredPatient] = useState<
     boolean | undefined
@@ -144,7 +144,7 @@ export const AddPatientModalContainer = ({
       (patient) => !patient.name.includes("+94")
     )[0];
     setIsRegisteredPatient(!!patient);
-    if (!!patient) {
+    if (patient) {
       setIsMyPatient(
         myPatientsData?.data
           ?.map((patient) => patient?.id)

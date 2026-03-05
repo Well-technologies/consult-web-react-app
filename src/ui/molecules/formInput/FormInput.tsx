@@ -2,8 +2,8 @@ import clsx from "clsx";
 import { useState } from "react";
 import { Controller } from "react-hook-form";
 
+import Input from "@/ui/atoms/input/input";
 import { FormLabel } from "@/ui/atoms/formLabel/FormLabel";
-import { Input } from "@/ui/atoms/input/Input";
 
 import { FormInputProps } from "./FormInput.types";
 
@@ -36,7 +36,7 @@ export const FormInput = ({
                 {...props}
                 {...field}
                 value={value}
-                onChange={(e) => {
+                onChange={(e: any) => {
                   setValue(e.target.value);
                 }}
               />

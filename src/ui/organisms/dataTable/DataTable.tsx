@@ -22,6 +22,7 @@ export const DataTable = <TData extends RowData>({
   onRowClick,
   ...props
 }: Omit<TableOptions<TData>, "getCoreRowModel"> & { onRowClick?: (i: number) => void; }) => {
+  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable<TData>({
     data,
     columns,

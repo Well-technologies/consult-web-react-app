@@ -20,6 +20,7 @@ export const DataTable = <TData extends RowData>({
   data,
   enableSorting,
 }: Pick<TableOptions<TData>, "columns" | "data" | "enableSorting">) => {
+  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable<TData>({
     data,
     columns,

@@ -855,9 +855,9 @@ export type CreatePrescriptionProps = {
 export type CreatePrescriptionBody = {
   labTests: LabTestDetails[];
   medications: Medication[];
-  diagnoses: ClinicalCommonDetails | Object;
-  symptoms: ClinicalCommonDetails | Object;
-  allergies: ClinicalCommonDetails | Object;
+  diagnoses: ClinicalCommonDetails | object;
+  symptoms: ClinicalCommonDetails | object;
+  allergies: ClinicalCommonDetails | object;
   medPreFiles: string[];
 };
 

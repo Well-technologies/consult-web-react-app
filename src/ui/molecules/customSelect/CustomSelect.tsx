@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronIcon } from "@/assets/icons/customIcons/ChevronIcon";
 import { CloseIcon } from "@/assets/icons/customIcons/CloseIcon";
 import useOnClickOutside from "@/hooks/useOnClickOutside/useOnClickOutside";
-import { Input } from "@/ui/atoms/input/Input";
+import Input from "@/ui/atoms/input/input";
 
 import {
   Option,

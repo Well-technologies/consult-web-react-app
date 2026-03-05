@@ -30,7 +30,7 @@ export const Warning = ({
         className={clsx("text-xs text-red-500", textColor || "text-yellow-600")}
       >
         {warningText}
-        {!!actionButtonText ? (
+        {actionButtonText ? (
           <button
             className="text-xs text-yellow-600 underline cursor-pointer font-semibold"
             onClick={actionButtonFunction}
