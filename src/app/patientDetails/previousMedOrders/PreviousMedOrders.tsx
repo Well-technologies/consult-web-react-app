@@ -1,4 +1,4 @@
-import Input from "@/ui/atoms/input/input";
+import { Input } from "@/ui/atoms/input/Input";
 import { Pagination } from "@/ui/atoms/pagination/Pagination";
 import { NotFound } from "@/ui/molecules/notFound/NotFound";
 

@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronIcon } from "@/assets/icons/customIcons/ChevronIcon";
 import { CloseIcon } from "@/assets/icons/customIcons/CloseIcon";
 import useOnClickOutside from "@/hooks/useOnClickOutside/useOnClickOutside";
-import Input from "@/ui/atoms/input/input";
+import { Input } from "@/ui/atoms/input/Input";
 
 import {
   Option,
@@ -234,7 +234,7 @@ export const CustomSelect = ({
               ) : (
                 <p
                   className={clsx(
-                    "truncate cursor-default select-none text-sm",
+                    "truncate cursor-default py-2 select-none text-sm",
                     value && !Array.isArray(value)
                       ? "text-secondary"
                       : "text-secondary-300",
@@ -326,7 +326,7 @@ export const CustomSelect = ({
               classNames?.menu
                 ? classNames.menu
                 : clsx(
-                    "absolute z-10 w-full bg-white shadow-lg border rounded py-1  text-sm text-gray-700 ",
+                    "absolute z-10 w-full bg-white shadow-lg border rounded py-1 text-sm text-gray-700 ",
                     menu
                   )
             }

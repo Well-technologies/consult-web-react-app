@@ -2,10 +2,10 @@ import clsx from "clsx";
 import { useState } from "react";
 import { Controller } from "react-hook-form";
 
-import Input from "@/ui/atoms/input/input";
 import { FormLabel } from "@/ui/atoms/formLabel/FormLabel";
 
 import { FormInputProps } from "./FormInput.types";
+import { Input } from "@/ui/atoms/input/Input";
 
 // import { ReactComponent as CheckMarkCircle } from "@/assets/icons/checkmark-circle.svg?react";
 
